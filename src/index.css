@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Pretendard Variable', NanumGothic, sans-serif;
+  user-select: none;
+}
+
+@layer utilities {
+}
