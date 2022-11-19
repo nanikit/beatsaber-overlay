@@ -1,0 +1,12 @@
+{
+  "fmt": {
+    "files": {
+      "include": [
+        "tool"
+      ]
+    },
+    "options": {
+      "lineWidth": 100
+    }
+  }
+}

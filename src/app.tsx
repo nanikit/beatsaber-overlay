@@ -1,26 +1,47 @@
 import { useAtom } from "jotai";
+import { DetailedHTMLProps, ImgHTMLAttributes, useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { usePreviousDistinct, useRaf, useWindowSize } from "react-use";
+import { useAsync, usePreviousDistinct, useRaf, useWindowSize } from "react-use";
 import useWebSocket from "react-use-websocket";
 import { FittedText } from "./components/fitted_text";
 import { BeatsaverMap, Characteristic, Difficulty, getDataUrlFromHash } from "./services/beatsaver";
 import { OverlayState } from "./services/overlay_atom";
 import { testableOverlayAtom } from "./services/testable_overlay_atom";
+import { timeout } from "./services/utils";
 
 export function App() {
   const [overlayState, updateOverlay] = useAtom(testableOverlayAtom);
-
-  const { readyState } = useWebSocket("ws://localhost:2947/socket", {
-    onOpen: () => {
-      console.log("Connected!");
-    },
-    onMessage: (message: MessageEvent<string>) => {
-      updateOverlay(message.data);
-    },
-    shouldReconnect: () => true,
-    reconnectAttempts: 24 * 60,
-    reconnectInterval: 60000,
+  const [state, setState] = useState({
+    connect: true,
+    retryCount: 0,
   });
+
+  const { readyState } = useWebSocket(
+    "ws://localhost:2947/socket",
+    {
+      onOpen: (event) => {
+        console.log(event);
+        setState({ ...state, connect: true, retryCount: 0 });
+      },
+      onMessage: (message: MessageEvent<string>) => {
+        updateOverlay(message.data);
+      },
+      onClose: console.log,
+      shouldReconnect: () => false,
+    },
+    state.connect,
+  );
+
+  useAsync(async () => {
+    if (readyState !== WebSocket.CLOSED) {
+      return;
+    }
+
+    const retryCount = state.retryCount + 1;
+    await timeout(Math.min(2 ** retryCount * 1000, 60000));
+    setState({ ...state, connect: false, retryCount });
+    setState({ ...state, connect: true, retryCount });
+  }, [readyState]);
 
   const { mapInfo, scoring, progress } = overlayState;
   const previousMap = usePreviousDistinct(mapInfo);
@@ -42,7 +63,7 @@ export function App() {
     <main className="text-white p-[1vw] overflow-hidden" onClick={() => updateOverlay("")}>
       {!!hash && (
         <div
-          className={`w-full h-[20vw] transition delay-200 duration-500 flex text-[20vw]${
+          className={`w-full h-[1em] transition delay-200 duration-500 flex text-[20vw] leading-[1.2]${
             isRight ? " flex-row" : " flex-row-reverse"
           }${!mapInfo ? " opacity-0" : ""}`}
         >
@@ -75,11 +96,11 @@ export function App() {
                   isRight ? "items-end" : ""
                 }`}
               >
-                <p className="text-[0.14em] leading-[1em] [-webkit-text-stroke:0.05em_black] mt-[0.2em]">
+                <p className="text-[0.14em] [-webkit-text-stroke:0.05em_black] mt-[0.2em]">
                   {artist} [{mapper}]
                 </p>
-                <div className="flex items-center gap-[0.05em]">
-                  <p className="text-[0.14em] leading-[4.4vw] [-webkit-text-stroke:0.15vw_black]">
+                <div className="flex items-end gap-[0.05em] mt-[0.03em]">
+                  <p className="text-[0.14em] [-webkit-text-stroke:0.05em_black]">
                     !bsr {beatmap?.id}
                   </p>
                   {!!difficulty && (
@@ -90,7 +111,7 @@ export function App() {
               <AutoProgressBar
                 duration={duration ?? 1}
                 progress={progress ?? lastProgress}
-                className={`h-[0.1em] w-full ${
+                className={`h-[0.1em] mt-[0.04em] w-full ${
                   (scoring?.health ?? lastScoring?.health ?? 0) > 0
                     ? "[--color-primary:#eee]"
                     : "[--color-primary:#555]"
@@ -98,10 +119,36 @@ export function App() {
               />
             </div>
           </div>
-          <img src={coverUrl} className="z-10 aspect-square object-cover h-full rounded-[2vw]" />
+          <TransparentFallbackImg
+            src={coverUrl}
+            className="z-10 aspect-square object-cover h-full rounded-[0.1em]"
+          />
         </div>
       )}
     </main>
+  );
+}
+
+function TransparentFallbackImg({
+  src,
+  ...props
+}: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) {
+  const transparent =
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+  const [state, setState] = useState({ hasError: false });
+
+  useEffect(() => {
+    setState({ ...state, hasError: false });
+  }, [src]);
+
+  return (
+    <img
+      onError={() => {
+        setState({ hasError: true });
+      }}
+      src={state.hasError ? transparent : src}
+      {...props}
+    />
   );
 }
 
@@ -161,11 +208,11 @@ function DifficultyLabel({
   const difficultyText = difficulty === "ExpertPlus" ? "Expert+" : difficulty;
   return (
     <div
-      className={`px-[1.5vw] py-[0.3vw] ${getDifficultyBackground(
+      className={`px-[0.07em] py-[0.03em] ${getDifficultyBackground(
         difficulty,
       )} flex items-center gap-[0.1em] rounded-[1em]`}
     >
-      {!!characteristic && <img src={getCharacteristicSvg(characteristic)} className="h-[2vw]" />}
+      {!!characteristic && <img src={getCharacteristicSvg(characteristic)} className="h-[0.1em]" />}
       <p className="text-[0.1em]">{difficultyText}</p>
     </div>
   );

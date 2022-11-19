@@ -43,19 +43,27 @@ export const overlayAtom = atom<OverlayState, string>(
     const previous = get(overlayStateAtom);
     const message = JSON.parse(value) as BsPlusMessage;
     const current = updateState(previous, message);
+    console.log(previous, message, current);
     set(overlayStateAtom, current);
     return current;
   },
 );
 
-function updateState(previous: OverlayState, message: BsPlusMessage): OverlayState {
+function updateState(
+  previous: OverlayState,
+  message: BsPlusMessage,
+): OverlayState {
   if (message._type === "handshake") {
     return { user: { id: message.playerPlatformId, name: message.playerName } };
   } else {
     switch (message._event) {
       case "gameState":
         if (message.gameStateChanged === "Menu") {
-          return { mapInfo: undefined, scoring: undefined, progress: undefined };
+          return {
+            mapInfo: undefined,
+            scoring: undefined,
+            progress: undefined,
+          };
         }
         return previous;
       case "mapInfo":
@@ -80,7 +88,9 @@ function updateState(previous: OverlayState, message: BsPlusMessage): OverlaySta
             title: name,
             artist,
             mapper,
-            coverUrl: `data:image/png;base64,${coverRaw}`,
+            coverUrl: coverRaw.startsWith("http")
+              ? coverRaw
+              : `data:image/png;base64,${coverRaw}`,
             duration,
           },
           progress: {

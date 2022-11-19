@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { overlayStateAtom, overlayAtom, OverlayState } from "./overlay_atom";
+import { overlayAtom, OverlayState, overlayStateAtom } from "./overlay_atom";
 
 const indexAtom = atom(0);
 
@@ -15,7 +15,8 @@ const testOverlayAtom = atom<OverlayState, unknown>(
           mapper: "miiilk",
           title: "Fansa (팬서비스)",
           artist: "GOSEGU",
-          coverUrl: "https://eu.cdn.beatsaver.com/5af29356a4f8591d23215f0bacdc6c4d660ef1d0.jpg",
+          coverUrl:
+            "https://eu.cdn.beatsaver.com/5af29356a4f8591d23215f0bacdc6c4d660ef1d0.jpg",
           duration: 20,
         },
         scoring: { health: 0.5 },
@@ -34,7 +35,8 @@ const testOverlayAtom = atom<OverlayState, unknown>(
           title: "Fansa",
           subtitle: "고세구 cover (ISEGYE Idol 이세계 아이돌)",
           artist: "GOSEGU",
-          coverUrl: "https://eu.cdn.beatsaver.com/5af29356a4f8591d23215f0bacdc6c4d660ef1d0.jpg",
+          coverUrl:
+            "https://eu.cdn.beatsaver.com/5af29356a4f8591d23215f0bacdc6c4d660ef1d0.jpg",
           duration: 20,
         },
         scoring: { health: 0.0 },
@@ -53,7 +55,8 @@ const testOverlayAtom = atom<OverlayState, unknown>(
           title: "Fansa (팬서비스) (팬서비스) (팬서비스)",
           subtitle: "고세구 cover (ISEGYE Idol 이세계 아이돌)",
           artist: "GOSEGU",
-          coverUrl: "https://eu.cdn.beatsaver.com/5af29356a4f8591d23215f0bacdc6c4d660ef1d0.jpg",
+          coverUrl:
+            "https://eu.cdn.beatsaver.com/5af29356a4f8591d23215f0bacdc6c4d660ef1d0.jpg",
           duration: 20,
         },
         scoring: { health: 1.0 },
