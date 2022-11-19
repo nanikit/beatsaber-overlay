@@ -1,4 +1,14 @@
 export type Difficulty = 'Easy' | 'Normal' | 'Hard' | 'Expert' | 'ExpertPlus';
+
+export type Characteristic =
+  | 'Standard'
+  | 'OneSaber'
+  | '90Degree'
+  | '360Degree'
+  | 'NoArrows'
+  | 'Lawless'
+  | 'Lightshow';
+
 export type BeatsaverMap = {
   id: string;
   name: string;
@@ -44,7 +54,7 @@ export type BeatsaverMap = {
       obstacles: number;
       nps: number;
       length: number;
-      characteristic: string;
+      characteristic: Characteristic;
       difficulty: Difficulty;
       events: number;
       chroma: boolean;

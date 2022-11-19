@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import { App } from './app';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ErrorBoundary } from 'react-error-boundary';
-import { LocalStorageResetConfirm } from './containers/local_storage_reset_confirm';
 import './index.css';
 
 const queryClient = new QueryClient({
@@ -19,10 +18,8 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ErrorBoundary FallbackComponent={LocalStorageResetConfirm}>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </React.StrictMode>,
 );

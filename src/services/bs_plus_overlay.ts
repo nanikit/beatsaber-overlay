@@ -1,0 +1,63 @@
+import { Difficulty } from './beatsaver';
+
+export type BsPlusMessage = Handshake | EventMessage;
+
+type Handshake = {
+  _type: 'handshake';
+  protocolVersion: number;
+  gameVersion: string;
+  playerName: string;
+  playerPlatformId: string;
+};
+
+type EventMessage = GameStateEvent | MapInfoEvent | ResumeEvent | ScoreEvent;
+
+type GameStateEvent = {
+  _type: 'event';
+  _event: 'gameState';
+  gameStateChanged: 'Menu' | 'Playing';
+};
+
+type ResumeEvent = {
+  _type: 'event';
+  _event: 'resume';
+  resumeTime: number;
+};
+
+type ScoreEvent = {
+  _type: 'event';
+  _event: 'score';
+  scoreEvent: {
+    time: number;
+    score: number;
+    accuracy: number;
+    combo: number;
+    missCount: number;
+    currentHealth: number;
+  };
+};
+
+type MapInfoEvent = {
+  _type: 'event';
+  _event: 'mapInfo';
+  mapInfoChanged: {
+    // 'custom_level_1C2CC9A3F9880BC99A994A664E65D63CE8616DD0';
+    level_id: string;
+    name: string;
+    sub_name: string;
+    artist: string;
+    mapper: string;
+    characteristic: 'Standard';
+    difficulty: Difficulty;
+    // seconds
+    duration: number;
+    BPM: number;
+    PP: number;
+    BSRKey: '';
+    // base64
+    coverRaw: string;
+    // seconds
+    time: number;
+    timeMultiplier: number;
+  };
+};
