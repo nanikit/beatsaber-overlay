@@ -31,6 +31,9 @@ async function handleRequest(request: Deno.RequestEvent) {
   const { socket, response } = Deno.upgradeWebSocket(request.request);
   socket.onopen = async () => {
     console.log(`[${new Date().toISOString()}] accepted websocket.`);
+    socket.send(
+      `{ "_type": "handshake", "protocolVersion": 1, "gameVersion": "1.25.1", "playerName": "nanikit", "playerPlatformId": "76561198159100356" }`,
+    );
     while (socket.readyState === socket.OPEN) {
       await sendActivity(socket);
     }
@@ -44,9 +47,6 @@ async function sendActivity(socket: WebSocket) {
     return;
   }
 
-  socket.send(
-    `{ "_type": "handshake", "protocolVersion": 1, "gameVersion": "1.25.1", "playerName": "nanikit", "playerPlatformId": "76561198159100356" }`,
-  );
   socket.send(
     `{ "_type": "event", "_event": "gameState", "gameStateChanged": "Menu" }`,
   );
@@ -88,6 +88,9 @@ async function sendActivity(socket: WebSocket) {
   if (socket.readyState !== socket.OPEN) {
     return;
   }
+
+  socket.send(`{ "_event": "pause", "_type": "event", "pauseTime": 5.11 }`);
+  await delay(2000);
 
   socket.send(
     `{ "_type": "event", "_event": "gameState", "gameStateChanged": "Menu" }`,

@@ -121,6 +121,17 @@ function updateState(
             timeMultiplier: previous.progress?.timeMultiplier ?? 1,
           },
         };
+      case "pause":
+        return {
+          ...previous,
+          progress: {
+            point: new Date(),
+            pauseTime: message.pauseTime,
+            timeMultiplier: previous.progress?.timeMultiplier ?? 1,
+          },
+        };
+      default:
+        return previous;
     }
   }
 }
