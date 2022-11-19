@@ -38,8 +38,10 @@ export function App() {
     }
 
     const retryCount = state.retryCount + 1;
-    await timeout(Math.min(2 ** retryCount * 1000, 60000));
+    const delay = Math.min(2 ** retryCount * 1000, 60000);
+    console.log(`retryCount: ${retryCount}, retrying after ${delay}ms`);
     setState({ ...state, connect: false, retryCount });
+    await timeout(delay);
     setState({ ...state, connect: true, retryCount });
   }, [readyState]);
 
