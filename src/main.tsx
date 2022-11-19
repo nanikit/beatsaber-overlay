@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { App } from './app';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ErrorBoundary } from 'react-error-boundary';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { ErrorBoundary } from "react-error-boundary";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { App } from "./app";
+import "./index.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,10 +16,12 @@ const queryClient = new QueryClient({
   },
 });
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
+    <ErrorBoundary fallback={<p>Broken</p>} onError={console.error}>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </ErrorBoundary>
   </React.StrictMode>,
 );

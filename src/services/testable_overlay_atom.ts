@@ -1,12 +1,11 @@
-import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
-import { overlayAtom, OverlayState } from "../services/overlayer";
+import { atom } from "jotai";
+import { overlayStateAtom, overlayAtom, OverlayState } from "./overlay_atom";
 
-export function useTestOverlay() {
-  const [state, set] = useAtom(overlayAtom);
-  const [index, setIndex] = useState(0);
+const indexAtom = atom(0);
 
-  const setRandomState = (_: unknown) => {
+const testOverlayAtom = atom<OverlayState, unknown>(
+  (get) => get(overlayStateAtom),
+  (get, set, _) => {
     const states: OverlayState[] = [
       {
         mapInfo: {
@@ -66,14 +65,20 @@ export function useTestOverlay() {
       },
       {},
     ];
+
+    const index = get(indexAtom);
     const newIndex = (index + 1) % states.length;
-    setIndex(newIndex);
-    set(states[newIndex]);
-  };
+    set(indexAtom, newIndex);
+    set(overlayStateAtom, states[newIndex]);
 
-  useEffect(() => {
-    setRandomState({});
-  }, []);
+    return states[newIndex];
+  },
+);
 
-  return [state, setRandomState] as const;
-}
+export const testableOverlayAtom = atom<OverlayState, string>(
+  (get) => get(overlayStateAtom),
+  (_get, set, value) => {
+    const isTest = new URLSearchParams(window.location.search).get("uiTest");
+    set(isTest != null ? testOverlayAtom : overlayAtom, value);
+  },
+);

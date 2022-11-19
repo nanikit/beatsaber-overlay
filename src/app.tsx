@@ -1,13 +1,14 @@
+import { useAtom } from "jotai";
 import { useQuery } from "react-query";
 import { usePreviousDistinct, useRaf, useWindowSize } from "react-use";
 import useWebSocket from "react-use-websocket";
 import { FittedText } from "./components/fitted_text";
-import { useTestOverlay } from "./hooks/use_test_overlay";
 import { BeatsaverMap, Characteristic, Difficulty, getDataUrlFromHash } from "./services/beatsaver";
-import { OverlayState } from "./services/overlayer";
+import { OverlayState } from "./services/overlay_atom";
+import { testableOverlayAtom } from "./services/testable_overlay_atom";
 
 export function App() {
-  const [overlayState, updateOverlay] = useTestOverlay();
+  const [overlayState, updateOverlay] = useAtom(testableOverlayAtom);
 
   const { readyState } = useWebSocket("ws://localhost:2947/socket", {
     onOpen: () => {
@@ -38,12 +39,7 @@ export function App() {
   const isRight = true;
 
   return (
-    <main
-      className="text-white p-[1vw] overflow-hidden"
-      onClick={() => {
-        updateOverlay(0);
-      }}
-    >
+    <main className="text-white p-[1vw] overflow-hidden" onClick={() => updateOverlay("")}>
       {!!hash && (
         <div
           className={`w-full h-[20vw] transition delay-200 duration-500 flex text-[20vw]${

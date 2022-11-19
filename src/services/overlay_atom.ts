@@ -31,15 +31,19 @@ export type OverlayState = {
   } & ({ resumeTime: number } | { pauseTime: number });
 };
 
-export const overlayAtom = atom<OverlayState>({});
+export const overlayStateAtom = atom<OverlayState>({});
 
-export const overlayerAtom = atom(
-  (get) => get(overlayAtom),
+export const overlayAtom = atom<OverlayState, string>(
+  (get) => get(overlayStateAtom),
   (get, set, value: string) => {
-    const previous = get(overlayAtom);
+    if (!value) {
+      return;
+    }
+
+    const previous = get(overlayStateAtom);
     const message = JSON.parse(value) as BsPlusMessage;
     const current = updateState(previous, message);
-    set(overlayAtom, current);
+    set(overlayStateAtom, current);
     return current;
   },
 );
