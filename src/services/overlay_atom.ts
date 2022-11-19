@@ -12,6 +12,7 @@ export type OverlayState = {
     subtitle?: string;
     artist?: string;
     mapper: string;
+    /** milliseconds */
     duration?: number;
   };
 
@@ -25,10 +26,14 @@ export type OverlayState = {
     health?: number;
   };
 
-  progress?: {
-    point: Date;
-    timeMultiplier: number;
-  } & ({ resumeTime: number } | { pauseTime: number });
+  progress?:
+    & {
+      point: Date;
+      timeMultiplier: number;
+    }
+    & ({ /** seconds */ resumeTime: number } | {
+      /** seconds */ pauseTime: number;
+    });
 };
 
 export const overlayStateAtom = atom<OverlayState>({});

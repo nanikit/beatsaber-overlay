@@ -65,7 +65,7 @@ export function App() {
     <main className="text-white p-[1vw] overflow-hidden" onClick={() => updateOverlay("")}>
       {!!hash && (
         <div
-          className={`w-full h-[1em] transition delay-200 duration-500 flex text-[20vw] leading-[1.2]${
+          className={`w-full h-[1em] transition duration-1000 flex text-[20vw] leading-[1.2]${
             isRight ? " flex-row" : " flex-row-reverse"
           }${!mapInfo ? " opacity-0" : ""}`}
         >
@@ -170,17 +170,17 @@ function AutoProgressBar({
 
   const remainingMs = (() => {
     if ("resumeTime" in progress) {
-      return (duration * 1000 - progress.resumeTime) / timeMultiplier;
+      return (duration - progress.resumeTime * 1000) / timeMultiplier;
     }
   })();
   useRaf(remainingMs);
 
   const ratio = (() => {
     if ("resumeTime" in progress) {
-      const elapsedSeconds = (new Date().getTime() - point.getTime()) / 1000;
-      return (progress.resumeTime + elapsedSeconds) / duration;
+      const elapsedMilliseconds = new Date().getTime() - point.getTime();
+      return (progress.resumeTime * 1000 + elapsedMilliseconds) / duration;
     }
-    return progress.pauseTime / duration;
+    return (progress.pauseTime * 1000) / duration;
   })();
   return <ProgressBar ratio={ratio} {...props} />;
 }
