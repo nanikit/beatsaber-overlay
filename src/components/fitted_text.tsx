@@ -31,19 +31,34 @@ export function FittedText({
   );
 }
 
+export function useTextFit(
+  {
+    ref,
+    maxHeight,
+    maxSize,
+  }: { ref: MutableRefObject<HTMLElement | null>; maxHeight: number; maxSize?: number },
+  deps?: unknown[],
+) {
+  useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+    fitText(ref.current, { maxHeight, maxWidth: Number.MAX_VALUE, maxSize });
+  }, deps);
+}
+
 function fitText(
   element: HTMLElement,
-  { maxWidth, maxHeight, maxSize }: { maxWidth: number; maxHeight: number; maxSize: number },
+  { maxWidth, maxHeight, maxSize }: { maxWidth: number; maxHeight: number; maxSize?: number },
 ) {
-  const span = element.querySelector("span")!;
-  let fontSize = Math.min(maxWidth, maxHeight, maxSize);
+  let fontSize = Math.min(maxWidth, maxHeight, maxSize ?? Number.MAX_VALUE);
   let textHeight;
   let textWidth;
   do {
     element.style.fontSize = `${fontSize}px`;
     element.style.lineHeight = `${fontSize * 1.1}px`;
-    textHeight = span.offsetHeight;
-    textWidth = span.offsetWidth;
+    textHeight = element.offsetHeight;
+    textWidth = element.offsetWidth;
     fontSize = fontSize - 1;
   } while ((textHeight > maxHeight || textWidth > maxWidth) && fontSize > 3);
 }

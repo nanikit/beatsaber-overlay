@@ -1,9 +1,9 @@
 import { useAtom } from "jotai";
-import { DetailedHTMLProps, ImgHTMLAttributes, useEffect, useState } from "react";
+import { DetailedHTMLProps, ImgHTMLAttributes, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { useAsync, usePreviousDistinct, useRaf, useWindowSize } from "react-use";
 import useWebSocket from "react-use-websocket";
-import { FittedText } from "./components/fitted_text";
+import { FittedText, useTextFit } from "./components/fitted_text";
 import { BeatsaverMap, Characteristic, Difficulty, getDataUrlFromHash } from "./services/beatsaver";
 import { OverlayState } from "./services/overlay_atom";
 import { testableOverlayAtom } from "./services/testable_overlay_atom";
@@ -61,11 +61,14 @@ export function App() {
   const { width: vw100 } = useWindowSize();
   const isRight = true;
 
+  const fittedTextRef = useRef<HTMLElement>(null);
+  useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.1, maxSize: 70 }, [title, subtitle]);
+
   return (
-    <main className="text-white p-[1vw] overflow-hidden" onClick={() => updateOverlay("")}>
+    <main className="w-full text-white p-[1vw] overflow-hidden" onClick={() => updateOverlay("")}>
       {!!hash && (
         <div
-          className={`w-full h-[1em] transition duration-1000 flex text-[20vw] leading-[1.2]${
+          className={`w-full h-[18vw] transition duration-1000 flex text-[20vw] leading-[1.2]${
             isRight ? " flex-row" : " flex-row-reverse"
           }${!mapInfo ? " opacity-0" : ""}`}
         >
@@ -75,34 +78,27 @@ export function App() {
                 isRight ? " items-end" : ""
               }${!mapInfo ? " translate-x-[100%]" : ""}`}
             >
-              <FittedText
-                options={{ maxHeight: vw100 * 0.1, maxWidth: vw100 * 0.78, maxSize: vw100 * 0.06 }}
-              >
-                <span
-                  className={`flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
-                    isRight ? "justify-end" : ""
-                  }`}
-                >
-                  {!!subtitle && (
-                    <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
-                      {subtitle}
-                    </span>
-                  )}
-                  <span className="[-webkit-text-stroke:0.03em_black] break-keep text-right">
-                    {title}
-                  </span>
-                </span>
-              </FittedText>
-              <div
-                className={`flex-[1_1_0] flex flex-col flex-wrap justify-end ${
-                  isRight ? "items-end" : ""
+              <span
+                ref={fittedTextRef}
+                className={`flex-1 flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
+                  isRight ? "justify-end" : ""
                 }`}
               >
+                {!!subtitle && (
+                  <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
+                    {subtitle}
+                  </span>
+                )}
+                <span className="[-webkit-text-stroke:0.03em_black] break-keep text-right">
+                  {title}
+                </span>
+              </span>
+              <div className={`flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}>
                 <p className="text-[0.14em] [-webkit-text-stroke:0.05em_black] mt-[0.2em]">
                   {artist} [{mapper}]
                 </p>
                 <div className="flex items-end gap-[0.05em] mt-[0.03em]">
-                  <p className="text-[0.14em] [-webkit-text-stroke:0.05em_black]">
+                  <p className="text-[0.14em] leading-[1] [-webkit-text-stroke:0.05em_black]">
                     !bsr {beatmap?.id}
                   </p>
                   {!!difficulty && (
@@ -113,7 +109,7 @@ export function App() {
               <AutoProgressBar
                 duration={duration ?? 1}
                 progress={progress ?? lastProgress}
-                className={`h-[0.1em] mt-[0.04em] w-full ${
+                className={`h-[0.07em] mt-[0.04em] w-full ${
                   (scoring?.health ?? lastScoring?.health ?? 0) > 0
                     ? "[--color-primary:#eee]"
                     : "[--color-primary:#555]"
@@ -210,9 +206,9 @@ function DifficultyLabel({
   const difficultyText = difficulty === "ExpertPlus" ? "Expert+" : difficulty;
   return (
     <div
-      className={`px-[0.07em] py-[0.03em] ${getDifficultyBackground(
+      className={`px-[0.07em] py-[0.015em] ${getDifficultyBackground(
         difficulty,
-      )} flex items-center gap-[0.1em] rounded-[1em]`}
+      )} flex items-center gap-[0.05em] rounded-[1em]`}
     >
       {!!characteristic && <img src={getCharacteristicSvg(characteristic)} className="h-[0.1em]" />}
       <p className="text-[0.1em]">{difficultyText}</p>
