@@ -66,6 +66,26 @@ const testOverlayAtom = atom<OverlayState, unknown>(
           pauseTime: 10,
         },
       },
+      {
+        mapInfo: {
+          characteristic: "Standard",
+          difficulty: "Expert",
+          hash: "e03e2fcf6396ede878fbf812e38857a59bdd615e",
+          mapper: "misterlihao",
+          title: "愛のモンスター",
+          subtitle: "covered by fui",
+          artist: "Ityo",
+          coverUrl:
+            "https://eu.cdn.beatsaver.com/e03e2fcf6396ede878fbf812e38857a59bdd615e.jpg",
+          duration: 20,
+        },
+        scoring: { health: 1.0 },
+        progress: {
+          point: new Date(),
+          timeMultiplier: 1,
+          pauseTime: 10,
+        },
+      },
       {},
     ];
 
