@@ -45,7 +45,24 @@ export function App() {
     setState({ ...state, connect: true, retryCount });
   }, [readyState]);
 
-  const { mapInfo, scoring, progress } = overlayState;
+  return (
+    <main
+      className="w-full h-[20vw] text-white p-[1vw] text-[20vw] overflow-hidden"
+      onClick={() => updateOverlay("")}
+    >
+      {readyState === WebSocket.OPEN ? (
+        <ConnectedOverlay state={overlayState} />
+      ) : (
+        <DisconnectionWarning />
+      )}
+    </main>
+  );
+}
+
+function ConnectedOverlay({ state }: { state: OverlayState }) {
+  const isRight = true;
+
+  const { mapInfo, scoring, progress } = state;
   const previousMap = usePreviousDistinct(mapInfo);
   const lastProgress = usePreviousDistinct(progress);
   const lastScoring = usePreviousDistinct(scoring);
@@ -59,69 +76,103 @@ export function App() {
   const beatmap = mapQuery.data;
 
   const { width: vw100 } = useWindowSize();
-  const isRight = true;
 
   const fittedTextRef = useRef<HTMLElement>(null);
   useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.1, maxSize: 70 }, [title, subtitle]);
 
+  if (!hash) {
+    return (
+      <div
+        className={
+          `absolute top-[0.05em] right-[0.05em] w-[0.1em] h-[0.1em] rounded-full` +
+          ` bg-gradient-to-br from-green-300 to-emerald-600 animate-[0.2s_ease-in_1s_forwards_onetime-fadeout]`
+        }
+      />
+    );
+  }
+
   return (
-    <main className="w-full text-white p-[1vw] overflow-hidden" onClick={() => updateOverlay("")}>
-      {!!hash && (
+    <div
+      className={`w-full h-full transition duration-1000 flex leading-[1.2]${
+        isRight ? " flex-row" : " flex-row-reverse"
+      }${!mapInfo ? " opacity-0" : ""}`}
+    >
+      <div className={`z-0 flex-1 overflow-hidden pr-[0.05em]`}>
         <div
-          className={`w-full h-[18vw] transition duration-1000 flex text-[20vw] leading-[1.2]${
-            isRight ? " flex-row" : " flex-row-reverse"
-          }${!mapInfo ? " opacity-0" : ""}`}
+          className={`h-full transition duration-500 flex flex-col${isRight ? " items-end" : ""}${
+            !mapInfo ? " translate-x-[100%]" : ""
+          }`}
         >
-          <div className={`z-0 flex-1 overflow-hidden pr-[0.05em]`}>
-            <div
-              className={`h-full transition duration-500 flex flex-col${
-                isRight ? " items-end" : ""
-              }${!mapInfo ? " translate-x-[100%]" : ""}`}
-            >
-              <span
-                ref={fittedTextRef}
-                className={`flex-1 flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
-                  isRight ? "justify-end" : ""
-                }`}
-              >
-                <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
-                  {beatmap?.metadata?.songSubName ?? subtitle ?? ""}
-                </span>
-                <span className="[-webkit-text-stroke:0.03em_black] break-keep text-right">
-                  {beatmap?.metadata?.songName ?? title}
-                </span>
-              </span>
-              <div className={`flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}>
-                <p className="text-[0.14em] [-webkit-text-stroke:0.05em_black] mt-[0.2em]">
-                  {artist} [{mapper}]
-                </p>
-                <div className="flex items-end gap-[0.05em] mt-[0.03em]">
-                  <p className="text-[0.14em] leading-[1] [-webkit-text-stroke:0.05em_black]">
-                    !bsr {beatmap?.id}
-                  </p>
-                  {!!difficulty && (
-                    <DifficultyLabel difficulty={difficulty} characteristic={characteristic} />
-                  )}
-                </div>
-              </div>
-              <AutoProgressBar
-                duration={duration ?? 1}
-                progress={progress ?? lastProgress}
-                className={`h-[0.07em] mt-[0.04em] w-full ${
-                  (scoring?.health ?? lastScoring?.health ?? 0) > 0
-                    ? "[--color-primary:#eee]"
-                    : "[--color-primary:#555]"
-                }`}
-              />
+          <span
+            ref={fittedTextRef}
+            className={`flex-1 flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
+              isRight ? "justify-end" : ""
+            }`}
+          >
+            <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
+              {beatmap?.metadata?.songSubName ?? subtitle ?? ""}
+            </span>
+            <span className="[-webkit-text-stroke:0.03em_black] break-keep text-right">
+              {beatmap?.metadata?.songName ?? title}
+            </span>
+          </span>
+          <div className={`flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}>
+            <p className="text-[0.14em] [-webkit-text-stroke:0.05em_black] mt-[0.2em]">
+              {artist} [{mapper}]
+            </p>
+            <div className="flex items-end gap-[0.05em] mt-[0.03em]">
+              <p className="text-[0.14em] leading-[1] [-webkit-text-stroke:0.05em_black]">
+                !bsr {beatmap?.id}
+              </p>
+              {!!difficulty && (
+                <DifficultyLabel difficulty={difficulty} characteristic={characteristic} />
+              )}
             </div>
           </div>
-          <TransparentFallbackImg
-            src={coverUrl}
-            className="z-10 aspect-square object-cover h-full rounded-[0.1em]"
+          <AutoProgressBar
+            duration={duration ?? 1}
+            progress={progress ?? lastProgress}
+            className={`h-[0.07em] mt-[0.04em] w-full ${
+              (scoring?.health ?? lastScoring?.health ?? 0) > 0
+                ? "[--color-primary:#eee]"
+                : "[--color-primary:#555]"
+            }`}
           />
         </div>
+      </div>
+      <TransparentFallbackImg
+        src={coverUrl}
+        className="z-10 aspect-square object-cover h-full rounded-[0.1em]"
+      />
+    </div>
+  );
+}
+
+function DisconnectionWarning() {
+  const [state, setState] = useState({ isHovering: false });
+  const { isHovering } = state;
+
+  return (
+    <div
+      onMouseEnter={() => {
+        setState({ ...state, isHovering: true });
+      }}
+      onMouseLeave={() => {
+        setState({ ...state, isHovering: false });
+      }}
+      className={
+        `absolute top-[1vw] right-[1vw] rounded-full transition-all overflow-hidden` +
+        ` bg-gradient-to-br from-yellow-300 to-orange-600` +
+        ` ${isHovering ? "w-[1.8em] h-[0.25em]" : "w-[0.1em] h-[0.1em]"}`
+      }
+    >
+      {isHovering && (
+        <div className="text-[0.08em] flex flex-col flex-nowrap items-center">
+          <p>BS+ song overlay is not connected.</p>
+          <p>It'll reconnect within 1 minutes.</p>
+        </div>
       )}
-    </main>
+    </div>
   );
 }
 
