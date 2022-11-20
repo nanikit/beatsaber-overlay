@@ -84,11 +84,9 @@ export function App() {
                   isRight ? "justify-end" : ""
                 }`}
               >
-                {!!subtitle && (
-                  <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
-                    {beatmap?.metadata?.songSubName ?? subtitle}
-                  </span>
-                )}
+                <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
+                  {beatmap?.metadata?.songSubName ?? subtitle ?? ""}
+                </span>
                 <span className="[-webkit-text-stroke:0.03em_black] break-keep text-right">
                   {beatmap?.metadata?.songName ?? title}
                 </span>
