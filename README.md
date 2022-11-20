@@ -2,6 +2,6 @@
 
 Just for my use. Currently intended to use with BS plus.
 
-[Demo page](http://localhost:5173/?uiTest) (click to switch)
+[Demo page](https://nanikit-bs.pages.dev/?uiTest) (click to switch)
 
 [Page](https://nanikit-bs.pages.dev/)
