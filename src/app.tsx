@@ -86,11 +86,11 @@ export function App() {
               >
                 {!!subtitle && (
                   <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
-                    {subtitle}
+                    {beatmap?.metadata?.songSubName ?? subtitle}
                   </span>
                 )}
                 <span className="[-webkit-text-stroke:0.03em_black] break-keep text-right">
-                  {title}
+                  {beatmap?.metadata?.songName ?? title}
                 </span>
               </span>
               <div className={`flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}>
