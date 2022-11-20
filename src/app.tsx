@@ -164,18 +164,19 @@ function AutoProgressBar({
 
   const remainingMs = (() => {
     if ("resumeTime" in progress) {
-      return (duration - progress.resumeTime * 1000) / timeMultiplier;
+      return ((duration - progress.resumeTime) * 1000) / timeMultiplier;
     }
   })();
   useRaf(remainingMs);
 
   const ratio = (() => {
     if ("resumeTime" in progress) {
-      const elapsedMilliseconds = new Date().getTime() - point.getTime();
-      return (progress.resumeTime * 1000 + elapsedMilliseconds) / duration;
+      const elapsedSeconds = (new Date().getTime() - point.getTime()) / 1000;
+      return (progress.resumeTime + elapsedSeconds) / duration;
     }
-    return (progress.pauseTime * 1000) / duration;
+    return progress.pauseTime / duration;
   })();
+  console.log(ratio);
   return <ProgressBar ratio={ratio} {...props} />;
 }
 

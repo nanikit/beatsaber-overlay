@@ -73,7 +73,7 @@ const testOverlayAtom = atom<OverlayState, unknown>(
           hash: "e03e2fcf6396ede878fbf812e38857a59bdd615e",
           mapper: "misterlihao",
           title: "愛のモンスター",
-          subtitle: "",
+          subtitle: "covered by fui",
           artist: "Ityo",
           coverUrl:
             "https://eu.cdn.beatsaver.com/e03e2fcf6396ede878fbf812e38857a59bdd615e.jpg",

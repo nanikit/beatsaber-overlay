@@ -12,7 +12,6 @@ export type OverlayState = {
     subtitle?: string;
     artist?: string;
     mapper: string;
-    /** milliseconds */
     duration?: number;
   };
 
@@ -31,8 +30,8 @@ export type OverlayState = {
       point: Date;
       timeMultiplier: number;
     }
-    & ({ /** seconds */ resumeTime: number } | {
-      /** seconds */ pauseTime: number;
+    & ({resumeTime: number } | {
+      pauseTime: number;
     });
 };
 
@@ -96,7 +95,7 @@ function updateState(
             coverUrl: coverRaw.startsWith("http")
               ? coverRaw
               : `data:image/png;base64,${coverRaw}`,
-            duration,
+            duration: duration / 1000,
           },
           progress: {
             point: new Date(),
