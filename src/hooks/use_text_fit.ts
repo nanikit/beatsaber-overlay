@@ -1,4 +1,4 @@
-import { MutableRefObject } from "react";
+import { MutableRefObject, useEffect } from "react";
 import useResizeObserver from "use-resize-observer";
 
 export function useTextFit(
@@ -16,6 +16,12 @@ export function useTextFit(
       }
     },
   });
+
+  useEffect(() => {
+    if (ref.current) {
+      fitText(ref.current, { maxHeight, maxWidth: Number.MAX_VALUE, maxSize });
+    }
+  }, [ref.current, maxHeight, maxSize]);
 }
 
 function fitText(

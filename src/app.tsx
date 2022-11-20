@@ -85,7 +85,7 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
   const { width: vw100 } = useWindowSize();
 
   const fittedTextRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.08, maxSize: vw100 * 0.08 });
+  useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.08, maxSize: vw100 * 0.06 });
 
   if (!hash) {
     return (
@@ -126,12 +126,12 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
           <div
             className={`flex-1 flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}
           >
-            <p className="text-[0.14em] [-webkit-text-stroke:0.05em_black] mt-[0.2em]">
+            <p className="text-[0.16em] [-webkit-text-stroke:0.04em_black] mt-[0.2em]">
               {artist} [{mapper}]
             </p>
             <div className="flex items-end gap-[0.05em] mt-[0.03em]">
               {!!beatmap?.id && (
-                <p className="text-[0.14em] leading-[1] [-webkit-text-stroke:0.05em_black]">
+                <p className="text-[0.14em] leading-[1] [-webkit-text-stroke:0.035em_black]">
                   !bsr {beatmap.id}
                 </p>
               )}
