@@ -91,6 +91,9 @@ async function sendActivity(socket: WebSocket) {
 
   socket.send(`{ "_event": "pause", "_type": "event", "pauseTime": 5.11 }`);
   await delay(2000);
+  if (socket.readyState !== socket.OPEN) {
+    return;
+  }
 
   socket.send(
     `{ "_type": "event", "_event": "gameState", "gameStateChanged": "Menu" }`,

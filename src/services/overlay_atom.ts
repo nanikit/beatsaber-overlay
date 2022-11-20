@@ -1,8 +1,10 @@
-import { atom } from "jotai";
+import { atom, Setter } from "jotai";
 import type { Characteristic, Difficulty } from "./beatsaver";
 import { BsPlusMessage } from "./bs_plus_overlay";
 
 export type OverlayState = {
+  readyState?: number;
+
   mapInfo?: {
     hash: string;
     characteristic: Characteristic;
@@ -30,7 +32,7 @@ export type OverlayState = {
       point: Date;
       timeMultiplier: number;
     }
-    & ({resumeTime: number } | {
+    & ({ resumeTime: number } | {
       pauseTime: number;
     });
 };
@@ -40,30 +42,48 @@ export const overlayStateAtom = atom<OverlayState>({});
 export const overlayAtom = atom<OverlayState, string>(
   (get) => get(overlayStateAtom),
   (get, set, value: string) => {
-    if (!value) {
+    if (processGeneralMessage(value, set)) {
       return;
     }
 
-    const previous = get(overlayStateAtom);
     const message = JSON.parse(value) as BsPlusMessage;
-    const current = updateState(previous, message);
-    console.log(previous, message, current);
+    const previous = get(overlayStateAtom);
+    const current = processBsPlusMessage(previous, message);
     set(overlayStateAtom, current);
     return current;
   },
 );
 
-function updateState(
+function processGeneralMessage(value: string, set: Setter): boolean {
+  switch (value) {
+    case "":
+      return true;
+    case "disconnected":
+      set(overlayStateAtom, { readyState: WebSocket.CLOSED });
+      return true;
+  }
+  return false;
+}
+
+function processBsPlusMessage(
   previous: OverlayState,
   message: BsPlusMessage,
 ): OverlayState {
   if (message._type === "handshake") {
-    return { user: { id: message.playerPlatformId, name: message.playerName } };
+    return {
+      ...previous,
+      readyState: WebSocket.OPEN,
+      user: { id: message.playerPlatformId, name: message.playerName },
+      mapInfo: undefined,
+      scoring: undefined,
+      progress: undefined,
+    };
   } else {
     switch (message._event) {
       case "gameState":
         if (message.gameStateChanged === "Menu") {
           return {
+            ...previous,
             mapInfo: undefined,
             scoring: undefined,
             progress: undefined,
@@ -92,9 +112,7 @@ function updateState(
             title: name,
             artist,
             mapper,
-            coverUrl: coverRaw.startsWith("http")
-              ? coverRaw
-              : `data:image/png;base64,${coverRaw}`,
+            coverUrl: coverRaw.startsWith("http") ? coverRaw : `data:image/png;base64,${coverRaw}`,
             duration: duration / 1000,
           },
           progress: {

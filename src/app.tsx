@@ -26,7 +26,10 @@ export function App() {
       onMessage: (message: MessageEvent<string>) => {
         updateOverlay(message.data);
       },
-      onClose: console.log,
+      onClose: (event) => {
+        console.log(event);
+        updateOverlay("disconnected");
+      },
       shouldReconnect: () => false,
     },
     state.connect,
@@ -39,7 +42,7 @@ export function App() {
 
     const retryCount = state.retryCount + 1;
     const delay = Math.min(2 ** retryCount * 1000, 60000);
-    console.log(`retryCount: ${retryCount}, retrying after ${delay}ms`);
+    console.log(`retryCount: ${retryCount}, retry after ${delay / 1000} seconds`);
     setState({ ...state, connect: false, retryCount });
     await timeout(delay);
     setState({ ...state, connect: true, retryCount });
@@ -50,7 +53,7 @@ export function App() {
       className="w-full h-[20vw] text-white p-[1vw] text-[20vw] overflow-hidden"
       onClick={() => updateOverlay("")}
     >
-      {readyState === WebSocket.OPEN ? (
+      {overlayState.readyState === WebSocket.OPEN ? (
         <ConnectedOverlay state={overlayState} />
       ) : (
         <DisconnectionWarning />
@@ -78,7 +81,7 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
   const { width: vw100 } = useWindowSize();
 
   const fittedTextRef = useRef<HTMLElement>(null);
-  useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.1, maxSize: 70 }, [title, subtitle]);
+  useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.085, maxSize: 70 }, [title, subtitle]);
 
   if (!hash) {
     return (
@@ -105,7 +108,7 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
         >
           <span
             ref={fittedTextRef}
-            className={`flex-1 flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
+            className={`flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
               isRight ? "justify-end" : ""
             }`}
           >
@@ -116,7 +119,9 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
               {beatmap?.metadata?.songName ?? title}
             </span>
           </span>
-          <div className={`flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}>
+          <div
+            className={`flex flex-1 flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}
+          >
             <p className="text-[0.14em] [-webkit-text-stroke:0.05em_black] mt-[0.2em]">
               {artist} [{mapper}]
             </p>
@@ -227,7 +232,6 @@ function AutoProgressBar({
     }
     return progress.pauseTime / duration;
   })();
-  console.log(ratio);
   return <ProgressBar ratio={ratio} {...props} />;
 }
 

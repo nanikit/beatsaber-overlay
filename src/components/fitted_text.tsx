@@ -51,7 +51,7 @@ function fitText(
   element: HTMLElement,
   { maxWidth, maxHeight, maxSize }: { maxWidth: number; maxHeight: number; maxSize?: number },
 ) {
-  let fontSize = Math.min(maxWidth, maxHeight, maxSize ?? Number.MAX_VALUE);
+  let fontSize = Math.floor(Math.min(maxWidth, maxHeight, maxSize ?? Number.MAX_VALUE));
   let textHeight;
   let textWidth;
   do {
