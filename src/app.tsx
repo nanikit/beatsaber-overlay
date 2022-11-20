@@ -117,10 +117,10 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
             }`}
           >
             <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
-              {beatmap?.metadata?.songSubName ?? subtitle ?? ""}
+              {subtitle ?? ""}
             </span>
             <span className="[-webkit-text-stroke:0.03em_black] break-keep text-right">
-              {beatmap?.metadata?.songName ?? title}
+              {title ?? ""}
             </span>
           </p>
           <div
@@ -130,9 +130,11 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
               {artist} [{mapper}]
             </p>
             <div className="flex items-end gap-[0.05em] mt-[0.03em]">
-              <p className="text-[0.14em] leading-[1] [-webkit-text-stroke:0.05em_black]">
-                !bsr {beatmap?.id}
-              </p>
+              {!!beatmap?.id && (
+                <p className="text-[0.14em] leading-[1] [-webkit-text-stroke:0.05em_black]">
+                  !bsr {beatmap.id}
+                </p>
+              )}
               {!!difficulty && (
                 <DifficultyLabel difficulty={difficulty} characteristic={characteristic} />
               )}
