@@ -3,7 +3,7 @@ import { DetailedHTMLProps, ImgHTMLAttributes, useEffect, useRef, useState } fro
 import { useQuery } from "react-query";
 import { useAsync, usePreviousDistinct, useRaf, useWindowSize } from "react-use";
 import useWebSocket from "react-use-websocket";
-import { FittedText, useTextFit } from "./components/fitted_text";
+import { useTextFit } from "./components/fitted_text";
 import { BeatsaverMap, Characteristic, Difficulty, getDataUrlFromHash } from "./services/beatsaver";
 import { OverlayState } from "./services/overlay_atom";
 import { testableOverlayAtom } from "./services/testable_overlay_atom";
