@@ -110,22 +110,22 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
             !mapInfo ? " translate-x-[100%]" : ""
           }`}
         >
-          <div className="flex-1 w-full overflow-hidden text-[1px]">
-            <p
-              ref={fittedTextRef}
-              className={`flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
-                isRight ? "justify-end" : ""
-              }`}
-            >
-              <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
-                {beatmap?.metadata?.songSubName ?? subtitle ?? ""}
-              </span>
-              <span className="[-webkit-text-stroke:0.03em_black] break-keep text-right">
-                {beatmap?.metadata?.songName ?? title}
-              </span>
-            </p>
-          </div>
-          <div className={`flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}>
+          <p
+            ref={fittedTextRef}
+            className={`flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
+              isRight ? "justify-end" : ""
+            }`}
+          >
+            <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
+              {beatmap?.metadata?.songSubName ?? subtitle ?? ""}
+            </span>
+            <span className="[-webkit-text-stroke:0.03em_black] break-keep text-right">
+              {beatmap?.metadata?.songName ?? title}
+            </span>
+          </p>
+          <div
+            className={`flex-1 flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}
+          >
             <p className="text-[0.14em] [-webkit-text-stroke:0.05em_black] mt-[0.2em]">
               {artist} [{mapper}]
             </p>
