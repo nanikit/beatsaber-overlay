@@ -1,10 +1,14 @@
 import { useAtom } from "jotai";
-import { DetailedHTMLProps, ImgHTMLAttributes, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useQuery } from "react-query";
-import { useAsync, usePreviousDistinct, useRaf, useWindowSize } from "react-use";
+import { useAsync, usePreviousDistinct, useWindowSize } from "react-use";
 import useWebSocket from "react-use-websocket";
-import { useTextFit } from "./components/fitted_text";
-import { BeatsaverMap, Characteristic, Difficulty, getDataUrlFromHash } from "./services/beatsaver";
+import { AutoProgressBar } from "./components/auto_progress_bar";
+import { DifficultyLabel } from "./components/difficulty_label";
+import { DisconnectionWarning } from "./components/disconnection_warning";
+import { TransparentFallbackImg } from "./components/transparent_fallback_img";
+import { useTextFit } from "./hooks/use_text_fit";
+import { BeatsaverMap, getDataUrlFromHash } from "./services/beatsaver";
 import { OverlayState } from "./services/overlay_atom";
 import { testableOverlayAtom } from "./services/testable_overlay_atom";
 import { timeout } from "./services/utils";
@@ -156,140 +160,4 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
       />
     </div>
   );
-}
-
-function DisconnectionWarning() {
-  const [state, setState] = useState({ isHovering: false });
-  const { isHovering } = state;
-
-  return (
-    <div
-      onMouseEnter={() => {
-        setState({ ...state, isHovering: true });
-      }}
-      onMouseLeave={() => {
-        setState({ ...state, isHovering: false });
-      }}
-      className={
-        `absolute top-[1vw] right-[1vw] rounded-full transition-all overflow-hidden` +
-        ` bg-gradient-to-br from-yellow-300 to-orange-600` +
-        ` ${isHovering ? "w-[1.8em] h-[0.25em]" : "w-[0.1em] h-[0.1em]"}`
-      }
-    >
-      {isHovering && (
-        <div className="text-[0.08em] flex flex-col flex-nowrap items-center">
-          <p>BS+ song overlay is not connected.</p>
-          <p>It'll reconnect within 1 minutes.</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function TransparentFallbackImg({
-  src,
-  ...props
-}: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) {
-  const transparent =
-    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-  const [state, setState] = useState({ hasError: false });
-
-  useEffect(() => {
-    setState({ ...state, hasError: false });
-  }, [src]);
-
-  return (
-    <img
-      onError={() => {
-        setState({ hasError: true });
-      }}
-      src={state.hasError ? transparent : src}
-      {...props}
-    />
-  );
-}
-
-const emptyProgress = { point: new Date(), timeMultiplier: 1, pauseTime: 0 };
-
-function AutoProgressBar({
-  progress: inputProgress,
-  duration,
-  ...props
-}: {
-  progress: OverlayState["progress"];
-  duration: number;
-  className: string;
-}) {
-  const progress = inputProgress ?? emptyProgress;
-  const { point, timeMultiplier } = progress;
-
-  const remainingMs = (() => {
-    if ("resumeTime" in progress) {
-      return ((duration - progress.resumeTime) * 1000) / timeMultiplier;
-    }
-  })();
-  useRaf(remainingMs);
-
-  const ratio = (() => {
-    if ("resumeTime" in progress) {
-      const elapsedSeconds = (new Date().getTime() - point.getTime()) / 1000;
-      return (progress.resumeTime + elapsedSeconds) / duration;
-    }
-    return progress.pauseTime / duration;
-  })();
-  return <ProgressBar ratio={ratio} {...props} />;
-}
-
-function ProgressBar({ ratio, className }: { ratio: number; className?: string }) {
-  return (
-    <div
-      className={`relative border-[0.01em] w-full border-[var(--color-primary)] ${className ?? ""}`}
-    >
-      <div
-        className={`absolute top-0 left-0 h-full bg-[var(--color-primary)]`}
-        style={{
-          width: `${Math.min(ratio, 1) * 100}%`,
-        }}
-      />
-    </div>
-  );
-}
-
-function DifficultyLabel({
-  characteristic,
-  difficulty,
-}: {
-  characteristic?: Characteristic;
-  difficulty: Difficulty;
-}) {
-  const difficultyText = difficulty === "ExpertPlus" ? "Expert+" : difficulty;
-  return (
-    <div
-      className={`px-[0.07em] py-[0.015em] ${getDifficultyBackground(
-        difficulty,
-      )} flex items-center gap-[0.05em] rounded-[1em]`}
-    >
-      {!!characteristic && <img src={getCharacteristicSvg(characteristic)} className="h-[0.1em]" />}
-      <p className="text-[0.1em]">{difficultyText}</p>
-    </div>
-  );
-}
-
-function getCharacteristicSvg(characteristic: Characteristic) {
-  return `/${characteristic.toLowerCase()}.svg`;
-}
-
-function getDifficultyBackground(difficulty: Difficulty) {
-  switch (difficulty) {
-    case "Easy":
-      return "bg-green-700";
-    case "Normal":
-      return "bg-sky-700";
-    case "Hard":
-      return "bg-amber-700";
-    case "Expert":
-      return "bg-red-700";
-    case "ExpertPlus":
-      return "bg-purple-700";
-  }
 }
