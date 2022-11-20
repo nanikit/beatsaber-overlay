@@ -1,35 +1,5 @@
-import { HTMLProps, MutableRefObject, useEffect, useRef } from "react";
+import { MutableRefObject, useEffect } from "react";
 import { useMeasure } from "react-use";
-
-export function FittedText({
-  children,
-  options,
-  ...props
-}: {
-  options: { maxWidth: number; maxHeight: number; maxSize: number };
-} & HTMLProps<HTMLParagraphElement>) {
-  const ref = useRef(null);
-  const [spanRef, { width, height }] = useMeasure();
-  const p = ref.current;
-  const { maxWidth, maxHeight, maxSize } = options;
-
-  useEffect(() => {
-    if (p) {
-      fitText(p, options);
-    }
-  }, [children, p, width, height, maxWidth, maxHeight, maxSize]);
-
-  return (
-    <p ref={ref} {...props}>
-      <span
-        ref={spanRef as unknown as MutableRefObject<HTMLElement>}
-        className="whitespace-pre-line"
-      >
-        {children}
-      </span>
-    </p>
-  );
-}
 
 export function useTextFit(
   {
@@ -39,12 +9,15 @@ export function useTextFit(
   }: { ref: MutableRefObject<HTMLElement | null>; maxHeight: number; maxSize?: number },
   deps?: unknown[],
 ) {
+  const [measureRef, { width, height }] = useMeasure();
+
   useEffect(() => {
     if (!ref.current) {
       return;
     }
+    measureRef(ref.current);
     fitText(ref.current, { maxHeight, maxWidth: Number.MAX_VALUE, maxSize });
-  }, deps);
+  }, [...(deps ?? []), maxHeight, maxSize, width, height]);
 }
 
 function fitText(

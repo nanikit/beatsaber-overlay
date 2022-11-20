@@ -81,7 +81,10 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
   const { width: vw100 } = useWindowSize();
 
   const fittedTextRef = useRef<HTMLElement>(null);
-  useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.085, maxSize: 70 }, [title, subtitle]);
+  useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.08, maxSize: vw100 * 0.08 }, [
+    title,
+    subtitle,
+  ]);
 
   if (!hash) {
     return (
@@ -120,7 +123,9 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
             </span>
           </span>
           <div
-            className={`flex flex-1 flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}
+            className={`flex flex-grow-[1] flex-col flex-wrap justify-end ${
+              isRight ? "items-end" : ""
+            }`}
           >
             <p className="text-[0.14em] [-webkit-text-stroke:0.05em_black] mt-[0.2em]">
               {artist} [{mapper}]
