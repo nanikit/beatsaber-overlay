@@ -8,18 +8,18 @@ const testOverlayStateAtom = atom<OverlayState>({
   mapInfo: {
     characteristic: "Standard",
     difficulty: "ExpertPlus",
-    hash: "5af29356a4f8591d23215f0bacdc6c4d660ef1d0",
-    mapper: "milk",
-    title: "Fansa",
-    artist: "GOSEGU",
-    coverUrl: "https://eu.cdn.beatsaver.com/5af29356a4f8591d23215f0bacdc6c4d660ef1d0.jpg",
+    hash: "207cc54d61a787e26da47ce6c0cc45d9608d87fb",
+    mapper: "rogdude",
+    title: "Heeartbeeat Oveerheeat!!!!",
+    artist: "Rogdude & Loloppe",
+    coverUrl: "https://eu.cdn.beatsaver.com/207cc54d61a787e26da47ce6c0cc45d9608d87fb.jpg",
     duration: 20,
   },
-  scoring: { health: 0.5 },
+  scoring: { health: 0 },
   progress: {
     point: new Date(),
     timeMultiplier: 1,
-    resumeTime: 10,
+    pauseTime: 4,
   },
 });
 

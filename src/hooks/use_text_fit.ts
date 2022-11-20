@@ -1,5 +1,5 @@
-import { MutableRefObject, useEffect } from "react";
-import { useMeasure } from "react-use";
+import { MutableRefObject } from "react";
+import useResizeObserver from "use-resize-observer";
 
 export function useTextFit(
   {
@@ -7,17 +7,15 @@ export function useTextFit(
     maxHeight,
     maxSize,
   }: { ref: MutableRefObject<HTMLElement | null>; maxHeight: number; maxSize?: number },
-  deps?: unknown[],
 ) {
-  const [measureRef, { width, height }] = useMeasure();
-
-  useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
-    measureRef(ref.current);
-    fitText(ref.current, { maxHeight, maxWidth: Number.MAX_VALUE, maxSize });
-  }, [...(deps ?? []), maxHeight, maxSize, width, height]);
+  useResizeObserver({
+    ref,
+    onResize: () => {
+      if (ref.current) {
+        fitText(ref.current, { maxHeight, maxWidth: Number.MAX_VALUE, maxSize });
+      }
+    },
+  });
 }
 
 function fitText(
@@ -30,8 +28,8 @@ function fitText(
   do {
     element.style.fontSize = `${fontSize}px`;
     element.style.lineHeight = `${fontSize * 1.1}px`;
-    textHeight = element.offsetHeight;
-    textWidth = element.offsetWidth;
+    textHeight = element.scrollHeight;
+    textWidth = element.scrollWidth;
     fontSize = fontSize - 1;
   } while ((textHeight > maxHeight || textWidth > maxWidth) && fontSize > 3);
 }
