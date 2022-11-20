@@ -23,10 +23,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <App />
       </QueryClientProvider>
     </ErrorBoundary>
-    <script
-      defer
-      src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon='{"token": "7e86ff99f3984c44ae0f613d597c210b"}'
-    ></script>
   </React.StrictMode>,
 );
