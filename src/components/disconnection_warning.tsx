@@ -19,9 +19,10 @@ export function DisconnectionWarning() {
       }
     >
       {isHovering && (
-        <div className="text-[0.08em] flex flex-col flex-nowrap items-center">
+        // relative is for mouse hover boundary stuttering.
+        <div className="relative text-[0.08em] flex flex-col flex-nowrap items-center">
           <p>BS+ song overlay is not connected.</p>
-          <p>It'll reconnect within 1 minutes.</p>
+          <p>It'll reconnect within a minute.</p>
         </div>
       )}
     </div>
