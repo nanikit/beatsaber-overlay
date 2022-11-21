@@ -68,7 +68,9 @@ async function sendActivity(socket: WebSocket) {
       _type: "event",
       _event: "mapInfo",
       mapInfoChanged: {
-        level_id: `custom_level_${hash.toUpperCase()}`,
+        level_id: `custom_level_${hash.toUpperCase()}${
+          Math.random() >= 0.5 ? "_245de (NanaCat - Glorious Crown)" : ""
+        }`,
         name: map.metadata.songName,
         sub_name: map.metadata.songSubName,
         artist: map.metadata.songAuthorName,

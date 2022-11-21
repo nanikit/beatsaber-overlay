@@ -97,8 +97,8 @@ export const testableOverlayAtom = atom<OverlayState, string>(
         scoring: { health: 0 },
         progress: {
           point: new Date(),
-          timeMultiplier: 1,
-          pauseTime: 4,
+          timeMultiplier: 2,
+          resumeTime: 4,
         },
       },
       {

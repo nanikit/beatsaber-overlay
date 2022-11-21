@@ -25,7 +25,7 @@ export function AutoProgressBar({
   const ratio = (() => {
     if ("resumeTime" in progress) {
       const elapsedSeconds = (new Date().getTime() - point.getTime()) / 1000;
-      return (progress.resumeTime + elapsedSeconds) / duration;
+      return (progress.resumeTime + elapsedSeconds * timeMultiplier) / duration;
     }
     return progress.pauseTime / duration;
   })();
