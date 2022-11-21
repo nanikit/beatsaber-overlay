@@ -120,11 +120,12 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
                 {artist} [{mapper}]
               </p>
               <div className="flex items-end gap-[0.05em] mt-[0.03em]">
-                {!!beatmap?.id && (
-                  <p className="text-[0.14em] leading-[1] [-webkit-text-stroke:0.035em_black]">
-                    !bsr {beatmap.id}
-                  </p>
-                )}
+                <p
+                  className={`text-[0.14em] leading-[1] [-webkit-text-stroke:0.035em_black] transition
+                  ${beatmap?.id ? "" : " opacity-0"}`}
+                >
+                  !bsr {beatmap?.id ?? ""}
+                </p>
                 {!!difficulty && (
                   <DifficultyLabel difficulty={difficulty} characteristic={characteristic} />
                 )}

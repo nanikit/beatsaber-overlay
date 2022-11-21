@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { overlayAtom, OverlayState, overlayStateAtom } from "./overlay_atom";
+import { overlayAtom, OverlayState } from "./overlay_atom";
 
 const indexAtom = atom(0);
 
