@@ -80,7 +80,7 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
     enabled: !!hash,
     staleTime: Infinity,
   });
-  const beatmap = mapQuery.data;
+  const { id, ranked } = mapQuery.data ?? {};
 
   const { width: vw100 } = useWindowSize();
 
@@ -121,10 +121,12 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
               </p>
               <div className="flex items-end gap-[0.05em] mt-[0.03em]">
                 <p
-                  className={`text-[0.14em] leading-[1] [-webkit-text-stroke:0.035em_black] transition
-                  ${beatmap?.id ? "" : " opacity-0"}`}
+                  className={
+                    `text-[0.14em] leading-[1] [-webkit-text-stroke:0.035em_black] transition` +
+                    `${id ? "" : " opacity-0"}`
+                  }
                 >
-                  !bsr {beatmap?.id ?? ""}
+                  !bsr {id ?? ""}
                 </p>
                 {!!difficulty && (
                   <DifficultyLabel difficulty={difficulty} characteristic={characteristic} />
@@ -142,10 +144,19 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
             />
           </div>
         </div>
-        <TransparentFallbackImg
-          src={coverUrl}
-          className="z-10 aspect-square object-cover h-full rounded-[0.1em]"
-        />
+        <div className="relative aspect-square h-full rounded-[0.1em] overflow-hidden">
+          <TransparentFallbackImg src={coverUrl} className="w-full h-full object-cover" />
+          {!!ranked && (
+            <div
+              className={
+                `absolute w-[1em] p-[0.03em] bg-purple-600 -rotate-45 top-[0.1em] left-[-0.3em]` +
+                ` transition `
+              }
+            >
+              <p className="text-[0.08em] text-center uppercase tracking-[0.15em]">Ranked</p>
+            </div>
+          )}
+        </div>
       </div>
       <div
         className={
