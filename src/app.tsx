@@ -85,7 +85,7 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
   const { width: vw100 } = useWindowSize();
 
   const fittedTextRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.08, maxSize: vw100 * 0.06 });
+  useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.078, maxSize: vw100 * 0.06 });
 
   if (!hash) {
     return (
