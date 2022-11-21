@@ -107,7 +107,7 @@ function processBsPlusMessage(
         return {
           ...previous,
           mapInfo: {
-            hash: id.replace("custom_level_", ""),
+            hash: id.startsWith("custom_level_") ? id.split("_")[2] : "",
             characteristic,
             difficulty,
             title: name,
