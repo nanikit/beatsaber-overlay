@@ -128,7 +128,7 @@ function processBsPlusMessage(
         return {
           ...previous,
           mapInfo: {
-            hash: id.startsWith("custom_level_") ? id.split("_")[2] : "",
+            hash: id.startsWith("custom_level_") ? id.split("_")[2]?.toLowerCase() : "",
             characteristic,
             difficulty,
             title: name,

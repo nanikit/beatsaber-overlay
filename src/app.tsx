@@ -1,7 +1,8 @@
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
+import { BsSpeedometer2 } from "react-icons/bs";
 import { useQuery } from "react-query";
-import { usePreviousDistinct, useWindowSize } from "react-use";
+import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
 import { AutoProgressBar } from "./components/auto_progress_bar";
 import { DifficultyLabel } from "./components/difficulty_label";
 import { DisconnectionWarning } from "./components/disconnection_warning";
@@ -37,6 +38,7 @@ export function App() {
 
 function ConnectedOverlay({ state }: { state: OverlayState }) {
   const isRight = true;
+  const showNjs = useSearchParam("njs");
 
   const { mapInfo, scoring, progress } = state;
   const previousMap = usePreviousDistinct(mapInfo);
@@ -49,7 +51,12 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
     enabled: !!hash,
     staleTime: Infinity,
   });
-  const { id, ranked } = mapQuery.data ?? {};
+  const { id, ranked, versions } = mapQuery.data ?? {};
+  const diff = versions
+    ?.find((version) => version.hash === hash)
+    ?.diffs?.find(
+      (diff) => diff.characteristic === characteristic && diff.difficulty === difficulty,
+    );
 
   const { width: vw100 } = useWindowSize();
 
@@ -88,7 +95,13 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
               <p className="text-[0.16em] [-webkit-text-stroke:0.04em_black] mt-[0.2em]">
                 {artist} [{mapper}]
               </p>
-              <div className="flex items-end gap-[0.05em] mt-[0.03em]">
+              <div className="flex items-end gap-[0.1em] mt-[0.03em]">
+                {showNjs != null && !!diff?.njs && (
+                  <p className="text-[0.15em] leading-[1] flex mx-[0.3em] [-webkit-text-stroke:0.03em_black]">
+                    <BsSpeedometer2 className="mr-[0.2em] stroke-[black] [stroke-width:0.015em]" />
+                    {diff.njs}
+                  </p>
+                )}
                 <p
                   className={
                     `text-[0.14em] leading-[1] [-webkit-text-stroke:0.035em_black] transition` +
