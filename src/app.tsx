@@ -1,64 +1,33 @@
 import { useAtom } from "jotai";
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "react-query";
-import { useAsync, usePreviousDistinct, useWindowSize } from "react-use";
-import useWebSocket from "react-use-websocket";
+import { usePreviousDistinct, useWindowSize } from "react-use";
 import { AutoProgressBar } from "./components/auto_progress_bar";
 import { DifficultyLabel } from "./components/difficulty_label";
 import { DisconnectionWarning } from "./components/disconnection_warning";
 import { TransparentFallbackImg } from "./components/transparent_fallback_img";
 import { useTextFit } from "./hooks/use_text_fit";
 import { BeatsaverMap, getDataUrlFromHash } from "./services/beatsaver";
-import { OverlayState } from "./services/overlay_atom";
-import { testableOverlayAtom } from "./services/testable_overlay_atom";
-import { timeout } from "./services/utils";
+import { OverlayState } from "./services/overlay_state";
+import { testableOverlayAtom } from "./services/test_overlay";
 
 export function App() {
-  const [overlayState, updateOverlay] = useAtom(testableOverlayAtom);
-  const [state, setState] = useState({
-    connect: true,
-    retryCount: 0,
-  });
+  const [overlay, updateOverlay] = useAtom(testableOverlayAtom);
 
-  const { readyState } = useWebSocket(
-    "ws://localhost:2947/socket",
-    {
-      onOpen: (event) => {
-        console.log(event);
-        setState({ ...state, connect: true, retryCount: 0 });
-      },
-      onMessage: (message: MessageEvent<string>) => {
-        updateOverlay(message.data);
-      },
-      onClose: (event) => {
-        console.log(event);
-        updateOverlay("disconnected");
-      },
-      shouldReconnect: () => false,
-    },
-    state.connect,
-  );
-
-  useAsync(async () => {
-    if (readyState !== WebSocket.CLOSED) {
-      return;
-    }
-
-    const retryCount = state.retryCount + 1;
-    const delay = Math.min(2 ** retryCount * 1000, 60000);
-    console.log(`retryCount: ${retryCount}, retry after ${delay / 1000} seconds`);
-    setState({ ...state, connect: false, retryCount });
-    await timeout(delay);
-    setState({ ...state, connect: true, retryCount });
-  }, [readyState]);
+  useEffect(() => {
+    updateOverlay("initialize");
+    return () => {
+      updateOverlay("cleanUp");
+    };
+  }, []);
 
   return (
     <main
       className="w-full h-[20vw] text-white p-[1vw] text-[20vw] overflow-hidden"
-      onClick={() => updateOverlay("")}
+      onClick={() => updateOverlay("click")}
     >
-      {overlayState.readyState === WebSocket.OPEN ? (
-        <ConnectedOverlay state={overlayState} />
+      {overlay.readyState === WebSocket.OPEN ? (
+        <ConnectedOverlay state={overlay} />
       ) : (
         <DisconnectionWarning />
       )}

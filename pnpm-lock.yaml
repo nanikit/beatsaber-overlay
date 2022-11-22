@@ -14,7 +14,6 @@ specifiers:
   react-icons: ^4.6.0
   react-query: ^3.39.2
   react-use: ^17.4.0
-  react-use-websocket: ^4.2.0
   tailwindcss: ^3.2.1
   typescript: ^4.8.4
   use-resize-observer: ^9.0.2
@@ -29,7 +28,6 @@ dependencies:
   react-icons: 4.6.0_react@18.2.0
   react-query: 3.39.2_biqbaboplfbrettd7655fr4n2y
   react-use: 17.4.0_biqbaboplfbrettd7655fr4n2y
-  react-use-websocket: 4.2.0_biqbaboplfbrettd7655fr4n2y
   use-resize-observer: 9.0.2_biqbaboplfbrettd7655fr4n2y
 
 devDependencies:
@@ -1440,16 +1438,6 @@ packages:
     dependencies:
       react: 18.2.0
       tslib: 2.4.1
-    dev: false
-
-  /react-use-websocket/4.2.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-ZovaTlc/tWX6a590fi3kMWImhyoWj46BWJWvO5oucZJzRnVVhYtes2D9g+5MKXjSdR7Es3456hB89v4/1pcBKg==}
-    peerDependencies:
-      react: '>= 18.0.0'
-      react-dom: '>= 18.0.0'
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react-use/17.4.0_biqbaboplfbrettd7655fr4n2y:

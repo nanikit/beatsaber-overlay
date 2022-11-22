@@ -1,5 +1,6 @@
 import { atom } from "jotai";
-import { overlayAtom, OverlayState } from "./overlay_atom";
+import { Interaction, overlayAtom } from "./overlay";
+import { OverlayState } from "./overlay_state";
 
 const indexAtom = atom(0);
 
@@ -26,7 +27,7 @@ const testOverlayStateAtom = atom<OverlayState>({
 
 const isTest = new URLSearchParams(window.location.search).get("uiTest");
 
-export const testableOverlayAtom = atom<OverlayState, string>(
+export const testableOverlayAtom = atom<OverlayState, Interaction>(
   (get) => {
     if (isTest == null) {
       return get(overlayAtom);
@@ -38,7 +39,7 @@ export const testableOverlayAtom = atom<OverlayState, string>(
       set(overlayAtom, value);
       return;
     }
-    if (value === "disconnected") {
+    if (value !== "click") {
       return;
     }
 

@@ -1,5 +1,5 @@
 import { useRaf } from "react-use";
-import { OverlayState } from "../services/overlay_atom";
+import { OverlayState } from "../services/overlay_state";
 
 const emptyProgress = { point: new Date(), timeMultiplier: 1, pauseTime: 0 };
 
