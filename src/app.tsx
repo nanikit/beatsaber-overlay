@@ -97,7 +97,11 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
               </p>
               <div className="flex items-end gap-[0.1em] mt-[0.03em]">
                 {showNjs != null && !!diff?.njs && (
-                  <p className="text-[0.15em] leading-[1] flex mx-[0.3em] [-webkit-text-stroke:0.03em_black]">
+                  <p
+                    className={`text-[0.15em] leading-[1] flex mx-[0.3em] [-webkit-text-stroke:0.03em_black]${
+                      id ? "" : " opacity-0"
+                    }`}
+                  >
                     <BsSpeedometer2 className="mr-[0.2em] stroke-[black] [stroke-width:0.015em]" />
                     {diff.njs}
                   </p>
