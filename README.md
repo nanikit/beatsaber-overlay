@@ -11,3 +11,4 @@ For use: https://nanikit-bs.pages.dev/
 You can make variance by query parameters. (e.g: https://nanikit-bs.pages.dev/?njs)
 
 - `njs`: show note jump speed
+- `bpm`: show beats per minute

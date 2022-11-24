@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
 import { BsSpeedometer2 } from "react-icons/bs";
+import { TbActivityHeartbeat } from "react-icons/tb";
 import { useQuery } from "react-query";
 import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
 import { AutoProgressBar } from "./components/auto_progress_bar";
@@ -39,6 +40,7 @@ export function App() {
 function ConnectedOverlay({ state }: { state: OverlayState }) {
   const isRight = true;
   const showNjs = useSearchParam("njs");
+  const showBpm = useSearchParam("bpm");
 
   const { mapInfo, scoring, progress } = state;
   const previousMap = usePreviousDistinct(mapInfo);
@@ -51,7 +53,7 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
     enabled: !!hash,
     staleTime: Infinity,
   });
-  const { id, ranked, versions } = mapQuery.data ?? {};
+  const { id, ranked, metadata, versions } = mapQuery.data ?? {};
   const diff = versions
     ?.find((version) => version.hash === hash)
     ?.diffs?.find(
@@ -97,7 +99,18 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
               </p>
               <div className="flex items-end gap-[0.1em] mt-[0.03em]">
                 <p
-                  className={`text-[0.15em] leading-[1] flex mx-[0.3em] [-webkit-text-stroke:0.03em_black] transition${
+                  className={`text-[0.15em] leading-[1] flex mx-[0.3em] [-webkit-text-stroke:0.03em_black] transition-opacity${
+                    showBpm != null && !!metadata?.bpm ? "" : " opacity-0 w-0"
+                  }`}
+                >
+                  <span className="relative mr-[0.2em] w-[1em]">
+                    <TbActivityHeartbeat className="absolute [stroke-width:0.15em] text-black" />
+                    <TbActivityHeartbeat className="absolute" />
+                  </span>
+                  {metadata?.bpm ?? ""}
+                </p>
+                <p
+                  className={`text-[0.15em] leading-[1] flex mx-[0.3em] [-webkit-text-stroke:0.03em_black] transition-opacity${
                     showNjs != null && !!diff?.njs ? "" : " opacity-0 w-0"
                   }`}
                 >
