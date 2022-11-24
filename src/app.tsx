@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
 import { BsSpeedometer2 } from "react-icons/bs";
-import { TbActivityHeartbeat } from "react-icons/tb";
+import { FaDrum } from "react-icons/fa";
 import { useQuery } from "react-query";
 import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
 import { AutoProgressBar } from "./components/auto_progress_bar";
@@ -99,22 +99,21 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
               </p>
               <div className="flex items-end gap-[0.1em] mt-[0.03em]">
                 <p
-                  className={`text-[0.15em] leading-[1] flex mx-[0.3em] [-webkit-text-stroke:0.03em_black] transition-opacity${
+                  className={`text-[0.15em] leading-[1] flex [-webkit-text-stroke:0.03em_black] transition-opacity${
                     showBpm != null && !!metadata?.bpm ? "" : " opacity-0 w-0"
                   }`}
                 >
                   <span className="relative mr-[0.2em] w-[1em]">
-                    <TbActivityHeartbeat className="absolute [stroke-width:0.15em] text-black" />
-                    <TbActivityHeartbeat className="absolute" />
+                    <FaDrum className="absolute [stroke-width:2%] stroke-[black]" />
                   </span>
                   {metadata?.bpm ?? ""}
                 </p>
                 <p
-                  className={`text-[0.15em] leading-[1] flex mx-[0.3em] [-webkit-text-stroke:0.03em_black] transition-opacity${
+                  className={`text-[0.15em] leading-[1] flex [-webkit-text-stroke:0.03em_black] transition-opacity${
                     showNjs != null && !!diff?.njs ? "" : " opacity-0 w-0"
                   }`}
                 >
-                  <BsSpeedometer2 className="mr-[0.2em] stroke-[black] [stroke-width:0.015em]" />
+                  <BsSpeedometer2 className="mr-[0.2em] stroke-[black] [stroke-width:2%]" />
                   {diff?.njs ?? ""}
                 </p>
                 <p
