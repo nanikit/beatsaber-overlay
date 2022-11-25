@@ -62,8 +62,11 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
 
   const { width: vw100 } = useWindowSize();
 
-  const fittedTextRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: fittedTextRef, maxHeight: vw100 * 0.078, maxSize: vw100 * 0.06 });
+  const titleRef = useRef<HTMLParagraphElement>(null);
+  useTextFit({ ref: titleRef, maxHeight: vw100 * 0.09, maxSize: vw100 * 0.06 });
+
+  const authorRef = useRef<HTMLParagraphElement>(null);
+  useTextFit({ ref: authorRef, maxHeight: vw100 * 0.05, maxSize: vw100 * 0.032 });
 
   return (
     <>
@@ -79,7 +82,7 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
             }`}
           >
             <p
-              ref={fittedTextRef}
+              ref={titleRef}
               className={`flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
                 isRight ? "justify-end" : ""
               }`}
@@ -94,7 +97,10 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
             <div
               className={`flex-1 flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}
             >
-              <p className="text-[0.16em] [-webkit-text-stroke:0.04em_black] mt-[0.2em]">
+              <p
+                ref={authorRef}
+                className="text-[0.16em] [-webkit-text-stroke:0.04em_black] text-right"
+              >
                 {artist} [{mapper}]
               </p>
               <div className="flex items-end gap-[0.1em] mt-[0.03em]">
