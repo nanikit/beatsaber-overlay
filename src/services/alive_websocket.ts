@@ -13,51 +13,62 @@ export function getAliveWebSocket(
 ) {
   const aborter = new AbortController();
 
-  let retryCount = 0;
-  let socket = getBsPlusWebSocket();
-  monitorReconnect(socket);
-
-  aborter.signal.addEventListener("abort", () => {
-    socket.close();
-  });
-
   function getBsPlusWebSocket() {
-    const socket = new WebSocket(url);
-    socket.addEventListener("open", (event) => {
+    const sock = new WebSocket(url);
+    sock.addEventListener("open", (event) => {
       console.log(event);
-      retryCount = 0;
       onOpen();
     });
-    socket.addEventListener("message", (event) => {
+    sock.addEventListener("message", (event) => {
       onMessage(event.data);
     });
-    socket.addEventListener("close", (event) => {
+    sock.addEventListener("close", (event) => {
       console.log(event);
       onClose();
     });
 
-    return socket;
+    return sock;
   }
 
-  async function monitorReconnect(current: WebSocket) {
-    const delay = Math.min(2 ** retryCount * 1000, 60000);
-    const isOpened = await Promise.race<true | undefined>([
-      new Promise<true>((resolve) => {
-        socket.addEventListener("open", () => resolve(true));
-      }),
-      timeout(delay),
-    ]);
-    if (isOpened || aborter.signal.aborted) {
-      retryCount = 0;
-      return;
+  async function monitorReconnect() {
+    let retryCount = 0;
+    let socket = getBsPlusWebSocket();
+
+    aborter.signal.addEventListener("abort", () => {
+      socket.close();
+    });
+
+    while (true) {
+      const delay = Math.min(2 ** retryCount * 1000, 60000);
+      console.log(`retryCount: ${retryCount}, next retry will be in ${delay / 1000} seconds.`);
+      const isOpened = await Promise.race<true | undefined>([
+        new Promise<true>((resolve) => {
+          socket.addEventListener("open", () => resolve(true), { once: true });
+        }),
+        timeout(delay),
+      ]);
+
+      if (aborter.signal.aborted) {
+        return;
+      }
+      if (isOpened) {
+        retryCount = 0;
+        await new Promise<true>((resolve) => {
+          socket.addEventListener("close", () => resolve(true), { once: true });
+        });
+        if (aborter.signal.aborted) {
+          return;
+        }
+      } else {
+        retryCount++;
+        socket.close();
+      }
+
+      socket = getBsPlusWebSocket();
     }
-
-    current.close();
-    socket = getBsPlusWebSocket();
-    retryCount = retryCount + 1;
-    console.log(`retryCount: ${retryCount}, retry after ${delay / 1000} seconds`);
-    monitorReconnect(socket);
   }
+
+  monitorReconnect();
 
   return aborter;
 }
