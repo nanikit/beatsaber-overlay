@@ -37,7 +37,7 @@ const states: OverlayState[] = [
       coverUrl: "https://eu.cdn.beatsaver.com/e03e2fcf6396ede878fbf812e38857a59bdd615e.jpg",
       duration: 171,
     },
-    scoring: { health: 0.0 },
+    scoring: { health: 1.0 },
     progress: {
       point: new Date(),
       timeMultiplier: 1,
@@ -56,7 +56,7 @@ const states: OverlayState[] = [
       coverUrl: "https://eu.cdn.beatsaver.com/5af29356a4f8591d23215f0bacdc6c4d660ef1d0.jpg",
       duration: 248,
     },
-    scoring: { health: 0.5 },
+    scoring: { health: 0.0 },
     progress: {
       point: new Date(),
       timeMultiplier: 2,
@@ -79,7 +79,7 @@ const states: OverlayState[] = [
     scoring: { health: 0.5 },
     progress: {
       point: new Date(),
-      timeMultiplier: 2,
+      timeMultiplier: 0,
       resumeTime: 10,
     },
   },
@@ -88,6 +88,8 @@ const states: OverlayState[] = [
   },
 ];
 
+const stateAtom = atom(states[0]);
+
 const isTest = new URLSearchParams(window.location.search).get("uiTest");
 
 export const testableOverlayAtom = atom<OverlayState, Interaction>(
@@ -95,7 +97,7 @@ export const testableOverlayAtom = atom<OverlayState, Interaction>(
     if (isTest == null) {
       return get(overlayAtom);
     }
-    return states[get(indexAtom)];
+    return get(stateAtom);
   },
   (get, set, value) => {
     if (isTest == null) {
@@ -110,6 +112,10 @@ export const testableOverlayAtom = atom<OverlayState, Interaction>(
     const newIndex = (index + 1) % states.length;
     set(indexAtom, newIndex);
 
-    return states[newIndex];
+    const newState = structuredClone(states[newIndex]);
+    if (newState.progress) {
+      newState.progress.point = new Date();
+    }
+    set(stateAtom, newState);
   },
 );
