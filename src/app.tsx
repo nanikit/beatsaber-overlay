@@ -120,13 +120,13 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
                 >
                   {showBpm != null && !!metadata?.bpm && (
                     <p className="flex [-webkit-text-stroke:0.03em_black]">
-                      <FaDrum className="mr-[0.2em] [stroke-width:2%] stroke-[black]" />
+                      <FaDrum className="mr-[0.2em] [stroke-width:2.5%] stroke-[black]" />
                       {metadata?.bpm ?? ""}
                     </p>
                   )}
                   {showNjs != null && !!diff?.njs && (
                     <p className={`flex [-webkit-text-stroke:0.03em_black]`}>
-                      <IoIosSpeedometer className="mr-[0.2em] stroke-[black] [stroke-width:2%]" />
+                      <IoIosSpeedometer className="mr-[0.2em] stroke-[black] [stroke-width:2.5%]" />
                       {diff?.njs ?? ""}
                     </p>
                   )}

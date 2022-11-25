@@ -47,7 +47,7 @@ function TimeProgress({
   return (
     <p className={className}>
       <span className="relative mr-[0.4em] w-[1em]">
-        <FaClock className="mr-[0.2em] [stroke-width:2%] stroke-[black]" />
+        <FaClock className="mr-[0.2em] [stroke-width:2.5%] stroke-[black]" />
       </span>
       <span className={`flex flex-shrink text-[var(--color-primary)]`}>
         {[...done].map((x, i) => (
