@@ -50,7 +50,8 @@ const states: OverlayState[] = [
     mapInfo: {
       characteristic: "Standard",
       difficulty: "ExpertPlus",
-      hash: "5af29356a4f8591d23215f0bacdc6c4d660ef1d0",
+      // wrong hash
+      hash: "5af29356a4f8591d23215f0bacdc6c4d660ef1d0_>_<",
       mapper: "milk",
       title: "Fansa",
       artist: "GOSEGU",

@@ -1,9 +1,9 @@
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
-import { IoIosSpeedometer, IoMdSpeedometer } from "react-icons/io";
 import { FaDrum } from "react-icons/fa";
+import { IoIosSpeedometer } from "react-icons/io";
 import { useQuery } from "react-query";
-import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
+import { usePreviousDistinct, useSearchParam, useTimeout, useWindowSize } from "react-use";
 import { AutoTimeProgress } from "./components/auto_time_progress";
 import { DifficultyLabel } from "./components/difficulty_label";
 import { DisconnectionWarning } from "./components/disconnection_warning";
@@ -67,18 +67,30 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
 
   const authorRef = useRef<HTMLParagraphElement>(null);
   useTextFit({ ref: authorRef, maxHeight: vw100 * 0.05, maxSize: vw100 * 0.032 });
+  const [isElapsed, clear, reset] = useTimeout(1000);
+
+  const display = mapInfo && (mapQuery.isFetched || isElapsed());
+  useEffect(() => {
+    if (mapInfo) {
+      if (!previousMap) {
+        reset();
+      }
+    } else {
+      clear();
+    }
+  }, [mapInfo, previousMap]);
 
   return (
     <>
       <div
         className={`w-full h-full transition duration-1000 flex leading-[1.2]${
           isRight ? " flex-row" : " flex-row-reverse"
-        }${!mapInfo ? " opacity-0" : ""}`}
+        }${display ? "" : " opacity-0"}`}
       >
         <div className={`z-0 flex-1 overflow-hidden pr-[0.05em]`}>
           <div
             className={`h-full transition duration-500 flex flex-col${isRight ? " items-end" : ""}${
-              !mapInfo ? " translate-x-[100%]" : ""
+              display ? "" : " translate-x-[100%]"
             }`}
           >
             <p
@@ -103,19 +115,19 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
               >
                 {artist} [{mapper}]
               </p>
-              <div className="flex items-end gap-[0.1em] mt-[0.03em]">
+              <div className="flex items-end mt-[0.03em]">
                 <AutoTimeProgress
                   duration={duration ?? 1}
                   progress={progress ?? lastProgress}
-                  className={`text-[0.14em] leading-[1] flex [-webkit-text-stroke:0.03em_black] ${
+                  className={`text-[0.14em] leading-[1] flex [-webkit-text-stroke:0.03em_black] mr-[0.72em] ${
                     (scoring?.health ?? lastScoring?.health ?? 0) > 0
                       ? "[--color-primary:white]"
                       : "[--color-primary:#aaa]"
                   }`}
                 />
                 <div
-                  className={`text-[0.14em] leading-[1] flex gap-[0.71em] transition-opacity${
-                    id ? "" : " opacity-0"
+                  className={`text-[0.14em] leading-[1] flex gap-[0.71em] transition-opacity ${
+                    id ? "mr-[0.72em]" : "opacity-0"
                   }`}
                 >
                   {showBpm != null && !!metadata?.bpm && (

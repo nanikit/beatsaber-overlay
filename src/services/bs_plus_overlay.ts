@@ -62,7 +62,7 @@ type MapInfoEvent = {
     mapper: string;
     characteristic: "Standard";
     difficulty: Difficulty;
-    /** seconds */
+    /** milliseconds */
     duration: number;
     BPM: number;
     PP: number;

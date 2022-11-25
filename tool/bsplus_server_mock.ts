@@ -77,7 +77,9 @@ async function sendActivity(socket: WebSocket) {
         mapper: map.metadata.levelAuthorName,
         characteristic: diff.characteristic,
         difficulty: diff.difficulty,
-        duration: map.metadata.duration,
+        duration: map.metadata.duration * 1000,
+        time: 0.1,
+        timeMultiplier: 1,
         BPM: map.metadata.bpm,
         PP: 0,
         BSRKey: map.id,
@@ -91,7 +93,7 @@ async function sendActivity(socket: WebSocket) {
     return;
   }
 
-  socket.send(`{ "_event": "pause", "_type": "event", "pauseTime": 5.11 }`);
+  socket.send(`{ "_event": "pause", "_type": "event", "pauseTime": 2.11 }`);
   await delay(2000);
   if (socket.readyState !== socket.OPEN) {
     return;
