@@ -54,11 +54,11 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
     staleTime: Infinity,
   });
   const { id, ranked, metadata, versions } = mapQuery.data ?? {};
-  const diff = versions
-    ?.find((version) => version.hash === hash)
-    ?.diffs?.find(
-      (diff) => diff.characteristic === characteristic && diff.difficulty === difficulty,
-    );
+  const version =
+    versions?.find((version) => version.hash === hash) ?? versions?.[versions.length - 1];
+  const diff = version?.diffs?.find(
+    (diff) => diff.characteristic === characteristic && diff.difficulty === difficulty,
+  );
 
   const { width: vw100 } = useWindowSize();
 
