@@ -1,10 +1,10 @@
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
-import { BsSpeedometer2 } from "react-icons/bs";
+import { IoIosSpeedometer, IoMdSpeedometer } from "react-icons/io";
 import { FaDrum } from "react-icons/fa";
 import { useQuery } from "react-query";
 import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
-import { AutoProgressBar } from "./components/auto_progress_bar";
+import { AutoTimeProgress } from "./components/auto_time_progress";
 import { DifficultyLabel } from "./components/difficulty_label";
 import { DisconnectionWarning } from "./components/disconnection_warning";
 import { TransparentFallbackImg } from "./components/transparent_fallback_img";
@@ -98,46 +98,39 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
                 {artist} [{mapper}]
               </p>
               <div className="flex items-end gap-[0.1em] mt-[0.03em]">
-                <p
-                  className={`text-[0.15em] leading-[1] flex [-webkit-text-stroke:0.03em_black] transition-opacity${
-                    showBpm != null && !!metadata?.bpm ? "" : " opacity-0 w-0"
+                <AutoTimeProgress
+                  duration={duration ?? 1}
+                  progress={progress ?? lastProgress}
+                  className={`text-[0.14em] leading-[1] flex [-webkit-text-stroke:0.03em_black] ${
+                    (scoring?.health ?? lastScoring?.health ?? 0) > 0
+                      ? "[--color-primary:white]"
+                      : "[--color-primary:#aaa]"
+                  }`}
+                />
+                <div
+                  className={`text-[0.14em] leading-[1] flex gap-[0.71em] transition-opacity${
+                    id ? "" : " opacity-0"
                   }`}
                 >
-                  <span className="relative mr-[0.2em] w-[1em]">
-                    <FaDrum className="absolute [stroke-width:2%] stroke-[black]" />
-                  </span>
-                  {metadata?.bpm ?? ""}
-                </p>
-                <p
-                  className={`text-[0.15em] leading-[1] flex [-webkit-text-stroke:0.03em_black] transition-opacity${
-                    showNjs != null && !!diff?.njs ? "" : " opacity-0 w-0"
-                  }`}
-                >
-                  <BsSpeedometer2 className="mr-[0.2em] stroke-[black] [stroke-width:2%]" />
-                  {diff?.njs ?? ""}
-                </p>
-                <p
-                  className={
-                    `text-[0.14em] leading-[1] [-webkit-text-stroke:0.035em_black] transition` +
-                    `${id ? "" : " opacity-0"}`
-                  }
-                >
-                  {id ? `!bsr ${id}` : ""}
-                </p>
+                  {showBpm != null && !!metadata?.bpm && (
+                    <p className="flex [-webkit-text-stroke:0.03em_black]">
+                      <FaDrum className="mr-[0.2em] [stroke-width:2%] stroke-[black]" />
+                      {metadata?.bpm ?? ""}
+                    </p>
+                  )}
+                  {showNjs != null && !!diff?.njs && (
+                    <p className={`flex [-webkit-text-stroke:0.03em_black]`}>
+                      <IoIosSpeedometer className="mr-[0.2em] stroke-[black] [stroke-width:2%]" />
+                      {diff?.njs ?? ""}
+                    </p>
+                  )}
+                  {!!id && <p className="[-webkit-text-stroke:0.035em_black]">!bsr {id}</p>}
+                </div>
                 {!!difficulty && (
                   <DifficultyLabel difficulty={difficulty} characteristic={characteristic} />
                 )}
               </div>
             </div>
-            <AutoProgressBar
-              duration={duration ?? 1}
-              progress={progress ?? lastProgress}
-              className={`shrink-0 h-[0.07em] mt-[0.04em] w-full ${
-                (scoring?.health ?? lastScoring?.health ?? 0) > 0
-                  ? "[--color-primary:#eee]"
-                  : "[--color-primary:#555]"
-              }`}
-            />
           </div>
         </div>
         <div className="relative aspect-square h-full rounded-[0.1em] overflow-hidden">
