@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function DisconnectionWarning() {
+export function DisconnectionWarning({ isRight }: { isRight: boolean }) {
   const [state, setState] = useState({ isHovering: false });
   const { isHovering } = state;
 
@@ -13,7 +13,9 @@ export function DisconnectionWarning() {
         setState({ ...state, isHovering: false });
       }}
       className={
-        `absolute top-[1vw] right-[1vw] rounded-full transition-all overflow-hidden` +
+        `absolute top-[1vw] ${
+          isRight ? "right-[1vw]" : "left-[1vw]"
+        } rounded-full transition-all overflow-hidden` +
         ` bg-gradient-to-br from-yellow-300 to-orange-600` +
         ` ${isHovering ? "w-[1.8em] h-[0.25em]" : "w-[0.1em] h-[0.1em]"}`
       }

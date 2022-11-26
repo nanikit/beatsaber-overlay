@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { FaDrum } from "react-icons/fa";
 import { IoIosSpeedometer } from "react-icons/io";
 import { useQuery } from "react-query";
-import { usePreviousDistinct, useSearchParam, useTimeout, useWindowSize } from "react-use";
+import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
 import { AutoTimeProgress } from "./components/auto_time_progress";
 import { DifficultyLabel } from "./components/difficulty_label";
 import { DisconnectionWarning } from "./components/disconnection_warning";
@@ -15,6 +15,8 @@ import { testableOverlayAtom } from "./services/test_overlay";
 
 export function App() {
   const [overlay, updateOverlay] = useAtom(testableOverlayAtom);
+  const layout = useSearchParam("layout");
+  const isRight = layout !== "left";
 
   useEffect(() => {
     updateOverlay("initialize");
@@ -29,16 +31,15 @@ export function App() {
       onClick={() => updateOverlay("click")}
     >
       {overlay.readyState === WebSocket.OPEN ? (
-        <ConnectedOverlay state={overlay} />
+        <ConnectedOverlay state={overlay} isRight={isRight} />
       ) : (
-        <DisconnectionWarning />
+        <DisconnectionWarning isRight={isRight} />
       )}
     </main>
   );
 }
 
-function ConnectedOverlay({ state }: { state: OverlayState }) {
-  const isRight = true;
+function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
   const showNjs = useSearchParam("njs");
   const showBpm = useSearchParam("bpm");
 
@@ -72,13 +73,13 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
     <>
       <div
         className={`w-full h-full transition duration-1000 flex leading-[1.2]${
-          isRight ? " flex-row" : " flex-row-reverse"
+          isRight ? " flex-row text-right" : " flex-row-reverse"
         }${mapInfo ? "" : " opacity-0"}`}
       >
-        <div className={`z-0 flex-1 overflow-hidden pr-[0.05em]`}>
+        <div className={`z-0 flex-1 overflow-hidden ${isRight ? "pr-[0.05em]" : "pl-[0.05em]"}`}>
           <div
             className={`h-full transition duration-500 flex flex-col${isRight ? " items-end" : ""}${
-              mapInfo ? "" : " translate-x-[100%]"
+              mapInfo ? "" : isRight ? " translate-x-[100%]" : " translate-x-[-100%]"
             }`}
           >
             <p
@@ -90,17 +91,12 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
               <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
                 {subtitle ?? ""}
               </span>
-              <span className="[-webkit-text-stroke:0.03em_black] break-keep text-right">
-                {title ?? ""}
-              </span>
+              <span className="[-webkit-text-stroke:0.03em_black] break-keep">{title ?? ""}</span>
             </p>
             <div
               className={`flex-1 flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}
             >
-              <p
-                ref={authorRef}
-                className="text-[0.16em] [-webkit-text-stroke:0.04em_black] text-right"
-              >
+              <p ref={authorRef} className="text-[0.16em] [-webkit-text-stroke:0.04em_black]">
                 {artist} [{mapper}]
               </p>
               <div
@@ -123,8 +119,9 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
                 <div
                   className={`text-[0.14em] leading-[1] flex gap-[0.71em] transition-opacity ${
                     id ? "" : "opacity-0"
-                  }`}
+                  } ${isRight ? "flex-row-reverse" : ""}`}
                 >
+                  {!!id && <p className="[-webkit-text-stroke:0.035em_black]">!bsr {id}</p>}
                   {showBpm != null && !!metadata?.bpm && (
                     <p className="flex [-webkit-text-stroke:0.03em_black]">
                       <FaDrum className="mr-[0.2em] [stroke-width:2.5%] stroke-[black]" />
@@ -137,7 +134,6 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
                       {diff?.njs ?? ""}
                     </p>
                   )}
-                  {!!id && <p className="[-webkit-text-stroke:0.035em_black]">!bsr {id}</p>}
                 </div>
               </div>
             </div>
@@ -158,10 +154,9 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
         </div>
       </div>
       <div
-        className={
-          `absolute top-[0.05em] right-[0.05em] w-[0.1em] h-[0.1em] rounded-full` +
-          ` bg-gradient-to-br from-green-300 to-emerald-600 animate-[0.2s_ease-in_1s_forwards_onetime-fadeout]`
-        }
+        className={`absolute top-[0.05em] w-[0.1em] h-[0.1em] rounded-full ${
+          isRight ? "right-[1vw]" : "left-[1vw]"
+        } bg-gradient-to-br from-green-300 to-emerald-600 animate-[0.2s_ease-in_1s_forwards_onetime-fadeout]`}
       />
     </>
   );
