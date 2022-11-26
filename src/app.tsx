@@ -67,30 +67,18 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
 
   const authorRef = useRef<HTMLParagraphElement>(null);
   useTextFit({ ref: authorRef, maxHeight: vw100 * 0.05, maxSize: vw100 * 0.032 });
-  const [isElapsed, clear, reset] = useTimeout(1000);
-
-  const display = mapInfo && (mapQuery.isFetched || isElapsed());
-  useEffect(() => {
-    if (mapInfo) {
-      if (!previousMap) {
-        reset();
-      }
-    } else {
-      clear();
-    }
-  }, [mapInfo, previousMap]);
 
   return (
     <>
       <div
         className={`w-full h-full transition duration-1000 flex leading-[1.2]${
           isRight ? " flex-row" : " flex-row-reverse"
-        }${display ? "" : " opacity-0"}`}
+        }${mapInfo ? "" : " opacity-0"}`}
       >
         <div className={`z-0 flex-1 overflow-hidden pr-[0.05em]`}>
           <div
             className={`h-full transition duration-500 flex flex-col${isRight ? " items-end" : ""}${
-              display ? "" : " translate-x-[100%]"
+              mapInfo ? "" : " translate-x-[100%]"
             }`}
           >
             <p
@@ -115,11 +103,18 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
               >
                 {artist} [{mapper}]
               </p>
-              <div className="flex items-end mt-[0.03em]">
+              <div
+                className={`flex gap-[0.1em] items-end mt-[0.03em]${
+                  isRight ? " flex-row-reverse" : ""
+                }`}
+              >
+                {!!difficulty && (
+                  <DifficultyLabel difficulty={difficulty} characteristic={characteristic} />
+                )}
                 <AutoTimeProgress
                   duration={duration ?? 1}
                   progress={progress ?? lastProgress}
-                  className={`text-[0.14em] leading-[1] flex [-webkit-text-stroke:0.03em_black] mr-[0.72em] ${
+                  className={`text-[0.14em] leading-[1] flex [-webkit-text-stroke:0.03em_black] ${
                     (scoring?.health ?? lastScoring?.health ?? 0) > 0
                       ? "[--color-primary:white]"
                       : "[--color-primary:#aaa]"
@@ -127,7 +122,7 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
                 />
                 <div
                   className={`text-[0.14em] leading-[1] flex gap-[0.71em] transition-opacity ${
-                    id ? "mr-[0.72em]" : "opacity-0"
+                    id ? "" : "opacity-0"
                   }`}
                 >
                   {showBpm != null && !!metadata?.bpm && (
@@ -144,9 +139,6 @@ function ConnectedOverlay({ state }: { state: OverlayState }) {
                   )}
                   {!!id && <p className="[-webkit-text-stroke:0.035em_black]">!bsr {id}</p>}
                 </div>
-                {!!difficulty && (
-                  <DifficultyLabel difficulty={difficulty} characteristic={characteristic} />
-                )}
               </div>
             </div>
           </div>
