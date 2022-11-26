@@ -1,10 +1,11 @@
 import { atom } from "jotai";
+import { getDetailFromId } from "./beatsaver";
 import { Interaction, overlayAtom } from "./overlay";
 import { OverlayState } from "./overlay_state";
 
 const indexAtom = atom(0);
 
-const states: OverlayState[] = [
+const sampleStates: OverlayState[] = [
   {
     readyState: WebSocket.OPEN,
     mapInfo: {
@@ -90,16 +91,31 @@ const states: OverlayState[] = [
   },
 ];
 
-const stateAtom = atom(states[0]);
+const stateAtom = atom(sampleStates[0]);
 
 const isTest = new URLSearchParams(window.location.search).get("uiTest");
+let isInitialized = false;
+let testStates = sampleStates;
 
-export const testableOverlayAtom = atom<OverlayState, Interaction>(
+export const testableOverlayAtom = atom<OverlayState | Promise<OverlayState>, Interaction>(
   (get) => {
     if (isTest == null) {
       return get(overlayAtom);
     }
-    return get(stateAtom);
+
+    const state = get(stateAtom);
+    if (!isInitialized) {
+      return (async () => {
+        isInitialized = true;
+        const appointeds = await getTestData();
+        if (appointeds && appointeds.length > 0) {
+          testStates = appointeds;
+          return appointeds[0];
+        }
+        return state;
+      })();
+    }
+    return state;
   },
   (get, set, value) => {
     if (isTest == null) {
@@ -111,13 +127,51 @@ export const testableOverlayAtom = atom<OverlayState, Interaction>(
     }
 
     const index = get(indexAtom);
-    const newIndex = (index + 1) % states.length;
+    const newIndex = (index + 1) % testStates.length;
     set(indexAtom, newIndex);
 
-    const newState = structuredClone(states[newIndex]);
+    const newState = structuredClone(testStates[newIndex]);
     if (newState.progress) {
       newState.progress.point = new Date();
     }
     set(stateAtom, newState);
   },
 );
+
+async function getTestData() {
+  const ids = isTest?.split(",").filter(Boolean);
+  if (!ids?.length) {
+    return;
+  }
+
+  const maps = await Promise.all(ids.map(getDetailFromId));
+  const infos = maps.map((map) => {
+    const { metadata, versions } = map;
+    const { levelAuthorName, songName, songAuthorName, songSubName, duration } = metadata;
+    const { diffs, coverURL, hash } = versions[0];
+    const diff = diffs[Math.floor(Math.random() * diffs.length)];
+    return {
+      readyState: WebSocket.OPEN,
+      mapInfo: {
+        characteristic: diff.characteristic,
+        difficulty: diff.difficulty,
+        // wrong hash
+        hash,
+        mapper: levelAuthorName,
+        title: songName,
+        subtitle: songSubName,
+        artist: songAuthorName,
+        coverUrl: coverURL,
+        duration,
+      },
+      scoring: { health: 1.0 },
+      progress: {
+        point: new Date(),
+        timeMultiplier: 1,
+        resumeTime: 0,
+      },
+    };
+  });
+
+  return [...infos, { readyState: WebSocket.OPEN }];
+}
