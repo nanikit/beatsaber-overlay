@@ -27,7 +27,7 @@ export function App() {
 
   return (
     <main
-      className="w-full h-[20vw] text-white p-[1vw] text-[20vw] overflow-hidden"
+      className="w-full h-[20vw] text-white p-[1vw] text-[20vw]"
       onClick={() => updateOverlay("click")}
     >
       {overlay.readyState === WebSocket.OPEN ? (
@@ -76,7 +76,11 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
           isRight ? " flex-row text-right" : " flex-row-reverse"
         }${mapInfo ? "" : " opacity-0"}`}
       >
-        <div className={`z-0 flex-1 overflow-hidden ${isRight ? "pr-[0.05em]" : "pl-[0.05em]"}`}>
+        <div
+          className={`z-0 flex-1 overflow-clip [overflow-clip-margin:1vw] ${
+            isRight ? "pr-[0.05em]" : "pl-[0.05em]"
+          }`}
+        >
           <div
             className={`h-full transition duration-500 flex flex-col${isRight ? " items-end" : ""}${
               mapInfo ? "" : isRight ? " translate-x-[100%]" : " translate-x-[-100%]"
