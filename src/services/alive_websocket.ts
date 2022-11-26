@@ -39,13 +39,15 @@ export function getAliveWebSocket(
     });
 
     while (true) {
-      const delay = Math.min(2 ** retryCount * 1000, 60000);
-      console.log(`retryCount: ${retryCount}, next retry will be in ${delay / 1000} seconds.`);
+      const delay = 30 * Math.log10(Math.max(2, retryCount + 2)) - 8;
+      console.log(
+        `retryCount: ${retryCount}, next retry will be in ${Math.ceil(delay)} seconds.`,
+      );
       const isOpened = await Promise.race<true | undefined>([
         new Promise<true>((resolve) => {
           socket.addEventListener("open", () => resolve(true), { once: true });
         }),
-        timeout(delay),
+        timeout(delay * 1000),
       ]);
 
       if (aborter.signal.aborted) {
