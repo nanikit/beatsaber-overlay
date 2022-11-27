@@ -129,7 +129,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                   {showBpm != null && !!metadata?.bpm && (
                     <p className="flex [-webkit-text-stroke:0.03em_black]">
                       <FaDrum className="mr-[0.2em] [stroke-width:2.5%] stroke-[black]" />
-                      {metadata?.bpm ?? ""}
+                      {(Math.round(metadata.bpm * 10) / 10).toFixed(1)}
                     </p>
                   )}
                   {showNjs != null && !!diff?.njs && (
