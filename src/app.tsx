@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
-import { FaDrum } from "react-icons/fa";
+import { FaDrum, FaStar } from "react-icons/fa";
 import { IoIosSpeedometer } from "react-icons/io";
 import { useQuery } from "react-query";
 import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
@@ -54,7 +54,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
     enabled: !!hash,
     staleTime: Infinity,
   });
-  const { id, ranked, metadata, versions } = mapQuery.data ?? {};
+  const { id, metadata, versions } = mapQuery.data ?? {};
   const version =
     versions?.find((version) => version.hash === hash) ?? versions?.[versions.length - 1];
   const diff = version?.diffs?.find(
@@ -145,14 +145,17 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
         </div>
         <div className="relative aspect-square h-full rounded-[0.1em] overflow-hidden">
           <TransparentFallbackImg src={coverUrl} className="w-full h-full object-cover" />
-          {!!ranked && (
+          {!!diff?.stars && (
             <div
               className={
                 `absolute w-[1em] p-[0.03em] bg-purple-600 -rotate-45 top-[0.1em] left-[-0.3em]` +
                 ` transition `
               }
             >
-              <p className="text-[0.08em] text-center uppercase tracking-[0.15em]">Ranked</p>
+              <p className="text-[0.08em] text-center tracking-[0.12em]">
+                {diff.stars}
+                <FaStar className="inline text-white" />
+              </p>
             </div>
           )}
         </div>
