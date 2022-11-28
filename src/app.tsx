@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { FaDrum, FaStar } from "react-icons/fa";
 import { IoIosSpeedometer } from "react-icons/io";
 import { useQuery } from "react-query";
@@ -7,6 +7,7 @@ import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
 import { AutoTimeProgress } from "./components/auto_time_progress";
 import { DifficultyLabel } from "./components/difficulty_label";
 import { DisconnectionWarning } from "./components/disconnection_warning";
+import { OutlinedParagraph } from "./components/outlined_paragraph";
 import { TransparentFallbackImg } from "./components/transparent_fallback_img";
 import { useTextFit } from "./hooks/use_text_fit";
 import { BeatsaverMap, getDataUrlFromHash } from "./services/beatsaver";
@@ -82,39 +83,43 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
           }`}
         >
           <div
-            className={`h-full transition duration-500 flex flex-col${isRight ? " items-end" : ""}${
-              mapInfo ? "" : isRight ? " translate-x-[100%]" : " translate-x-[-100%]"
-            }`}
+            className={`h-full transition duration-500 flex flex-col [-webkit-text-stroke:0.5vw_black]${
+              isRight ? " items-end" : ""
+            }${mapInfo ? "" : isRight ? " translate-x-[100%]" : " translate-x-[-100%]"}`}
           >
-            <p
+            <div
               ref={titleRef}
               className={`flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
                 isRight ? "justify-end" : ""
               }`}
             >
-              <span className="text-[0.5em] [-webkit-text-stroke:0.05em_black] leading-[1.4]">
+              <OutlinedParagraph className="text-[0.5em] leading-[1.4]">
                 {subtitle ?? ""}
-              </span>
-              <span className="[-webkit-text-stroke:0.03em_black] break-keep">{title ?? ""}</span>
-            </p>
+              </OutlinedParagraph>
+              <OutlinedParagraph>{title ?? ""}</OutlinedParagraph>
+            </div>
             <div
               className={`flex-1 flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}
             >
-              <p ref={authorRef} className="text-[0.16em] [-webkit-text-stroke:0.04em_black]">
-                {artist} [{mapper}]
-              </p>
+              <OutlinedParagraph ref={authorRef} className="text-[0.16em]">
+                {artist ?? ""} [{mapper ?? ""}]
+              </OutlinedParagraph>
               <div
                 className={`flex gap-[0.1em] items-end mt-[0.03em]${
                   isRight ? " flex-row-reverse" : ""
                 }`}
               >
                 {!!difficulty && (
-                  <DifficultyLabel difficulty={difficulty} characteristic={characteristic} />
+                  <DifficultyLabel
+                    difficulty={difficulty}
+                    characteristic={characteristic}
+                    className="[-webkit-text-stroke:0]"
+                  />
                 )}
                 <AutoTimeProgress
                   duration={duration ?? 1}
                   progress={progress ?? lastProgress}
-                  className={`text-[0.14em] leading-[1] flex [-webkit-text-stroke:0.03em_black] ${
+                  className={`text-[0.14em] leading-[1] flex ${
                     (scoring?.health ?? lastScoring?.health ?? 0) > 0
                       ? "[--color-primary:white]"
                       : "[--color-primary:#aaa]"
@@ -125,18 +130,20 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                     id ? "" : "opacity-0"
                   } ${isRight ? "flex-row-reverse" : ""}`}
                 >
-                  {!!id && <p className="[-webkit-text-stroke:0.035em_black]">!bsr {id}</p>}
+                  {!!id && <OutlinedParagraph>!bsr {id}</OutlinedParagraph>}
                   {showBpm != null && !!metadata?.bpm && (
-                    <p className="flex [-webkit-text-stroke:0.03em_black]">
-                      <FaDrum className="mr-[0.2em] [stroke-width:2.5%] stroke-[black]" />
-                      {(Math.round(metadata.bpm * 10) / 10).toFixed(1)}
-                    </p>
+                    <div className="flex">
+                      <FaDrum className="mr-[0.3em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                      <OutlinedParagraph>
+                        {(Math.round(metadata.bpm * 10) / 10).toFixed(1)}
+                      </OutlinedParagraph>
+                    </div>
                   )}
                   {showNjs != null && !!diff?.njs && (
-                    <p className={`flex [-webkit-text-stroke:0.03em_black]`}>
-                      <IoIosSpeedometer className="mr-[0.2em] stroke-[black] [stroke-width:2.5%]" />
-                      {diff?.njs ?? ""}
-                    </p>
+                    <div className="flex">
+                      <IoIosSpeedometer className="mr-[0.2em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                      <OutlinedParagraph>{diff?.njs ?? ""}</OutlinedParagraph>
+                    </div>
                   )}
                 </div>
               </div>

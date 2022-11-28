@@ -3,16 +3,18 @@ import { Characteristic, Difficulty } from "../services/beatsaver";
 export function DifficultyLabel({
   characteristic,
   difficulty,
+  className,
 }: {
   characteristic?: Characteristic;
   difficulty: Difficulty;
+  className?: string;
 }) {
   const difficultyText = difficulty === "ExpertPlus" ? "Expert+" : difficulty;
   return (
     <div
       className={`px-[0.07em] py-[0.015em] ${getDifficultyBackground(
         difficulty,
-      )} flex items-center gap-[0.05em] rounded-[1em]`}
+      )} flex items-center gap-[0.05em] rounded-[1em] ${className ?? ""}`}
     >
       {!!characteristic && <img src={getCharacteristicSvg(characteristic)} className="h-[0.1em]" />}
       <p className="text-[0.1em]">{difficultyText}</p>

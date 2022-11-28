@@ -1,6 +1,7 @@
 import { useRaf } from "react-use";
 import { OverlayState } from "../services/overlay_state";
 import { FaClock } from "react-icons/fa";
+import { OutlinedParagraph } from "./outlined_paragraph";
 
 const emptyProgress = { point: new Date(), timeMultiplier: 1, pauseTime: 0 };
 
@@ -45,19 +46,19 @@ function TimeProgress({
   const total = formatSeconds(duration);
   const done = formatSeconds(elapsed);
   return (
-    <p className={className}>
+    <div className={className}>
       <span className="relative mr-[0.4em] w-[1em]">
-        <FaClock className="mr-[0.2em] [stroke-width:2.5%] stroke-[black]" />
+        <FaClock className="mr-[0.2em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
       </span>
-      <span className={`flex flex-shrink text-[var(--color-primary)]`}>
+      <OutlinedParagraph className={`flex flex-shrink text-[var(--color-primary)]`}>
         {[...done].map((x, i) => (
-          <span key={i} className={`text-center ${x === ":" ? "" : "w-[0.7em]"}`}>
+          <span key={i} className={`text-center ${x === ":" ? "" : "w-[1.8vw]"}`}>
             {x}
           </span>
         ))}
-      </span>
-      <span>&nbsp;/ {total}</span>
-    </p>
+        &nbsp;/ {total}
+      </OutlinedParagraph>
+    </div>
   );
 }
 
