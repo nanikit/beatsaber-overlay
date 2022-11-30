@@ -139,9 +139,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                   {showBpm != null && !!metadata?.bpm && (
                     <div className="flex">
                       <FaDrum className="text-[0.9em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
-                      <OutlinedParagraph>
-                        {(Math.round(metadata.bpm * 10) / 10).toFixed(1)}
-                      </OutlinedParagraph>
+                      <OutlinedParagraph>{Math.round(metadata.bpm * 10) / 10}</OutlinedParagraph>
                     </div>
                   )}
                   {showNjs != null && !!diff?.njs && (
