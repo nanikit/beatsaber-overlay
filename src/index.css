@@ -4,8 +4,14 @@
 
 @font-face {
   font-family: "Corporate Logo Maru";
-  src: url("/Corporate-Logo-Rounded-Bold-ver3.woff2")
-    format("woff2");
+  src: url("/Corporate-Logo-Rounded-Bold-ver3.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Genjyuu";
+  src: url("/GenJyuuGothicX-Heavy.woff2") format("woff2");
+  unicode-range: U+3041-3096, U+30A0-30FF, U+3400-4DB5, U+4E00-9FCB, U+F900-FA6A, U+2E80-2FD5,
+    U+FF5F-FF9F, U+3000-303F, U+31F0-31FF, U+3220-3243, U+3280-337F, U+FF01-FF5E;
 }
 
 @font-face {
@@ -15,7 +21,7 @@
 }
 
 body {
-  font-family: Maplestory, 'Corporate Logo Maru', sans-serif;
+  font-family: Genjyuu, Maplestory, sans-serif;
   user-select: none;
 }
 
