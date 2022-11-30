@@ -46,10 +46,8 @@ function TimeProgress({
   const total = formatSeconds(duration);
   const done = formatSeconds(elapsed);
   return (
-    <div className={className}>
-      <span className="relative mr-[0.4em] w-[1em]">
-        <FaClock className="mr-[0.2em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
-      </span>
+    <div className={`flex items-center ${className}`}>
+      <FaClock className="text-[0.85em] mr-[0.5em] [stroke-width:20%] align-bottom stroke-[black] overflow-visible [paint-order:stroke_fill]" />
       <OutlinedParagraph className={`flex flex-shrink text-[var(--color-primary)]`}>
         {[...done].map((x, i) => (
           <span key={i} className={`text-center ${x === ":" ? "" : "w-[1.8vw]"}`}>

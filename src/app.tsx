@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { forwardRef, useEffect, useRef } from "react";
-import { FaDrum, FaStar } from "react-icons/fa";
+import { FaDrum, FaStar, FaTwitch } from "react-icons/fa";
 import { IoIosSpeedometer } from "react-icons/io";
 import { useQuery } from "react-query";
 import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
@@ -105,7 +105,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                 {artist ?? ""} [{mapper ?? ""}]
               </OutlinedParagraph>
               <div
-                className={`flex gap-[0.1em] items-end mt-[0.03em]${
+                className={`flex gap-[0.12em] items-end mt-[0.03em]${
                   isRight ? " flex-row-reverse" : ""
                 }`}
               >
@@ -126,14 +126,19 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                   }`}
                 />
                 <div
-                  className={`text-[0.14em] leading-[1] flex gap-[0.71em] transition-opacity ${
+                  className={`text-[0.14em] leading-[1] flex gap-[1em] transition-opacity ${
                     id ? "" : "opacity-0"
                   } ${isRight ? "flex-row-reverse" : ""}`}
                 >
-                  {!!id && <OutlinedParagraph>!bsr {id}</OutlinedParagraph>}
+                  {!!id && (
+                    <div className="flex">
+                      <FaTwitch className="text-[0.8em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill] [transform:translateY(10%)]" />
+                      <OutlinedParagraph>{id}</OutlinedParagraph>
+                    </div>
+                  )}
                   {showBpm != null && !!metadata?.bpm && (
                     <div className="flex">
-                      <FaDrum className="mr-[0.3em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                      <FaDrum className="text-[0.9em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
                       <OutlinedParagraph>
                         {(Math.round(metadata.bpm * 10) / 10).toFixed(1)}
                       </OutlinedParagraph>
@@ -141,7 +146,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                   )}
                   {showNjs != null && !!diff?.njs && (
                     <div className="flex">
-                      <IoIosSpeedometer className="mr-[0.2em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                      <IoIosSpeedometer className="text-[1.0em] mr-[0.4em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
                       <OutlinedParagraph>{diff?.njs ?? ""}</OutlinedParagraph>
                     </div>
                   )}
