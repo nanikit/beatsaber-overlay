@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
-import { forwardRef, useEffect, useRef } from "react";
-import { FaDrum, FaStar, FaTwitch } from "react-icons/fa";
+import { useEffect, useRef } from "react";
+import { FaDrum, FaKey, FaStar } from "react-icons/fa";
 import { IoIosSpeedometer } from "react-icons/io";
 import { useQuery } from "react-query";
 import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
@@ -132,7 +132,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                 >
                   {!!id && (
                     <div className="flex">
-                      <FaTwitch className="text-[0.8em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill] [transform:translateY(10%)]" />
+                      <FaKey className="text-[0.8em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill] [transform:translateY(10%)]" />
                       <OutlinedParagraph>{id}</OutlinedParagraph>
                     </div>
                   )}
