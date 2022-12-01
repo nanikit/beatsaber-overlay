@@ -65,10 +65,21 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
   const { width: vw100 } = useWindowSize();
 
   const titleRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: titleRef, maxHeight: vw100 * 0.09, maxSize: vw100 * 0.06 });
+  useTextFit({ ref: titleRef, maxHeight: vw100 * 0.09, maxSize: vw100 * 0.038 });
 
   const authorRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: authorRef, maxHeight: vw100 * 0.05, maxSize: vw100 * 0.032 });
+  useTextFit({ ref: authorRef, maxHeight: vw100 * 0.05, maxSize: vw100 * 0.028 });
+
+  // For bypassing weird layout when wrapping map info and progress.
+  // https://www.itcodar.com/html/flexbox-wrong-width-calculation-when-flex-direction-column-flex-wrap-wrap.html
+  const infoRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const div = infoRef.current;
+    if (div) {
+      div.style.minWidth = "auto";
+      div.style.minWidth = `${div.scrollWidth}px`;
+    }
+  }, [infoRef.current, vw100, diff]);
 
   return (
     <>
@@ -78,19 +89,19 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
         }${mapInfo ? "" : " opacity-0"}`}
       >
         <div
-          className={`z-0 flex-1 overflow-clip [overflow-clip-margin:1vw] ${
+          className={`z-0 h-full flex-1 overflow-clip [overflow-clip-margin:1vw] ${
             isRight ? "pr-[0.05em]" : "pl-[0.05em]"
           }`}
         >
           <div
-            className={`h-full transition duration-500 flex flex-col [-webkit-text-stroke:0.5vw_black]${
-              isRight ? " items-end" : ""
+            className={`h-full flex flex-col [-webkit-text-stroke:0.5vw_black] transition duration-500 ${
+              isRight ? "items-end" : "items-start"
             }${mapInfo ? "" : isRight ? " translate-x-[100%]" : " translate-x-[-100%]"}`}
           >
             <div
               ref={titleRef}
-              className={`flex flex-row flex-wrap gap-[0_0.2em] items-start leading-[1] ${
-                isRight ? "justify-end" : ""
+              className={`flex flex-wrap justify-end gap-[0_0.4em] leading-[1] ${
+                isRight ? "flex-row items-start" : "flex-row-reverse items-end"
               }`}
             >
               <OutlinedParagraph className="text-[0.5em] leading-[1.4]">
@@ -98,17 +109,40 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
               </OutlinedParagraph>
               <OutlinedParagraph>{title ?? ""}</OutlinedParagraph>
             </div>
+            <OutlinedParagraph ref={authorRef} className="text-[0.16em] mt-[0.3em]">
+              {artist ?? ""} [{mapper ?? ""}]
+            </OutlinedParagraph>
             <div
-              className={`flex-1 flex flex-col flex-wrap justify-end ${isRight ? "items-end" : ""}`}
+              ref={infoRef}
+              className={`flex-1 mt-[0.03em] min-h-0 flex flex-col gap-[0.06em_0.15em] justify-end ${
+                isRight ? "items-end flex-wrap" : "flex-wrap-reverse"
+              }`}
             >
-              <OutlinedParagraph ref={authorRef} className="text-[0.16em]">
-                {artist ?? ""} [{mapper ?? ""}]
-              </OutlinedParagraph>
               <div
-                className={`flex gap-[0.12em] items-end mt-[0.03em]${
-                  isRight ? " flex-row-reverse" : ""
-                }`}
+                className={`text-[0.14em] leading-[1] flex gap-[1em] transition-opacity ${
+                  id ? "" : "opacity-0"
+                } ${isRight ? "flex-row-reverse" : ""}`}
               >
+                {!!id && (
+                  <div className="flex">
+                    <FaKey className="text-[0.8em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill] [transform:translateY(10%)]" />
+                    <OutlinedParagraph>{id}</OutlinedParagraph>
+                  </div>
+                )}
+                {showBpm != null && !!metadata?.bpm && (
+                  <div className="flex">
+                    <FaDrum className="text-[0.9em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                    <OutlinedParagraph>{Math.round(metadata.bpm * 10) / 10}</OutlinedParagraph>
+                  </div>
+                )}
+                {showNjs != null && !!diff?.njs && (
+                  <div className="flex">
+                    <IoIosSpeedometer className="text-[1.0em] mr-[0.4em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                    <OutlinedParagraph>{diff?.njs ?? ""}</OutlinedParagraph>
+                  </div>
+                )}
+              </div>
+              <div className={`flex gap-[0.12em] items-end${isRight ? " flex-row-reverse" : ""}`}>
                 {!!difficulty && (
                   <DifficultyLabel
                     difficulty={difficulty}
@@ -125,30 +159,6 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                       : "[--color-primary:#aaa]"
                   }`}
                 />
-                <div
-                  className={`text-[0.14em] leading-[1] flex gap-[1em] transition-opacity ${
-                    id ? "" : "opacity-0"
-                  } ${isRight ? "flex-row-reverse" : ""}`}
-                >
-                  {!!id && (
-                    <div className="flex">
-                      <FaKey className="text-[0.8em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill] [transform:translateY(10%)]" />
-                      <OutlinedParagraph>{id}</OutlinedParagraph>
-                    </div>
-                  )}
-                  {showBpm != null && !!metadata?.bpm && (
-                    <div className="flex">
-                      <FaDrum className="text-[0.9em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
-                      <OutlinedParagraph>{Math.round(metadata.bpm * 10) / 10}</OutlinedParagraph>
-                    </div>
-                  )}
-                  {showNjs != null && !!diff?.njs && (
-                    <div className="flex">
-                      <IoIosSpeedometer className="text-[1.0em] mr-[0.4em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
-                      <OutlinedParagraph>{diff?.njs ?? ""}</OutlinedParagraph>
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
           </div>
