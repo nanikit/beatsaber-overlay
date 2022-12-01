@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
 import { FaDrum, FaKey, FaStar } from "react-icons/fa";
+import { MdFilterCenterFocus } from "react-icons/md";
 import { IoIosSpeedometer } from "react-icons/io";
 import { useQuery } from "react-query";
 import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
@@ -43,11 +44,14 @@ export function App() {
 function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
   const showNjs = useSearchParam("njs");
   const showBpm = useSearchParam("bpm");
+  const showAcc = useSearchParam("acc");
 
   const { mapInfo, scoring, progress } = state;
   const previousMap = usePreviousDistinct(mapInfo);
   const lastProgress = usePreviousDistinct(progress);
   const lastScoring = usePreviousDistinct(scoring);
+  const health = scoring?.health ?? lastScoring?.health;
+  const accuracy = scoring?.accuracy ?? lastScoring?.accuracy;
 
   const { hash, coverUrl, title, subtitle, artist, mapper, characteristic, difficulty, duration } =
     mapInfo ?? previousMap ?? {};
@@ -150,15 +154,25 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                     className="[-webkit-text-stroke:0]"
                   />
                 )}
-                <AutoTimeProgress
-                  duration={duration ?? 1}
-                  progress={progress ?? lastProgress}
-                  className={`text-[0.14em] leading-[1] flex ${
-                    (scoring?.health ?? lastScoring?.health ?? 0) > 0
-                      ? "[--color-primary:white]"
-                      : "[--color-primary:#aaa]"
+                <div
+                  className={`text-[0.14em] leading-[1] flex gap-[1em] ${
+                    isRight ? "flex-row-reverse" : ""
                   }`}
-                />
+                >
+                  <AutoTimeProgress
+                    duration={duration ?? 1}
+                    progress={progress ?? lastProgress}
+                    className={`flex ${
+                      (health ?? 0) > 0 ? "[--color-primary:white]" : "[--color-primary:#aaa]"
+                    }`}
+                  />
+                  <div className={`flex ${showAcc != null && accuracy ? "" : "hidden"}`}>
+                    <MdFilterCenterFocus className="center-icon text-[1.0em] mr-[0.4em] [stroke-width:10%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                    <OutlinedParagraph>
+                      {Math.round((accuracy ?? 1) * 1000) / 10}%
+                    </OutlinedParagraph>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

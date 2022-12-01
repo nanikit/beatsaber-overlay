@@ -3,11 +3,6 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "Corporate Logo Maru";
-  src: url("/Corporate-Logo-Rounded-Bold-ver3.woff2") format("woff2");
-}
-
-@font-face {
   font-family: "Genjyuu";
   src: url("https://cdn.jsdelivr.net/gh/nanikit/beatsaber-overlay@6711aee805b3b3aaeacdad3ecc096893f67b48aa/public/GenJyuuGothicX-Heavy.woff2")
     format("woff2");
@@ -24,6 +19,10 @@
 body {
   font-family: Genjyuu, Maplestory, sans-serif;
   user-select: none;
+}
+
+.center-icon path:first-child {
+  display: none;
 }
 
 @layer utilities {

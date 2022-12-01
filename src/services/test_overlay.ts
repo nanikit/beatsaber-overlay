@@ -19,7 +19,7 @@ const sampleStates: OverlayState[] = [
       coverUrl: "https://eu.cdn.beatsaver.com/207cc54d61a787e26da47ce6c0cc45d9608d87fb.jpg",
       duration: 250,
     },
-    scoring: { health: 0.3 },
+    scoring: { accuracy: 0.9312, health: 0.3 },
     progress: {
       point: new Date(),
       timeMultiplier: 1,
@@ -79,7 +79,7 @@ const sampleStates: OverlayState[] = [
       coverUrl: "https://eu.cdn.beatsaver.com/8bfe200ce339db24b7ea8120a37aecd5672a3efb.jpg",
       duration: 95,
     },
-    scoring: { health: 0.5 },
+    scoring: { accuracy: 0.912312, health: 0.5 },
     progress: {
       point: new Date(),
       timeMultiplier: 0,
