@@ -8,8 +8,12 @@ For use: https://nanikit-bs.pages.dev/
 
 ### Configuration
 
-You can make variance by query parameters. (e.g: https://nanikit-bs.pages.dev/?njs&bpm&layout=left)
+You can make variance by query parameters. (e.g: https://nanikit-bs.pages.dev/?layout=left&hide=njs,bpm)
 
-- `layout` (`left`, `right`): overall layout (default: right)
-- `njs`: show note jump speed
-- `bpm`: show beats per minute
+- `layout` (`left`, `right`): overall layout (default: `right`)
+- `hide`: hide some info (default: none)
+  - `njs`: note jump speed
+  - `bpm`: beats per minute
+  - `id`: beatmap id
+  - `time`: time progress
+  - `acc`: current accuracy

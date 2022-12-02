@@ -1,8 +1,8 @@
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
 import { FaDrum, FaKey, FaStar } from "react-icons/fa";
-import { MdFilterCenterFocus } from "react-icons/md";
 import { IoIosSpeedometer } from "react-icons/io";
+import { MdFilterCenterFocus } from "react-icons/md";
 import { useQuery } from "react-query";
 import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
 import { AutoTimeProgress } from "./components/auto_time_progress";
@@ -42,9 +42,8 @@ export function App() {
 }
 
 function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
-  const showNjs = useSearchParam("njs");
-  const showBpm = useSearchParam("bpm");
-  const showAcc = useSearchParam("acc");
+  const hidesParam = useSearchParam("hide") ?? "";
+  const hides = hidesParam.split(",").reduce((acc, x) => acc.add(x), new Set());
 
   const { mapInfo, scoring, progress } = state;
   const previousMap = usePreviousDistinct(mapInfo);
@@ -72,18 +71,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
   useTextFit({ ref: titleRef, maxHeight: vw100 * 0.09, maxSize: vw100 * 0.038 });
 
   const authorRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: authorRef, maxHeight: vw100 * 0.05, maxSize: vw100 * 0.028 });
-
-  // For bypassing weird layout when wrapping map info and progress.
-  // https://www.itcodar.com/html/flexbox-wrong-width-calculation-when-flex-direction-column-flex-wrap-wrap.html
-  const infoRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const div = infoRef.current;
-    if (div) {
-      div.style.minWidth = "auto";
-      div.style.minWidth = `${div.scrollWidth}px`;
-    }
-  }, [infoRef.current, vw100, diff]);
+  useTextFit({ ref: authorRef, maxHeight: vw100 * 0.04, maxSize: vw100 * 0.028 });
 
   return (
     <>
@@ -117,8 +105,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
               {artist ?? ""} [{mapper ?? ""}]
             </OutlinedParagraph>
             <div
-              ref={infoRef}
-              className={`flex-1 mt-[0.03em] min-h-0 flex flex-col gap-[0.06em_0.15em] justify-end ${
+              className={`flex-1 mt-[0.03em] w-full min-h-0 flex flex-col gap-[0.06em_0.12em] justify-end ${
                 isRight ? "items-end flex-wrap" : "flex-wrap-reverse"
               }`}
             >
@@ -127,26 +114,26 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                   id ? "" : "opacity-0"
                 } ${isRight ? "flex-row-reverse" : ""}`}
               >
-                {!!id && (
+                {!hides.has("id") && !!id && (
                   <div className="flex">
                     <FaKey className="text-[0.8em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill] [transform:translateY(10%)]" />
                     <OutlinedParagraph>{id}</OutlinedParagraph>
                   </div>
                 )}
-                {showBpm != null && !!metadata?.bpm && (
+                {!hides.has("bpm") && !!metadata?.bpm && (
                   <div className="flex">
                     <FaDrum className="text-[0.9em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
                     <OutlinedParagraph>{Math.round(metadata.bpm * 10) / 10}</OutlinedParagraph>
                   </div>
                 )}
-                {showNjs != null && !!diff?.njs && (
+                {!hides.has("njs") && !!diff?.njs && (
                   <div className="flex">
                     <IoIosSpeedometer className="text-[1.0em] mr-[0.4em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
                     <OutlinedParagraph>{diff?.njs ?? ""}</OutlinedParagraph>
                   </div>
                 )}
               </div>
-              <div className={`flex gap-[0.12em] items-end${isRight ? " flex-row-reverse" : ""}`}>
+              <div className={`flex gap-[0.1em] items-end${isRight ? " flex-row-reverse" : ""}`}>
                 {!!difficulty && (
                   <DifficultyLabel
                     difficulty={difficulty}
@@ -154,24 +141,22 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                     className="[-webkit-text-stroke:0]"
                   />
                 )}
-                <div
-                  className={`text-[0.14em] leading-[1] flex gap-[1em] ${
-                    isRight ? "flex-row-reverse" : ""
-                  }`}
-                >
+                {!hides.has("time") && (
                   <AutoTimeProgress
                     duration={duration ?? 1}
                     progress={progress ?? lastProgress}
-                    className={`flex ${
+                    className={`text-[0.14em] leading-[1] flex ${
                       (health ?? 0) > 0 ? "[--color-primary:white]" : "[--color-primary:#aaa]"
                     }`}
                   />
-                  <div className={`flex ${showAcc != null && accuracy ? "" : "hidden"}`}>
-                    <MdFilterCenterFocus className="center-icon text-[1.0em] mr-[0.4em] [stroke-width:10%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
-                    <OutlinedParagraph>
-                      {Math.round((accuracy ?? 1) * 1000) / 10}%
-                    </OutlinedParagraph>
-                  </div>
+                )}
+                <div
+                  className={`text-[0.14em] leading-[1] flex ${
+                    !hides.has("acc") && accuracy ? "" : "hidden"
+                  }`}
+                >
+                  <MdFilterCenterFocus className="center-icon text-[1.0em] mr-[0.4em] [stroke-width:10%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                  <OutlinedParagraph>{Math.round((accuracy ?? 1) * 1000) / 10}%</OutlinedParagraph>
                 </div>
               </div>
             </div>
