@@ -2,6 +2,7 @@ import { useRaf } from "react-use";
 import { OverlayState } from "../services/overlay_state";
 import { FaClock } from "react-icons/fa";
 import { OutlinedParagraph } from "./outlined_paragraph";
+import { MonospaceImitation } from "./monospace_imitation";
 
 const emptyProgress = { point: new Date(), timeMultiplier: 1, pauseTime: 0 };
 
@@ -49,11 +50,7 @@ function TimeProgress({
     <div className={`flex items-center ${className}`}>
       <FaClock className="text-[0.85em] mr-[0.5em] [stroke-width:20%] align-bottom stroke-[black] overflow-visible [paint-order:stroke_fill]" />
       <OutlinedParagraph className={`flex flex-shrink text-[var(--color-primary)]`}>
-        {[...done].map((x, i) => (
-          <span key={i} className={`text-center ${x === ":" ? "" : "w-[1.8vw]"}`}>
-            {x}
-          </span>
-        ))}
+        <MonospaceImitation>{done}</MonospaceImitation>
         &nbsp;/ {total}
       </OutlinedParagraph>
     </div>

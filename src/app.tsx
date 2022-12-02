@@ -8,6 +8,7 @@ import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
 import { AutoTimeProgress } from "./components/auto_time_progress";
 import { DifficultyLabel } from "./components/difficulty_label";
 import { DisconnectionWarning } from "./components/disconnection_warning";
+import { MonospaceImitation } from "./components/monospace_imitation";
 import { OutlinedParagraph } from "./components/outlined_paragraph";
 import { TransparentFallbackImg } from "./components/transparent_fallback_img";
 import { useTextFit } from "./hooks/use_text_fit";
@@ -156,7 +157,12 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                   }`}
                 >
                   <MdFilterCenterFocus className="center-icon text-[1.0em] mr-[0.4em] [stroke-width:10%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
-                  <OutlinedParagraph>{Math.round((accuracy ?? 1) * 1000) / 10}%</OutlinedParagraph>
+                  <OutlinedParagraph className="flex">
+                    <MonospaceImitation>
+                      {`${((accuracy ?? 1) * 100).toFixed(1)}`}
+                    </MonospaceImitation>
+                    %
+                  </OutlinedParagraph>
                 </div>
               </div>
             </div>
