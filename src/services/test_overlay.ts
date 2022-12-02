@@ -1,9 +1,7 @@
 import { atom } from "jotai";
-import { getDetailFromId } from "./beatsaver";
+import { BeatsaverMap, getDetailFromId } from "./beatsaver";
 import { Interaction, overlayAtom } from "./overlay";
 import { OverlayState } from "./overlay_state";
-
-const indexAtom = atom(0);
 
 const sampleStates: OverlayState[] = [
   {
@@ -91,60 +89,82 @@ const sampleStates: OverlayState[] = [
   },
 ];
 
-const stateAtom = atom(sampleStates[0]);
+const stateAtom = atom(sampleStates[sampleStates.length - 1]);
 
-const isTest = new URLSearchParams(window.location.search).get("uiTest");
-let isInitialized = false;
-let testStates = sampleStates;
+const statesAtom = atom({
+  index: sampleStates.length - 1,
+  states: sampleStates,
+});
+
+const testParameter = new URLSearchParams(window.location.search).get("uiTest");
+
+let intervalId = 0;
 
 export const testableOverlayAtom = atom<OverlayState | Promise<OverlayState>, Interaction>(
   (get) => {
-    if (isTest == null) {
-      return get(overlayAtom);
-    }
-
-    const state = get(stateAtom);
-    if (!isInitialized) {
-      return (async () => {
-        isInitialized = true;
-        const appointeds = await getTestData();
-        if (appointeds && appointeds.length > 0) {
-          testStates = appointeds;
-          return appointeds[0];
-        }
-        return state;
-      })();
-    }
-    return state;
+    return get(testParameter == null ? overlayAtom : stateAtom);
   },
-  (get, set, value) => {
-    if (isTest == null) {
+  async (get, set, value) => {
+    if (testParameter == null) {
       set(overlayAtom, value);
       return;
     }
-    if (value !== "click") {
-      return;
+
+    switch (value) {
+      case "initialize": {
+        const appointeds = await getTestData();
+        const states = get(statesAtom);
+        if (appointeds && appointeds.length > 0) {
+          set(statesAtom, { ...states, states: appointeds });
+        }
+        set(stateAtom, states.states[0]);
+        break;
+      }
+      case "click": {
+        const states = get(statesAtom);
+        const newIndex = (states.index + 1) % states.states.length;
+        set(statesAtom, { ...states, index: newIndex });
+
+        const newState = structuredClone(states.states[newIndex]);
+        if (newState.progress) {
+          newState.progress.point = new Date();
+        }
+        set(stateAtom, newState);
+        break;
+      }
+      case "cleanUp":
+        break;
     }
 
-    const index = get(indexAtom);
-    const newIndex = (index + 1) % testStates.length;
-    set(indexAtom, newIndex);
-
-    const newState = structuredClone(testStates[newIndex]);
-    if (newState.progress) {
-      newState.progress.point = new Date();
+    clearInterval(intervalId);
+    if ("resumeTime" in (get(stateAtom).progress ?? {})) {
+      intervalId = setInterval(() => {
+        if (Math.random() < 0.25) {
+          return;
+        }
+        const state = get(stateAtom);
+        let accuracy = (state.scoring?.accuracy ?? 0.9) + (Math.random() - 0.5) * 0.01;
+        accuracy = Math.max(0, Math.min(1, accuracy));
+        set(stateAtom, { ...state, scoring: { ...state.scoring, accuracy } });
+      }, 200);
     }
-    set(stateAtom, newState);
   },
 );
 
 async function getTestData() {
-  const ids = isTest?.split(",").filter(Boolean);
-  if (!ids?.length) {
-    return;
+  if (testParameter?.includes("?")) {
+    const response = await fetch(`https://beatsaver.com/api/search/text/${testParameter}`);
+    const json = await response.json();
+    return beatsaversToStates(json.docs);
   }
+  const ids = testParameter?.split(",").filter(Boolean);
+  if (ids?.length) {
+    const maps = await Promise.all(ids.map(getDetailFromId));
+    return beatsaversToStates(maps);
+  }
+}
 
-  const maps = await Promise.all(ids.map(getDetailFromId));
+function beatsaversToStates(maps: BeatsaverMap[]) {
   const infos = maps.map((map) => {
     const { metadata, versions } = map;
     const { levelAuthorName, songName, songAuthorName, songSubName, duration } = metadata;
