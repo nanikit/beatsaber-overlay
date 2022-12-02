@@ -72,7 +72,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
   useTextFit({ ref: titleRef, maxHeight: vw100 * 0.09, maxSize: vw100 * 0.038 });
 
   const authorRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: authorRef, maxHeight: vw100 * 0.04, maxSize: vw100 * 0.028 });
+  useTextFit({ ref: authorRef, maxHeight: vw100 * 0.04, maxSize: vw100 * 0.0225 });
 
   return (
     <>
@@ -106,12 +106,12 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
               {artist ?? ""} [{mapper ?? ""}]
             </OutlinedParagraph>
             <div
-              className={`flex-1 mt-[0.03em] w-full min-h-0 flex flex-col gap-[0.06em_0.12em] justify-end ${
+              className={`flex-1 mt-[0.03em] w-full min-h-0 flex flex-col gap-[0.03em_0.12em] justify-end ${
                 isRight ? "items-end flex-wrap" : "flex-wrap-reverse"
               }`}
             >
               <div
-                className={`text-[0.14em] leading-[1] flex gap-[1em] transition-opacity ${
+                className={`text-[0.12em] leading-[1] flex gap-[1em] transition-opacity ${
                   id ? "" : "opacity-0"
                 } ${isRight ? "flex-row-reverse" : ""}`}
               >
@@ -146,17 +146,17 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                   <AutoTimeProgress
                     duration={duration ?? 1}
                     progress={progress ?? lastProgress}
-                    className={`text-[0.14em] leading-[1] flex ${
+                    className={`text-[0.12em] leading-[1] flex ${
                       (health ?? 0) > 0 ? "[--color-primary:white]" : "[--color-primary:#aaa]"
                     }`}
                   />
                 )}
                 <div
-                  className={`text-[0.14em] leading-[1] flex ${
+                  className={`text-[0.12em] leading-[1] flex ${
                     !hides.has("acc") && accuracy ? "" : "hidden"
                   }`}
                 >
-                  <MdFilterCenterFocus className="center-icon text-[1.0em] mr-[0.4em] [stroke-width:10%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                  <MdFilterCenterFocus className="center-icon mr-[0.4em] [stroke-width:10%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
                   <OutlinedParagraph className="flex">
                     <MonospaceImitation>
                       {`${((accuracy ?? 1) * 100).toFixed(1)}`}
