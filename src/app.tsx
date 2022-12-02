@@ -111,30 +111,30 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
               }`}
             >
               <div
-                className={`text-[0.12em] leading-[1] flex gap-[1em] transition-opacity ${
+                className={`text-[0.12em] h-[2.9989vw] flex items-center gap-[1em] transition-opacity ${
                   id ? "" : "opacity-0"
                 } ${isRight ? "flex-row-reverse" : ""}`}
               >
                 {!hides.has("id") && !!id && (
-                  <div className="flex">
-                    <FaKey className="text-[0.8em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill] [transform:translateY(10%)]" />
+                  <div className="flex items-center">
+                    <FaKey className="text-[0.8em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
                     <OutlinedParagraph>{id}</OutlinedParagraph>
                   </div>
                 )}
                 {!hides.has("bpm") && !!metadata?.bpm && (
-                  <div className="flex">
+                  <div className="flex items-center">
                     <FaDrum className="text-[0.9em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
                     <OutlinedParagraph>{Math.round(metadata.bpm * 10) / 10}</OutlinedParagraph>
                   </div>
                 )}
                 {!hides.has("njs") && !!diff?.njs && (
-                  <div className="flex">
+                  <div className="flex items-center">
                     <IoIosSpeedometer className="text-[1.0em] mr-[0.4em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
                     <OutlinedParagraph>{diff?.njs ?? ""}</OutlinedParagraph>
                   </div>
                 )}
               </div>
-              <div className={`flex gap-[0.1em] items-end${isRight ? " flex-row-reverse" : ""}`}>
+              <div className={`flex gap-[0.1em] items-center${isRight ? " flex-row-reverse" : ""}`}>
                 {!!difficulty && (
                   <DifficultyLabel
                     difficulty={difficulty}
