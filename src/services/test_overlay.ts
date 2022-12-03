@@ -116,6 +116,8 @@ export const testableOverlayAtom = atom<OverlayState | Promise<OverlayState>, In
         const states = get(statesAtom);
         if (appointeds && appointeds.length > 0) {
           set(statesAtom, { ...states, states: appointeds });
+        } else {
+          set(statesAtom, { ...states, index: 0 });
         }
         set(stateAtom, states.states[0]);
         break;

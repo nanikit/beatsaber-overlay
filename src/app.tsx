@@ -89,7 +89,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
           <div
             className={`h-full flex flex-col [-webkit-text-stroke:0.5vw_black] transition duration-500 ${
               isRight ? "items-end" : "items-start"
-            }${mapInfo ? "" : isRight ? " translate-x-[100%]" : " translate-x-[-100%]"}`}
+            }${mapInfo ? "" : isRight ? " translate-x-[105%]" : " translate-x-[-105%]"}`}
           >
             <div
               ref={titleRef}
