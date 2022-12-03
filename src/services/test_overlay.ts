@@ -119,7 +119,7 @@ export const testableOverlayAtom = atom<OverlayState | Promise<OverlayState>, In
         } else {
           set(statesAtom, { ...states, index: 0 });
         }
-        set(stateAtom, states.states[0]);
+        set(stateAtom, get(statesAtom).states[0]);
         break;
       }
       case "click": {
