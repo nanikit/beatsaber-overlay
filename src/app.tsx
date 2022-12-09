@@ -159,7 +159,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                     className={`flex ${(health ?? 0) > 0 ? "text-white" : "text-[#aaa]"}`}
                   >
                     <MonospaceImitation>
-                      {`${((accuracy ?? 1) * 100).toFixed(1)}`}
+                      {(Math.floor((accuracy ?? 1) * 1000) / 10).toFixed(1)}
                     </MonospaceImitation>
                     %
                   </OutlinedParagraph>
