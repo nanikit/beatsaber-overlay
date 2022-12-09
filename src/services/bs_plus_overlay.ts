@@ -145,11 +145,18 @@ function processBsPlusMessage(
           },
         };
       case "score":
+        const { accuracy, currentHealth } = message.scoreEvent;
+        const inNoFail = previous.scoring?.inNoFail || (() => {
+          const diedNow = (previous.scoring?.health ?? 1) > 0 && currentHealth === 0;
+          const seemsNoFail = accuracy * 2 < (previous.scoring?.accuracy ?? 0);
+          return diedNow && seemsNoFail;
+        })();
         return {
           ...previous,
           scoring: {
-            accuracy: message.scoreEvent.accuracy,
+            accuracy: inNoFail ? accuracy * 2 : accuracy,
             health: message.scoreEvent.currentHealth,
+            inNoFail,
           },
         };
       case "resume":
