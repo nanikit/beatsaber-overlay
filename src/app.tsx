@@ -146,9 +146,7 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                   <AutoTimeProgress
                     duration={duration ?? 1}
                     progress={progress ?? lastProgress}
-                    className={`text-[0.12em] leading-[1] flex ${
-                      (health ?? 0) > 0 ? "[--color-primary:white]" : "[--color-primary:#aaa]"
-                    }`}
+                    className="text-[0.12em] leading-[1] [--color-primary:white] flex"
                   />
                 )}
                 <div
@@ -157,7 +155,9 @@ function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: bo
                   }`}
                 >
                   <MdFilterCenterFocus className="center-icon mr-[0.4em] [stroke-width:10%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
-                  <OutlinedParagraph className="flex">
+                  <OutlinedParagraph
+                    className={`flex ${(health ?? 0) > 0 ? "text-white" : "text-[#aaa]"}`}
+                  >
                     <MonospaceImitation>
                       {`${((accuracy ?? 1) * 100).toFixed(1)}`}
                     </MonospaceImitation>
