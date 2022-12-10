@@ -6,13 +6,9 @@ let beatmaps: BeatsaverMap[] = [];
 main().catch(console.error);
 
 async function main() {
-  const ids = ["22dd9", "1e941", "27118"];
-  beatmaps = (await Promise.all(
-    ids.map(async (id) => {
-      const response = await fetch(`https://api.beatsaver.com/maps/id/${id}`);
-      return response.json();
-    }),
-  )) as BeatsaverMap[];
+  const response = await fetch("https://beatsaver.com/api/search/text/0?sortOrder=Relevance");
+  const json = await response.json();
+  beatmaps = json.docs as BeatsaverMap[];
 
   const port = 2947;
   console.log(`Preloaded map data. Listen on ${port}..`);
@@ -87,11 +83,50 @@ async function sendActivity(socket: WebSocket) {
       },
     }),
   );
-  await delay(2000);
 
+  for (let i = 0; i < 4; i++) {
+    await delay(400);
+    if (socket.readyState !== socket.OPEN) {
+      return;
+    }
+    socket.send(
+      JSON.stringify({
+        _type: "event",
+        _event: "score",
+        scoreEvent: {
+          time: 0.01756902,
+          score: 9210,
+          accuracy: 0.9,
+          combo: 0,
+          missCount: 0,
+          currentHealth: 0.5,
+        },
+      }),
+    );
+  }
+
+  await delay(400);
   if (socket.readyState !== socket.OPEN) {
     return;
   }
+
+  const result = Math.random() * 0.6;
+  const willFail = result < 2 / 3;
+  const isNoFail = result < 1 / 3;
+  socket.send(
+    JSON.stringify({
+      _type: "event",
+      _event: "score",
+      scoreEvent: {
+        time: 0.01756902,
+        score: 19029,
+        accuracy: isNoFail ? 0.45 : 0.9,
+        combo: 4,
+        missCount: 0,
+        currentHealth: willFail ? 0 : 0.1,
+      },
+    }),
+  );
 
   socket.send(`{ "_event": "pause", "_type": "event", "pauseTime": 2.11 }`);
   await delay(2000);

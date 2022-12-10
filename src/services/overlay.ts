@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import { aliveWebSocketAtom, getAliveWebSocket } from "./alive_websocket";
 import { bsPlusOverlayAtom } from "./bs_plus_overlay";
+import { loggerAtom } from "./logger";
 import { OverlayState, overlayStateAtom } from "./overlay_state";
 
 export type Interaction = "initialize" | "click" | "cleanUp";
@@ -15,11 +16,13 @@ export const overlayAtom = atom<OverlayState, Interaction>(
         getAliveWebSocket({
           url: "ws://localhost:2947/socket",
           onOpen: () => {
+            set(loggerAtom, { level: "info", type: "socket_open" });
           },
           onMessage: (data) => {
             set(bsPlusOverlayAtom, data);
           },
-          onClose: () => {
+          onClose: (event) => {
+            set(loggerAtom, { level: "info", type: "socket_close", data: event });
             set(overlayStateAtom, { readyState: WebSocket.CLOSED });
           },
         }),

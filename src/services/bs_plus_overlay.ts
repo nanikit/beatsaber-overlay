@@ -1,5 +1,6 @@
-import { atom } from "jotai";
+import { atom, Getter, Setter } from "jotai";
 import { Difficulty } from "./beatsaver";
+import { loggerAtom } from "./logger";
 import { OverlayState, overlayStateAtom } from "./overlay_state";
 
 export type BsPlusMessage = Handshake | EventMessage;
@@ -75,12 +76,14 @@ type MapInfoEvent = {
   };
 };
 
+const isNoFailingAtom = atom(false);
+
 export const bsPlusOverlayAtom = atom<OverlayState, string>(
   (get) => get(overlayStateAtom),
   (get, set, value: string) => {
     const message = JSON.parse(value) as BsPlusMessage;
     const previous = get(overlayStateAtom);
-    const current = processBsPlusMessage(previous, message);
+    const current = processBsPlusMessage(previous, message, { get, set });
     set(overlayStateAtom, current);
     return current;
   },
@@ -89,6 +92,7 @@ export const bsPlusOverlayAtom = atom<OverlayState, string>(
 function processBsPlusMessage(
   previous: OverlayState,
   message: BsPlusMessage,
+  { get, set }: { get: Getter; set: Setter },
 ): OverlayState {
   if (message._type === "handshake") {
     return {
@@ -125,6 +129,10 @@ function processBsPlusMessage(
           time,
           timeMultiplier,
         } = message.mapInfoChanged;
+
+        set(loggerAtom, { level: "info", type: "map_changed", data: { id } });
+        set(isNoFailingAtom, false);
+
         return {
           ...previous,
           mapInfo: {
@@ -146,17 +154,22 @@ function processBsPlusMessage(
         };
       case "score":
         const { accuracy, currentHealth } = message.scoreEvent;
-        const inNoFail = previous.scoring?.inNoFail || (() => {
+
+        const isNoFailing = get(isNoFailingAtom);
+        const isNoFailed = isNoFailing || (() => {
           const diedNow = (previous.scoring?.health ?? 1) > 0 && currentHealth === 0;
-          const seemsNoFail = accuracy * 2 < (previous.scoring?.accuracy ?? 0);
+          const seemsNoFail = accuracy * 2 <= (previous.scoring?.accuracy ?? 0);
           return diedNow && seemsNoFail;
         })();
+        if (!isNoFailing && isNoFailed) {
+          set(isNoFailingAtom, true);
+        }
+
         return {
           ...previous,
           scoring: {
-            accuracy: inNoFail ? accuracy * 2 : accuracy,
+            accuracy: isNoFailed ? accuracy * 2 : accuracy,
             health: message.scoreEvent.currentHealth,
-            inNoFail,
           },
         };
       case "resume":

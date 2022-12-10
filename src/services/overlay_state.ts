@@ -24,7 +24,6 @@ export type OverlayState = {
   scoring?: {
     accuracy?: number;
     health?: number;
-    inNoFail: boolean;
   };
 
   progress?:

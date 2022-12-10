@@ -6,26 +6,20 @@ export const aliveWebSocketAtom = atom<AbortController | undefined>(undefined);
 export function getAliveWebSocket(
   { url, onOpen, onMessage, onClose }: {
     url: string;
-    onOpen: () => void;
+    onOpen: (event: Event) => void;
     onMessage: (data: string) => void;
-    onClose: () => void;
+    onClose: (event: CloseEvent) => void;
   },
 ) {
   const aborter = new AbortController();
 
   function getBsPlusWebSocket() {
     const sock = new WebSocket(url);
-    sock.addEventListener("open", (event) => {
-      console.log(event);
-      onOpen();
-    });
+    sock.addEventListener("open", onOpen);
     sock.addEventListener("message", (event) => {
       onMessage(event.data);
     });
-    sock.addEventListener("close", (event) => {
-      console.log(event);
-      onClose();
-    });
+    sock.addEventListener("close", onClose);
 
     return sock;
   }
