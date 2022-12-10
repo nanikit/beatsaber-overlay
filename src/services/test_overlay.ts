@@ -1,7 +1,6 @@
 import { atom } from "jotai";
 import { BeatsaverMap, getDetailFromId } from "./beatsaver";
-import { Interaction, overlayAtom } from "./overlay";
-import { OverlayState } from "./overlay_state";
+import { Interaction, OverlayState } from "./overlay_state";
 
 const sampleStates: OverlayState[] = [
   {
@@ -96,23 +95,17 @@ const statesAtom = atom({
   states: sampleStates,
 });
 
-const testParameter = new URLSearchParams(window.location.search).get("uiTest");
-
 let intervalId = 0;
 
-export const testableOverlayAtom = atom<OverlayState | Promise<OverlayState>, Interaction>(
+export const uiTestOverlayAtom = atom<OverlayState | Promise<OverlayState>, Interaction>(
   (get) => {
-    return get(testParameter == null ? overlayAtom : stateAtom);
+    return get(stateAtom);
   },
   async (get, set, value) => {
-    if (testParameter == null) {
-      set(overlayAtom, value);
-      return;
-    }
-
     switch (value) {
       case "initialize": {
-        const appointeds = await getTestData();
+        const testParameter = new URLSearchParams(window.location.search).get("query");
+        const appointeds = await getTestData(testParameter ?? undefined);
         const states = get(statesAtom);
         if (appointeds && appointeds.length > 0) {
           set(statesAtom, { ...states, states: appointeds });
@@ -153,7 +146,7 @@ export const testableOverlayAtom = atom<OverlayState | Promise<OverlayState>, In
   },
 );
 
-async function getTestData() {
+async function getTestData(testParameter?: string) {
   if (testParameter?.includes("?")) {
     const response = await fetch(`https://beatsaver.com/api/search/text/${testParameter}`);
     const json = await response.json();

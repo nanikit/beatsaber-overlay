@@ -110,7 +110,7 @@ async function sendActivity(socket: WebSocket) {
     return;
   }
 
-  const result = Math.random() * 0.6;
+  const result = Math.random();
   const willFail = result < 2 / 3;
   const isNoFail = result < 1 / 3;
   socket.send(

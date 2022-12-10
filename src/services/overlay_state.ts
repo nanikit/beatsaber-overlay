@@ -1,6 +1,8 @@
 import { atom } from "jotai";
 import { Characteristic, Difficulty } from "./beatsaver";
 
+export type Interaction = "initialize" | "click" | "cleanUp";
+
 export type OverlayState = {
   readyState?: number;
 

@@ -2,9 +2,7 @@ import { atom } from "jotai";
 import { aliveWebSocketAtom, getAliveWebSocket } from "./alive_websocket";
 import { bsPlusOverlayAtom } from "./bs_plus_overlay";
 import { loggerAtom } from "./logger";
-import { OverlayState, overlayStateAtom } from "./overlay_state";
-
-export type Interaction = "initialize" | "click" | "cleanUp";
+import { Interaction, OverlayState, overlayStateAtom } from "./overlay_state";
 
 export const overlayAtom = atom<OverlayState, Interaction>(
   (get) => get(overlayStateAtom),
