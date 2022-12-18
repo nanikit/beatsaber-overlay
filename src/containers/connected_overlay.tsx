@@ -101,7 +101,7 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
                 {!hides.has("njs") && !!diff?.njs && (
                   <div className="flex items-center">
                     <IoIosSpeedometer className="text-[1.0em] mr-[0.4em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
-                    <OutlinedParagraph>{diff?.njs ?? ""}</OutlinedParagraph>
+                    <OutlinedParagraph>{Math.round(diff.njs * 10) / 10}</OutlinedParagraph>
                   </div>
                 )}
               </div>
