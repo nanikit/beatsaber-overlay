@@ -158,7 +158,7 @@ function processBsPlusMessage(
         const isNoFailing = get(isNoFailingAtom);
         const isNoFailed = isNoFailing || (() => {
           const diedNow = (previous.scoring?.health ?? 1) > 0 && currentHealth === 0;
-          const seemsNoFail = accuracy * 2 <= (previous.scoring?.accuracy ?? 0);
+          const seemsNoFail = accuracy * 1.9 <= (previous.scoring?.accuracy ?? 0);
           return diedNow && seemsNoFail;
         })();
         if (!isNoFailing && isNoFailed) {
