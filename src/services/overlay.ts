@@ -2,11 +2,11 @@ import { atom } from "jotai";
 import { aliveWebSocketAtom, getAliveWebSocket } from "./alive_websocket";
 import { bsPlusOverlayAtom } from "./bs_plus_overlay";
 import { loggerAtom } from "./logger";
-import { Interaction, OverlayState, overlayStateAtom } from "./overlay_state";
+import { Interaction, overlayStateAtom } from "./overlay_state";
 
-export const overlayAtom = atom<OverlayState, Interaction>(
+export const overlayAtom = atom(
   (get) => get(overlayStateAtom),
-  (get, set, value: Interaction) => {
+  async (get, set, value: Interaction) => {
     const aborter = get(aliveWebSocketAtom);
     if (aborter === undefined && value === "initialize") {
       set(
@@ -29,7 +29,5 @@ export const overlayAtom = atom<OverlayState, Interaction>(
       aborter?.abort();
       set(aliveWebSocketAtom, undefined);
     }
-
-    return get(overlayStateAtom);
   },
 );

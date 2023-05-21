@@ -97,11 +97,11 @@ const statesAtom = atom({
 
 let intervalId = 0;
 
-export const uiTestOverlayAtom = atom<OverlayState | Promise<OverlayState>, Interaction>(
+export const uiTestOverlayAtom = atom(
   (get) => {
     return get(stateAtom);
   },
-  async (get, set, value) => {
+  async (get, set, value: Interaction) => {
     switch (value) {
       case "initialize": {
         const testParameter = new URLSearchParams(window.location.search).get("query");

@@ -11,7 +11,7 @@ Sentry.init({
 
 const isLocal = location.hostname.match(/^(localhost|127\.0\.0\.\d+)$/);
 
-export const loggerAtom = atom<undefined, Sentry.Breadcrumb>(
+export const loggerAtom = atom(
   undefined,
   (_get, _set, event: Sentry.Breadcrumb) => {
     if (isLocal) {

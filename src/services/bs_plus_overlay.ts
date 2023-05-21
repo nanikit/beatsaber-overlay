@@ -78,7 +78,7 @@ type MapInfoEvent = {
 
 const isNoFailingAtom = atom(false);
 
-export const bsPlusOverlayAtom = atom<OverlayState, string>(
+export const bsPlusOverlayAtom = atom(
   (get) => get(overlayStateAtom),
   (get, set, value: string) => {
     const message = JSON.parse(value) as BsPlusMessage;
