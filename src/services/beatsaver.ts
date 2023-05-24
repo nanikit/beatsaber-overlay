@@ -1,13 +1,13 @@
-export type Difficulty = 'Easy' | 'Normal' | 'Hard' | 'Expert' | 'ExpertPlus';
+export type Difficulty = "Easy" | "Normal" | "Hard" | "Expert" | "ExpertPlus";
 
 export type Characteristic =
-  | 'Standard'
-  | 'OneSaber'
-  | '90Degree'
-  | '360Degree'
-  | 'NoArrows'
-  | 'Lawless'
-  | 'Lightshow';
+  | "Standard"
+  | "OneSaber"
+  | "90Degree"
+  | "360Degree"
+  | "NoArrows"
+  | "Lawless"
+  | "Lightshow";
 
 export type BeatsaverMap = {
   id: string;
@@ -68,6 +68,8 @@ export type BeatsaverMap = {
         resets: number;
       };
       stars?: number;
+      maxScore?: number;
+      label?: string;
     }[];
     downloadURL: string;
     coverURL: string;

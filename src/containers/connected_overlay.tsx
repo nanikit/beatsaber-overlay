@@ -110,6 +110,8 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
                   <DifficultyLabel
                     difficulty={difficulty}
                     characteristic={characteristic}
+                    stars={diff?.stars}
+                    label={diff?.label}
                     className="[-webkit-text-stroke:0]"
                   />
                 )}
@@ -141,19 +143,6 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
         </div>
         <div className="relative aspect-square h-full rounded-[0.1em] overflow-hidden">
           <TransparentFallbackImg src={coverUrl} className="w-full h-full object-cover" />
-          {!!diff?.stars && (
-            <div
-              className={
-                `absolute w-[1em] p-[0.03em] bg-purple-600 -rotate-45 top-[0.1em] left-[-0.3em]` +
-                ` transition `
-              }
-            >
-              <p className="text-[0.08em] text-center tracking-[0.12em]">
-                {diff.stars}
-                <FaStar className="inline text-white" />
-              </p>
-            </div>
-          )}
         </div>
       </div>
       <div
