@@ -1,8 +1,8 @@
-import { useRaf } from "react-use";
-import { OverlayState } from "../services/overlay_state";
 import { FaClock } from "react-icons/fa";
-import { OutlinedParagraph } from "./outlined_paragraph";
+import { useInterval, useUpdate } from "react-use";
+import { OverlayState } from "../services/overlay_state";
 import { MonospaceImitation } from "./monospace_imitation";
+import { OutlinedParagraph } from "./outlined_paragraph";
 
 const emptyProgress = { point: new Date(), timeMultiplier: 1, pauseTime: 0 };
 
@@ -18,20 +18,18 @@ export function AutoTimeProgress({
   const progress = inputProgress ?? emptyProgress;
   const { point, timeMultiplier } = progress;
 
-  const remainingMs = (() => {
-    if ("resumeTime" in progress) {
-      return ((duration - progress.resumeTime) * 1000) / timeMultiplier;
-    }
-  })();
-  useRaf(remainingMs);
-
   const elapsed = (() => {
-    if ("resumeTime" in progress) {
-      const elapsedSeconds = (new Date().getTime() - point.getTime()) / 1000;
-      return Math.min(progress.resumeTime + elapsedSeconds * timeMultiplier, duration);
+    if (!("resumeTime" in progress)) {
+      return progress.pauseTime;
     }
-    return progress.pauseTime;
+    const elapsedMilliseconds = new Date().getTime() - point.getTime();
+    const elapsedSeconds = Math.round(elapsedMilliseconds / 1000);
+    return Math.min(progress.resumeTime + elapsedSeconds * timeMultiplier, duration);
   })();
+
+  const interval = elapsed >= duration ? null : 1000;
+  useInterval(useUpdate(), interval);
+
   return <TimeProgress duration={duration} elapsed={elapsed} {...props} />;
 }
 
