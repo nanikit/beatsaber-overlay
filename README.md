@@ -2,9 +2,15 @@
 
 Currently support only BeatSaberPlus_SongOverlay mod.
 
-Demo page: https://nanikit-bs.pages.dev/test/ui (click to switch)
-
 For use: https://nanikit-bs.pages.dev/
+
+Demo: https://nanikit-bs.pages.dev/test/ui (click to switch)
+
+Demo(Beatsaver page 1): [https://nanikit-bs.pages.dev/test/ui?query=0?](https://nanikit-bs.pages.dev/test/ui?query=0?)
+
+Demo(Ranked songs): https://nanikit-bs.pages.dev/test/ui?query=0?ranked=true
+
+Demo(Custom): https://nanikit-bs.pages.dev/test/ui?query=13377,ca62,28dfe
 
 I made it for personal use so I can change design without notice. If you have any opinion just tell me.
 
