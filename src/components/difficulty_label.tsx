@@ -35,13 +35,13 @@ export function DifficultyLabel({
 
       const maxWidth = parseFloat(getComputedStyle(div).fontSize) * 0.8;
       const width = Math.min(div.clientWidth, maxWidth);
-      setState({ ...state, width, isOverflowed: width === maxWidth });
+      setState({ ...state, width, isOverflowed: div.clientWidth > maxWidth * 1.15 });
     },
   });
 
   return (
     <div
-      className={`relative px-[0.07em] py-[0.015em] ${
+      className={`relative px-[0.03em] py-[0.015em] flex items-center justify-center ${
         width ? "" : "max-w-[0.8em]"
       } ${getDifficultyBackground(difficulty)} overflow-hidden transition-all rounded-[1em] ${
         className ?? ""
@@ -74,6 +74,7 @@ export function DifficultyLabel({
         )}
       </div>
 
+      {/* For height */}
       {isOverflowed && <p className="text-[0.1em] invisible">.</p>}
     </div>
   );

@@ -106,11 +106,8 @@ export const uiTestOverlayAtom = atom(
       case "initialize": {
         const testParameter = new URLSearchParams(window.location.search).get("query");
         const appointeds = await getTestData(testParameter ?? undefined);
-        const states = get(statesAtom);
         if (appointeds && appointeds.length > 0) {
-          set(statesAtom, { ...states, states: appointeds });
-        } else {
-          set(statesAtom, { ...states, index: 0 });
+          set(statesAtom, { states: appointeds, index: 0 });
         }
         set(stateAtom, get(statesAtom).states[0]);
         break;
