@@ -10,7 +10,7 @@ Demo(Beatsaver page 1): [https://nanikit-bs.pages.dev/test/ui?query=0?](https://
 
 Demo(Ranked songs): https://nanikit-bs.pages.dev/test/ui?query=0?ranked=true
 
-Demo(Custom): https://nanikit-bs.pages.dev/test/ui?query=13377,ca62,28dfe,32b06,1e3ab
+Demo(Custom): https://nanikit-bs.pages.dev/test/ui?query=13377,ca62,28dfe,1e3ab,19172
 
 I made it for personal use so I can change design without notice. If you have any opinion just tell me.
 
