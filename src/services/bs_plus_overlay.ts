@@ -76,7 +76,7 @@ type MapInfoEvent = {
   };
 };
 
-const isNoFailingAtom = atom(false);
+const isNoFailAtom = atom(false);
 
 export const bsPlusOverlayAtom = atom(
   (get) => get(overlayStateAtom),
@@ -131,7 +131,7 @@ function processBsPlusMessage(
         } = message.mapInfoChanged;
 
         set(loggerAtom, { level: "info", type: "map_changed", data: { id } });
-        set(isNoFailingAtom, false);
+        set(isNoFailAtom, false);
 
         return {
           ...previous,
@@ -153,22 +153,17 @@ function processBsPlusMessage(
           },
         };
       case "score":
-        const { accuracy, currentHealth } = message.scoreEvent;
+        const { accuracy, currentHealth, score } = message.scoreEvent;
 
-        const isNoFailing = get(isNoFailingAtom);
-        const isNoFailed = isNoFailing || (() => {
-          const diedNow = (previous.scoring?.health ?? 1) > 0 && currentHealth === 0;
-          const seemsNoFail = accuracy * 1.9 <= (previous.scoring?.accuracy ?? 0);
-          return diedNow && seemsNoFail;
-        })();
-        if (!isNoFailing && isNoFailed) {
-          set(isNoFailingAtom, true);
-        }
+        // const isScoreDecreased = score < (previous.scoring?.score ?? 0);
+        const isScoreChangedAfterFail = currentHealth === 0 && score !== previous.scoring?.score;
+        const seemsNoFail = isScoreChangedAfterFail;
+        const isNoFail = get(isNoFailAtom) || seemsNoFail && (set(isNoFailAtom, true), true);
 
         return {
           ...previous,
           scoring: {
-            accuracy: isNoFailed ? accuracy * 2 : accuracy,
+            accuracy: isNoFail ? accuracy * 2 : accuracy,
             health: message.scoreEvent.currentHealth,
           },
         };
