@@ -6,11 +6,11 @@ For use: https://nanikit-bs.pages.dev/
 
 Demo: https://nanikit-bs.pages.dev/test/ui (click to switch)
 
+Demo(Left layout): https://nanikit-bs.pages.dev/test/ui?layout=left&query=13377,ca62,28dfe,1e3ab,19172,30348
+
 Demo(Beatsaver page 1): [https://nanikit-bs.pages.dev/test/ui?query=0?](https://nanikit-bs.pages.dev/test/ui?query=0?)
 
 Demo(Ranked songs): https://nanikit-bs.pages.dev/test/ui?query=0?ranked=true
-
-Demo(Custom): https://nanikit-bs.pages.dev/test/ui?query=13377,ca62,28dfe,1e3ab,19172
 
 I made it for personal use so I can change design without notice. If you have any opinion just tell me.
 
