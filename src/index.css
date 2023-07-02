@@ -27,6 +27,8 @@
   unicode-range:
     /* Latin-1 Supplement */
     U+0080-00FF,
+    /* Cyrillic */
+    U+0400-04FF,
     U+2E80-2FD5, U+3000-303F,
     /* Hiragana */
     U+3041-3096,
