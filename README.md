@@ -4,19 +4,23 @@ Currently support only BeatSaberPlus_SongOverlay mod.
 
 For use: https://nanikit-bs.pages.dev/
 
-Demo: https://nanikit-bs.pages.dev/test/ui (click to switch)
+Demo: https://nanikit-bs.pages.dev/test/ui?query=0?ranked=true (click to switch)
 
-Demo(Left layout): https://nanikit-bs.pages.dev/test/ui?layout=left&query=13377,ca62,28dfe,1e3ab,19172,30348
+Demo(Left layout):
+https://nanikit-bs.pages.dev/test/ui?layout=left&query=13377,ca62,1e3ab,19172,30348
 
-Demo(Beatsaver page 1): [https://nanikit-bs.pages.dev/test/ui?query=0?](https://nanikit-bs.pages.dev/test/ui?query=0?)
+Demo(Beatsaver page 1):
+[https://nanikit-bs.pages.dev/test/ui?query=0?](https://nanikit-bs.pages.dev/test/ui?query=0?)
 
-Demo(Ranked songs): https://nanikit-bs.pages.dev/test/ui?query=0?ranked=true
+Demo(CJK test): https://nanikit-bs.pages.dev/test/ui?query=d2d2,28dfe,3307a
 
-I made it for personal use so I can change design without notice. If you have any opinion just tell me.
+I made it for personal use so I can change design without notice. If you have any opinion just tell
+me.
 
 ### Configuration
 
-You can make variance by query parameters. (e.g: https://nanikit-bs.pages.dev/test/ui?layout=left&hide=njs,bpm)
+You can make variance by query parameters. (e.g:
+https://nanikit-bs.pages.dev/test/ui?layout=left&hide=njs,bpm)
 
 - `layout` (`left`, `right`): overall layout (default: `right`)
 - `hide`: hide some info (default: none)

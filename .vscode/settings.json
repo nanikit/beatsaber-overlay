@@ -1,6 +1,5 @@
 {
   "npm.packageManager": "pnpm",
-  "eslint.packageManager": "pnpm",
   "editor.formatOnSave": true,
   "deno.enablePaths": ["tool"],
   "editor.defaultFormatter": "denoland.vscode-deno",
