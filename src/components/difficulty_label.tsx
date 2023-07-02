@@ -98,7 +98,7 @@ function DifficultyFragment({
       )}
       <p className="text-[0.1em] whitespace-nowrap">{label}</p>
       {!!stars && (
-        <p className="flex items-center justify-center align-middle text-[0.09em] text-center tracking-[0.12em]">
+        <p className="flex items-center justify-center align-middle text-[0.09em] text-center">
           <FaStar className="inline text-white mr-[0.25em]" />
           {stars}
         </p>
@@ -109,7 +109,7 @@ function DifficultyFragment({
 
 function getDifficultyText(difficulty: Difficulty, label?: string) {
   if (label) {
-    if (label.toLowerCase().match(/\b(easy|normal|hard|expert|ex?|n|h)\b/)) {
+    if (label.match(/\b(easy|normal|hard|expert|ex?|n|h)\b/i)) {
       return label;
     }
     return `${label} (${getDifficultyAbbreviation(difficulty)})`;
