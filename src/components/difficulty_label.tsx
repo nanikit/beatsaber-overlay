@@ -109,7 +109,7 @@ function DifficultyFragment({
 
 function getDifficultyText(difficulty: Difficulty, label?: string) {
   if (label) {
-    if (label.match(/\b(easy|normal|hard|expert|ex?|n|h)\b/i)) {
+    if (label.match(/\b(easy|normal|hard|expert(plus)?|ex?|n|h)\b/i)) {
       return label;
     }
     return `${label} (${getDifficultyAbbreviation(difficulty)})`;
