@@ -155,7 +155,6 @@ function processBsPlusMessage(
       case "score":
         const { accuracy, currentHealth, score } = message.scoreEvent;
 
-        // const isScoreDecreased = score < (previous.scoring?.score ?? 0);
         const isScoreChangedAfterFail = currentHealth === 0 && score !== previous.scoring?.score;
         const seemsNoFail = isScoreChangedAfterFail;
         const isNoFail = get(isNoFailAtom) || seemsNoFail && (set(isNoFailAtom, true), true);
