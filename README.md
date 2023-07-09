@@ -12,7 +12,7 @@ https://nanikit-bs.pages.dev/test/ui?layout=left&query=13377,ca62,1e3ab,19172,30
 Demo(Beatsaver page 1):
 [https://nanikit-bs.pages.dev/test/ui?query=0?](https://nanikit-bs.pages.dev/test/ui?query=0?)
 
-Demo(CJK, Cyrillic test): https://nanikit-bs.pages.dev/test/ui?query=d2d2,28dfe,3307a,33750,32e6b
+Demo(CJK, Cyrillic test): https://nanikit-bs.pages.dev/test/ui?query=d2d2,33725,3307a,33750,32e6b
 
 I made it for personal use so I can change design without notice. If you have any opinion just tell
 me.
