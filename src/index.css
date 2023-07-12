@@ -3,47 +3,12 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "txjlccyzt";
-  src: url("https://cdn.jsdelivr.net/gh/nanikit/beatsaber-overlay@0bba91f8b3660e2b0f82ef6498916d8561123328/public/Teng Xiang Jia Li Chao Cu Yuan Zi Ti.woff2")
-    format("woff2");
-  unicode-range:
-    U+3041-3096, U+30A0-30FF,
-    /* CJK Radicals Supplement */
-    U+2E80-2FD5,
-    /* CJK Symbols and Punctuation */
-    U+3000-303F,
-    U+3220-3243, U+3280-337F, U+3400-4DB5, U+4E00-9FCB, U+F900-FA6A, U+FF01-FF5E;
-}
-
-@font-face {
   font-family: "Genjyuu";
-  src: url("https://cdn.jsdelivr.net/gh/nanikit/beatsaber-overlay@6711aee805b3b3aaeacdad3ecc096893f67b48aa/public/GenJyuuGothicX-Heavy.woff2")
-    format("woff2");
-  unicode-range:
-    /* Latin-1 Supplement */
-    U+0080-00FF,
-    /* Cyrillic */
-    U+0400-04FF,
-    U+2E80-2FD5, U+3000-303F,
-    /* Hiragana */
-    U+3041-3096,
-    /* Katakana (Full Width) */
-    U+30A0-30FF,
-    /* Katakana Phonetic Extensions */
-    U+31F0-31FF,
-    U+3220-3243, U+3280-337F, U+3400-4DB5, U+4E00-9FCB, U+F900-FA6A, U+FF01-FF5E,
-    /* Katakana and Punctuation (Half Width) */
-    U+FF5F-FF9F;
-}
-
-@font-face {
-  font-family: "Maplestory";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff")
-    format("woff");
+  src: url("https://cdn.jsdelivr.net/gh/nanikit/beatsaber-overlay@37c5a2eff2cc6f3e5a8786565b48dfa9e0b9ca8f/public/GenJyuuGothicX.woff2") format("woff2");
 }
 
 body {
-  font-family: Genjyuu, txjlccyzt, Maplestory, sans-serif;
+  font-family: Genjyuu, sans-serif;
   user-select: none;
 }
 
