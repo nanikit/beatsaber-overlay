@@ -23,6 +23,8 @@ You can make variance by query parameters. (e.g:
 https://nanikit-bs.pages.dev/test/ui?layout=left&hide=njs,bpm)
 
 - `layout` (`left`, `right`): overall layout (default: `right`)
+- `outline_color`: text outline color (default: `black`)
+- `letter_color`: text fill color (default: `white`)
 - `hide`: hide some info (default: none)
   - `njs`: note jump speed
   - `bpm`: beats per minute

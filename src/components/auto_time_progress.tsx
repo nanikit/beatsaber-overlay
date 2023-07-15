@@ -3,6 +3,7 @@ import { useInterval, useUpdate } from "react-use";
 import { OverlayState } from "../services/overlay_state";
 import { MonospaceImitation } from "./monospace_imitation";
 import { OutlinedParagraph } from "./outlined_paragraph";
+import { usePalette } from "../hooks/use_palette";
 
 const emptyProgress = { point: new Date(), timeMultiplier: 1, pauseTime: 0 };
 
@@ -42,11 +43,18 @@ function TimeProgress({
   elapsed: number;
   className?: string;
 }) {
+  const { letter, outline } = usePalette();
+
   const total = formatSeconds(duration);
   const done = formatSeconds(elapsed);
+
   return (
     <div className={`flex items-center ${className}`}>
-      <FaClock className="text-[0.85em] mr-[0.5em] [stroke-width:20%] align-bottom stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+      <FaClock
+        className="text-[0.85em] mr-[0.5em] [stroke-width:20%] align-bottom overflow-visible [paint-order:stroke_fill]"
+        stroke={outline}
+        fill={letter}
+      />
       <OutlinedParagraph className={`flex flex-shrink text-[var(--color-primary)]`}>
         <MonospaceImitation>{done}</MonospaceImitation>
         &nbsp;/ {total}

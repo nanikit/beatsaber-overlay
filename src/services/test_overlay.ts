@@ -10,7 +10,7 @@ const sampleStates: OverlayState[] = [
       difficulty: "ExpertPlus",
       hash: "207cc54d61a787e26da47ce6c0cc45d9608d87fb",
       mapper: "rogdude",
-      title: "Heeartbeeat Oveerheeat!!!!",
+      title: "Käärijä격전Съездбек 愛のモンスター妄语人间",
       subtitle: "Camellia feat. Nanahira",
       artist: "Rogdude & Loloppe",
       coverUrl: "https://eu.cdn.beatsaver.com/207cc54d61a787e26da47ce6c0cc45d9608d87fb.jpg",

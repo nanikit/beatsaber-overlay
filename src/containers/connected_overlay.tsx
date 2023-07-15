@@ -12,6 +12,7 @@ import { TransparentFallbackImg } from "../components/transparent_fallback_img";
 import { useTextFit } from "../hooks/use_text_fit";
 import { BeatsaverMap, getDataUrlFromHash } from "../services/beatsaver";
 import { OverlayState } from "../services/overlay_state";
+import { usePalette } from "../hooks/use_palette";
 
 export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
   const hidesParam = useSearchParam("hide") ?? "";
@@ -31,8 +32,8 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
     staleTime: Infinity,
   });
   const { id, metadata, versions } = mapQuery.data ?? {};
-  const version =
-    versions?.find((version) => version.hash === hash) ?? versions?.[versions.length - 1];
+  const version = versions?.find((version) => version.hash === hash) ??
+    versions?.[versions.length - 1];
   const diff = version?.diffs?.find(
     (diff) => diff.characteristic === characteristic && diff.difficulty === difficulty,
   );
@@ -44,6 +45,8 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
 
   const authorRef = useRef<HTMLParagraphElement>(null);
   useTextFit({ ref: authorRef, maxHeight: vw100 * 0.04, maxSize: vw100 * 0.0225 });
+
+  const { letter, outline } = usePalette();
 
   return (
     <>
@@ -88,19 +91,31 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
               >
                 {!hides.has("id") && !!id && (
                   <div className="flex items-center">
-                    <FaKey className="text-[0.8em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                    <FaKey
+                      className="text-[0.8em] mr-[0.5em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
+                      stroke={outline}
+                      fill={letter}
+                    />
                     <OutlinedParagraph>{id}</OutlinedParagraph>
                   </div>
                 )}
                 {!hides.has("bpm") && !!metadata?.bpm && (
                   <div className="flex items-center">
-                    <FaDrum className="text-[0.9em] mr-[0.5em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                    <FaDrum
+                      className="text-[0.9em] mr-[0.5em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
+                      stroke={outline}
+                      fill={letter}
+                    />
                     <OutlinedParagraph>{Math.round(metadata.bpm * 10) / 10}</OutlinedParagraph>
                   </div>
                 )}
                 {!hides.has("njs") && !!diff?.njs && (
                   <div className="flex items-center">
-                    <IoIosSpeedometer className="text-[1.0em] mr-[0.4em] [stroke-width:20%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                    <IoIosSpeedometer
+                      className="text-[1.0em] mr-[0.4em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
+                      stroke={outline}
+                      fill={letter}
+                    />
                     <OutlinedParagraph>{Math.round(diff.njs * 10) / 10}</OutlinedParagraph>
                   </div>
                 )}
@@ -127,7 +142,11 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
                     !hides.has("acc") && accuracy ? "" : "hidden"
                   }`}
                 >
-                  <MdFilterCenterFocus className="center-icon mr-[0.4em] [stroke-width:10%] stroke-[black] overflow-visible [paint-order:stroke_fill]" />
+                  <MdFilterCenterFocus
+                    className="center-icon mr-[0.4em] [stroke-width:10%] overflow-visible [paint-order:stroke_fill]"
+                    stroke={outline}
+                    fill={letter}
+                  />
                   <OutlinedParagraph
                     className={`flex ${(health ?? 0) > 0 ? "text-white" : "text-[#aaa]"}`}
                   >
