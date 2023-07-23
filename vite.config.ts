@@ -6,7 +6,17 @@ import cloudflarePagesFunctions from "vite-plugin-cloudflare-functions";
 export default defineConfig({
   plugins: [
     react({
-      babel: { plugins: ["jotai/babel/plugin-react-refresh"] },
+      babel: {
+        presets: [[
+          "@babel/preset-env",
+          {
+            "corejs": "3.22",
+            "useBuiltIns": "usage",
+            "modules": false,
+          },
+        ]],
+        plugins: ["jotai/babel/plugin-react-refresh"],
+      },
     }),
     cloudflarePagesFunctions({ dts: "cloudflare.d.ts.log" }),
   ],

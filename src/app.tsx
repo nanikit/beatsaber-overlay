@@ -22,15 +22,20 @@ export function App() {
   }, []);
 
   return (
-    <main
-      className="w-full h-[20vw] text-white p-[1vw] text-[20vw]"
-      onClick={() => updateOverlay("click")}
+    <div
+      className="h-[100vh]"
+      onContextMenu={(event) => {
+        event.preventDefault();
+      }}
     >
-      {overlay.readyState === WebSocket.OPEN ? (
-        <ConnectedOverlay state={overlay} isRight={isRight} />
-      ) : (
-        <DisconnectionWarning isRight={isRight} />
-      )}
-    </main>
+      <main
+        className="w-full h-[20vw] text-white p-[1vw] text-[20vw]"
+        onClick={() => updateOverlay("click")}
+      >
+        {overlay.readyState === WebSocket.OPEN
+          ? <ConnectedOverlay state={overlay} isRight={isRight} />
+          : <DisconnectionWarning isRight={isRight} />}
+      </main>
+    </div>
   );
 }
