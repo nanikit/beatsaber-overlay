@@ -1,7 +1,9 @@
 {
+  "lock": false,
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true
+  },
   "fmt": {
-    "options": {
-      "lineWidth": 100
-    }
+    "lineWidth": 100
   }
 }
