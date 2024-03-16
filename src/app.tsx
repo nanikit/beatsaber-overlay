@@ -1,5 +1,4 @@
 import { useAtom } from "jotai";
-import { useEffect } from "react";
 import { useLocation, useSearchParam } from "react-use";
 import { DisconnectionWarning } from "./components/disconnection_warning";
 import { ConnectedOverlay } from "./containers/connected_overlay";
@@ -13,13 +12,6 @@ export function App() {
   );
   const layout = useSearchParam("layout");
   const isRight = layout !== "left";
-
-  useEffect(() => {
-    updateOverlay("initialize");
-    return () => {
-      updateOverlay("cleanUp");
-    };
-  }, []);
 
   return (
     <div

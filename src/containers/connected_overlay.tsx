@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FaDrum, FaKey, FaStar } from "react-icons/fa";
+import { FaDrum, FaKey } from "react-icons/fa";
 import { IoIosSpeedometer } from "react-icons/io";
 import { MdFilterCenterFocus } from "react-icons/md";
 import { useQuery } from "react-query";
@@ -9,10 +9,10 @@ import { DifficultyLabel } from "../components/difficulty_label";
 import { MonospaceImitation } from "../components/monospace_imitation";
 import { OutlinedParagraph } from "../components/outlined_paragraph";
 import { TransparentFallbackImg } from "../components/transparent_fallback_img";
+import { usePalette } from "../hooks/use_palette";
 import { useTextFit } from "../hooks/use_text_fit";
 import { BeatsaverMap, getDataUrlFromHash } from "../services/beatsaver";
 import { OverlayState } from "../services/overlay_state";
-import { usePalette } from "../hooks/use_palette";
 
 export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
   const hidesParam = useSearchParam("hide") ?? "";

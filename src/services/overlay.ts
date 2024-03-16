@@ -31,3 +31,7 @@ export const overlayAtom = atom(
     }
   },
 );
+overlayAtom.onMount = (set) => {
+  set("initialize");
+  return () => set("cleanUp");
+};
