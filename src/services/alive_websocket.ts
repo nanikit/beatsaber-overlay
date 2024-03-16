@@ -1,8 +1,3 @@
-import { atom } from "jotai";
-import { timeout } from "./utils";
-
-export const aliveWebSocketAtom = atom<AbortController | undefined>(undefined);
-
 export function getAliveWebSocket(
   { url, onOpen, onMessage, onClose }: {
     url: string;
@@ -67,4 +62,8 @@ export function getAliveWebSocket(
   monitorReconnect();
 
   return aborter;
+}
+
+function timeout(milliseconds: number): Promise<undefined> {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }

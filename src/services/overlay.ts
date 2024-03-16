@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { aliveWebSocketAtom, getAliveWebSocket } from "./alive_websocket";
+import { getAliveWebSocket } from "./alive_websocket";
 import { bsPlusOverlayAtom } from "./bs_plus_overlay";
 import { loggerAtom } from "./logger";
 import { Interaction, overlayStateAtom } from "./overlay_state";
@@ -35,3 +35,5 @@ overlayAtom.onMount = (set) => {
   set("initialize");
   return () => set("cleanUp");
 };
+
+const aliveWebSocketAtom = atom<AbortController | undefined>(undefined);
