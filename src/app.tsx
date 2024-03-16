@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { useLocation, useSearchParam } from "react-use";
 import { DisconnectionWarning } from "./components/disconnection_warning";
-import { ConnectedOverlay } from "./containers/connected_overlay";
+import { ConnectedOverlay } from "./features/overlay/containers/connected_overlay";
 import { uiTestOverlayAtom } from "./features/demo/atoms";
 import { overlayAtom } from "./features/overlay/atoms/overlay";
 

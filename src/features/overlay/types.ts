@@ -1,8 +1,6 @@
-import { atom } from "jotai";
-import { Characteristic, Difficulty } from "../../../services/beatsaver";
+import { Characteristic, Difficulty } from "../../services/beatsaver";
 
 export type Interaction = "initialize" | "click" | "cleanUp";
-
 export type OverlayState = {
   readyState?: number;
 
@@ -38,5 +36,3 @@ export type OverlayState = {
       pauseTime: number;
     });
 };
-
-export const overlayStateAtom = atom<OverlayState>({});

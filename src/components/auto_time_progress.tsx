@@ -1,6 +1,6 @@
 import { FaClock } from "react-icons/fa";
 import { useInterval, useUpdate } from "react-use";
-import { OverlayState } from "../features/overlay/atoms/overlay_state";
+import { OverlayState } from "../features/overlay/types";
 import { usePalette } from "../hooks/use_palette";
 import { MonospaceImitation } from "./monospace_imitation";
 import { OutlinedParagraph } from "./outlined_paragraph";

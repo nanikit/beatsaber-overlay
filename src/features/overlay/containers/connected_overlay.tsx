@@ -4,15 +4,15 @@ import { IoIosSpeedometer } from "react-icons/io";
 import { MdFilterCenterFocus } from "react-icons/md";
 import { useQuery } from "react-query";
 import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
-import { AutoTimeProgress } from "../components/auto_time_progress";
-import { DifficultyLabel } from "../components/difficulty_label";
-import { MonospaceImitation } from "../components/monospace_imitation";
-import { OutlinedParagraph } from "../components/outlined_paragraph";
-import { TransparentFallbackImg } from "../components/transparent_fallback_img";
-import { OverlayState } from "../features/overlay/atoms/overlay_state";
-import { usePalette } from "../hooks/use_palette";
-import { useTextFit } from "../hooks/use_text_fit";
-import { BeatsaverMap, getDataUrlFromHash } from "../services/beatsaver";
+import { AutoTimeProgress } from "../../../components/auto_time_progress";
+import { DifficultyLabel } from "../../../components/difficulty_label";
+import { MonospaceImitation } from "../../../components/monospace_imitation";
+import { OutlinedParagraph } from "../../../components/outlined_paragraph";
+import { TransparentFallbackImg } from "../../../components/transparent_fallback_img";
+import { OverlayState } from "../types";
+import { usePalette } from "../../../hooks/use_palette";
+import { useTextFit } from "../../../hooks/use_text_fit";
+import { BeatsaverMap, getDataUrlFromHash } from "../../../services/beatsaver";
 
 export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
   const hidesParam = useSearchParam("hide") ?? "";

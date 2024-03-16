@@ -1,6 +1,7 @@
 import { atom, Getter, Setter } from "jotai";
 import { loggerAtom } from "../../services/logger";
-import { OverlayState, overlayStateAtom } from "../overlay/atoms/overlay_state";
+import { overlayStateAtom } from "../overlay/atoms/state";
+import { OverlayState } from "../overlay/types";
 import { BsPlusMessage } from "./types";
 
 const isNoFailAtom = atom(false);
