@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { getReconnectingWebSocket } from "../../../services/get_reconnecting_web_socket";
-import { loggerAtom } from "../../../services/logger";
+import { loggerAtom } from "../../../atoms/logger";
 import { bsPlusOverlayAtom } from "../../bs_plus/atoms";
 import { Interaction } from "../types";
 import { overlayStateAtom } from "./state";

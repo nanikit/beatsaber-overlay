@@ -1,5 +1,5 @@
 import { atom, Getter, Setter } from "jotai";
-import { loggerAtom } from "../../services/logger";
+import { loggerAtom } from "../../atoms/logger";
 import { overlayStateAtom } from "../overlay/atoms/state";
 import { OverlayState } from "../overlay/types";
 import { BsPlusMessage } from "./types";
