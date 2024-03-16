@@ -1,8 +1,8 @@
 import { atom } from "jotai";
-import { getAliveWebSocket } from "./alive_websocket";
 import { bsPlusOverlayAtom } from "./bs_plus_overlay";
 import { loggerAtom } from "./logger";
 import { Interaction, overlayStateAtom } from "./overlay_state";
+import { getReconnectingWebSocket } from "./get_reconnecting_web_socket";
 
 export const overlayAtom = atom(
   (get) => get(overlayStateAtom),
@@ -11,7 +11,7 @@ export const overlayAtom = atom(
     if (aborter === undefined && value === "initialize") {
       set(
         aliveWebSocketAtom,
-        getAliveWebSocket({
+        getReconnectingWebSocket({
           url: "ws://localhost:2947/socket",
           onOpen: () => {
             set(loggerAtom, { level: "info", type: "socket_open" });

@@ -1,4 +1,4 @@
-export function getAliveWebSocket(
+export function getReconnectingWebSocket(
   { url, onOpen, onMessage, onClose }: {
     url: string;
     onOpen: (event: Event) => void;
