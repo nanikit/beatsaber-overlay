@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { Characteristic, Difficulty } from "./beatsaver";
+import { Characteristic, Difficulty } from "../../../services/beatsaver";
 
 export type Interaction = "initialize" | "click" | "cleanUp";
 

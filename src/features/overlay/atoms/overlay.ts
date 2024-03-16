@@ -1,8 +1,8 @@
 import { atom } from "jotai";
-import { bsPlusOverlayAtom } from "./bs_plus_overlay";
-import { loggerAtom } from "./logger";
+import { loggerAtom } from "../../../services/logger";
+import { bsPlusOverlayAtom } from "../../bs_plus/atoms";
 import { Interaction, overlayStateAtom } from "./overlay_state";
-import { getReconnectingWebSocket } from "./get_reconnecting_web_socket";
+import { getReconnectingWebSocket } from "../../../services/get_reconnecting_web_socket";
 
 export const overlayAtom = atom(
   (get) => get(overlayStateAtom),

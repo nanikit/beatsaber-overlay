@@ -1,7 +1,7 @@
 import { atom, Getter, Setter } from "jotai";
-import { Difficulty } from "./beatsaver";
-import { loggerAtom } from "./logger";
-import { OverlayState, overlayStateAtom } from "./overlay_state";
+import { Difficulty } from "../../services/beatsaver";
+import { loggerAtom } from "../../services/logger";
+import { OverlayState, overlayStateAtom } from "../overlay/atoms/overlay_state";
 
 export type BsPlusMessage = Handshake | EventMessage;
 
