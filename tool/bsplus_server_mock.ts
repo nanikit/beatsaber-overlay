@@ -1,5 +1,5 @@
 import { delay } from "https://deno.land/std@0.165.0/async/delay.ts";
-import { BeatsaverMap } from "../src/services/beatsaver.ts";
+import { BeatsaverMap } from "../src/modules/beatsaver.ts";
 
 let beatmaps: BeatsaverMap[] = [];
 

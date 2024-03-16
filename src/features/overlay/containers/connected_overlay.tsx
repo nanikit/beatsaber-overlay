@@ -12,7 +12,7 @@ import { TransparentFallbackImg } from "../../../components/transparent_fallback
 import { OverlayState } from "../types";
 import { usePalette } from "../../../hooks/use_palette";
 import { useTextFit } from "../../../hooks/use_text_fit";
-import { BeatsaverMap, getDataUrlFromHash } from "../../../services/beatsaver";
+import { BeatsaverMap, getDataUrlFromHash } from "../../../modules/beatsaver";
 
 export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
   const hidesParam = useSearchParam("hide") ?? "";

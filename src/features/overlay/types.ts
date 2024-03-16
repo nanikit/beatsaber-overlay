@@ -1,4 +1,4 @@
-import { Characteristic, Difficulty } from "../../services/beatsaver";
+import { Characteristic, Difficulty } from "../../modules/beatsaver";
 
 export type Interaction = "initialize" | "click" | "cleanUp";
 export type OverlayState = {

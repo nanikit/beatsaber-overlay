@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import useResizeObserver from "use-resize-observer";
-import { Characteristic, Difficulty } from "../services/beatsaver";
+import { Characteristic, Difficulty } from "../modules/beatsaver";
 
 export function DifficultyLabel({
   characteristic,

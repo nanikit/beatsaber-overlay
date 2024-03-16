@@ -1,4 +1,4 @@
-import { Difficulty } from "../../services/beatsaver";
+import { Difficulty } from "../../modules/beatsaver";
 
 export type BsPlusMessage = Handshake | EventMessage;
 

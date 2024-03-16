@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { BeatsaverMap, getDetailFromId } from "../../services/beatsaver";
+import { BeatsaverMap, getDetailFromId } from "../../modules/beatsaver";
 import { Interaction, OverlayState } from "../overlay/types";
 
 const sampleStates: OverlayState[] = [
