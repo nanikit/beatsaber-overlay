@@ -1,67 +1,81 @@
-export function getReconnectingWebSocket(
-  { url, onOpen, onMessage, onClose }: {
-    url: string;
-    onOpen: (event: Event) => void;
-    onMessage: (data: string) => void;
-    onClose: (event: CloseEvent) => void;
-  },
-) {
-  const aborter = new AbortController();
+export async function getReconnectingWebSocket({ url, onOpen, onMessage, onClose, aborter }: {
+  url: string;
+  onOpen: (socket: WebSocket) => void;
+  onMessage: (data: string) => void;
+  onClose: () => void;
+  aborter: AbortController;
+}) {
+  const abort = Promise.withResolvers<"aborted">();
+  aborter.signal.addEventListener("abort", () => {
+    abort.resolve("aborted");
+  });
 
-  function getBsPlusWebSocket() {
-    const sock = new WebSocket(url);
-    sock.addEventListener("open", onOpen);
-    sock.addEventListener("message", (event) => {
-      onMessage(event.data);
-    });
-    sock.addEventListener("close", onClose);
+  let retryCount = 0;
 
-    return sock;
-  }
+  while (!aborter.signal.aborted) {
+    const socket = getWebSocket();
+    const delay = 30 * Math.log10(Math.max(2, retryCount + 2)) - 8;
+    const interval = timeout(delay * 1000);
+    console.log(
+      `retryCount: ${retryCount}, next retry will be in ${Math.ceil(delay)} seconds.`,
+    );
 
-  async function monitorReconnect() {
-    let retryCount = 0;
-    let socket = getBsPlusWebSocket();
-
-    aborter.signal.addEventListener("abort", () => {
-      socket.close();
-    });
-
-    while (true) {
-      const delay = 30 * Math.log10(Math.max(2, retryCount + 2)) - 8;
-      console.log(
-        `retryCount: ${retryCount}, next retry will be in ${Math.ceil(delay)} seconds.`,
-      );
-      const isOpened = await Promise.race<true | undefined>([
-        new Promise<true>((resolve) => {
-          socket.addEventListener("open", () => resolve(true), { once: true });
-        }),
-        timeout(delay * 1000),
-      ]);
-
-      if (aborter.signal.aborted) {
-        return;
-      }
-      if (isOpened) {
+    const result = await waitSocketEvents(socket);
+    switch (result) {
+      case "open":
         retryCount = 0;
-        await new Promise<true>((resolve) => {
-          socket.addEventListener("close", () => resolve(true), { once: true });
-        });
-        if (aborter.signal.aborted) {
+        const result = await waitCloseOrAbort(socket);
+        if (result === "aborted") {
           return;
         }
-      } else {
+        onClose();
+        break;
+      case "close":
+      case undefined:
         retryCount++;
+        break;
+      case "aborted":
         socket.close();
-      }
-
-      socket = getBsPlusWebSocket();
+        return;
     }
+
+    await Promise.race([interval, abort.promise]);
   }
 
-  monitorReconnect();
+  function getWebSocket() {
+    const socket = new WebSocket(url);
+    socket.addEventListener("open", () => onOpen(socket));
+    socket.addEventListener("message", (event) => {
+      onMessage(event.data);
+    });
 
-  return aborter;
+    return socket;
+  }
+
+  async function waitSocketEvents(socket: WebSocket) {
+    const closePromise = waitEvent(socket, "close");
+    return await Promise.race([
+      waitEvent(socket, "open"),
+      closePromise,
+      abort.promise,
+    ]);
+  }
+
+  async function waitCloseOrAbort(socket: WebSocket) {
+    const closePromise = waitEvent(socket, "close");
+    const result = await Promise.race([closePromise, abort.promise]);
+    if (result === "aborted") {
+      socket.close();
+      return "aborted";
+    }
+    return "close";
+  }
+
+  function waitEvent<T extends string>(target: EventTarget, eventName: T) {
+    return new Promise<T>((resolve) => {
+      target.addEventListener(eventName, () => resolve(eventName), { once: true });
+    });
+  }
 }
 
 function timeout(milliseconds: number): Promise<undefined> {
