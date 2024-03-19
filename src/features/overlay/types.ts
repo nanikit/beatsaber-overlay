@@ -1,20 +1,11 @@
 import { Characteristic, Difficulty } from "../../modules/beatsaver";
 
 export type Interaction = "initialize" | "click" | "cleanUp";
+
 export type OverlayState = {
   readyState?: number;
 
-  mapInfo?: {
-    hash: string;
-    characteristic: Characteristic;
-    difficulty: Difficulty;
-    coverUrl?: string;
-    title: string;
-    subtitle?: string;
-    artist?: string;
-    mapper: string;
-    duration?: number;
-  };
+  mapInfo?: MapInfo;
 
   user?: {
     id?: string;
@@ -35,4 +26,16 @@ export type OverlayState = {
     & ({ resumeTime: number } | {
       pauseTime: number;
     });
+};
+
+export type MapInfo = {
+  hash: string;
+  characteristic: Characteristic;
+  difficulty: Difficulty;
+  coverUrl?: string;
+  title: string;
+  subtitle?: string;
+  artist?: string;
+  mapper: string;
+  duration?: number;
 };

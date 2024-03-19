@@ -1,21 +1,48 @@
 import { atom, Getter, Setter } from "jotai";
 import { loggerAtom } from "../../atoms/logger";
-import { overlayStateAtom } from "../overlay/atoms/state";
 import { OverlayState } from "../overlay/types";
 import { BsPlusMessage } from "./types";
+import { getReconnectingWebSocket } from "../../modules/get_reconnecting_web_socket";
+import { endpointAtom } from "../overlay/atoms/endpoint";
+import { Mount, mount, onMount, unmount } from "../../modules/atom_mount_hook";
 
 const isNoFailAtom = atom(false);
+const aliveWebSocketAtom = atom<AbortController | null>(null);
+const overlayStateAtom = atom<OverlayState>({ readyState: WebSocket.CLOSED });
 
 export const bsPlusOverlayAtom = atom(
   (get) => get(overlayStateAtom),
-  (get, set, value: string) => {
-    const message = JSON.parse(value) as BsPlusMessage;
-    const previous = get(overlayStateAtom);
-    const current = processBsPlusMessage(previous, message, { get, set });
-    set(overlayStateAtom, current);
-    return current;
+  (get, set, value: Mount) => {
+    const aborter = get(aliveWebSocketAtom);
+    aborter?.abort();
+
+    if (value === mount) {
+      const newAborter = new AbortController();
+      getReconnectingWebSocket({
+        url: "ws://localhost:2947/socket",
+        onOpen: () => {
+          set(endpointAtom, "bsplus");
+          set(loggerAtom, { level: "info", type: "socket_open" });
+        },
+        onMessage: (data) => {
+          const message = JSON.parse(data) as BsPlusMessage;
+          const previous = get(overlayStateAtom);
+          const current = processBsPlusMessage(previous, message, { get, set });
+          set(overlayStateAtom, current);
+        },
+        onClose: () => {
+          set(loggerAtom, { level: "info", type: "socket_close" });
+          set(endpointAtom, null);
+        },
+        aborter: newAborter,
+      });
+      set(aliveWebSocketAtom, newAborter);
+    } else if (value === unmount) {
+      set(aliveWebSocketAtom, null);
+    }
   },
 );
+bsPlusOverlayAtom.onMount = onMount;
 
 function processBsPlusMessage(
   previous: OverlayState,
