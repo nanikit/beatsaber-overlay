@@ -139,7 +139,7 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
                 )}
                 <div
                   className={`text-[0.12em] leading-[1] flex ${
-                    !hides.has("acc") && accuracy ? "" : "hidden"
+                    !hides.has("acc") && accuracy != null ? "" : "hidden"
                   }`}
                 >
                   <MdFilterCenterFocus
