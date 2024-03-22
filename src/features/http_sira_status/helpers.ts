@@ -59,6 +59,8 @@ function convertMapInfo(beatmap: Beatmap | null): MapInfo | undefined {
     songAuthorName,
     levelAuthorName,
     length,
+    songBPM,
+    noteJumpSpeed,
   } = beatmap;
 
   return {
@@ -71,5 +73,7 @@ function convertMapInfo(beatmap: Beatmap | null): MapInfo | undefined {
     artist: songAuthorName,
     mapper: levelAuthorName,
     duration: length / 1000,
+    bpm: songBPM,
+    speed: noteJumpSpeed,
   };
 }

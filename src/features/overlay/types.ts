@@ -29,6 +29,7 @@ export type OverlayState = {
 };
 
 export type MapInfo = {
+  // All endpoints support followings
   hash: string;
   characteristic: Characteristic;
   difficulty: Difficulty;
@@ -38,4 +39,9 @@ export type MapInfo = {
   artist?: string;
   mapper: string;
   duration?: number;
+
+  // BS+ doesn't have followings
+  bpm?: number;
+  speed?: number;
+  key?: string;
 };

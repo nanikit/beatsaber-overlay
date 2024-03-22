@@ -25,8 +25,9 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
   const health = scoring?.health ?? lastScoring?.health;
   const accuracy = scoring?.accuracy ?? lastScoring?.accuracy;
 
+  const map = mapInfo ?? previousMap;
   const { hash, coverUrl, title, subtitle, artist, mapper, characteristic, difficulty, duration } =
-    mapInfo ?? previousMap ?? {};
+    map ?? {};
   const mapQuery = useQuery<BeatsaverMap>([getDataUrlFromHash(hash ?? "")], {
     enabled: !!hash,
     staleTime: Infinity,
@@ -37,6 +38,8 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
   const diff = version?.diffs?.find(
     (diff) => diff.characteristic === characteristic && diff.difficulty === difficulty,
   );
+  const noteJumpSpeed = map?.speed ?? diff?.njs;
+  const bpm = map?.bpm ?? metadata?.bpm;
 
   const { width: vw100 } = useWindowSize();
 
@@ -86,7 +89,7 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
             >
               <div
                 className={`text-[0.12em] h-[2.9989vw] flex items-center gap-[1em] transition-opacity ${
-                  id ? "" : "opacity-0"
+                  !mapQuery.isLoading ? "" : "opacity-0"
                 } ${isRight ? "flex-row-reverse" : ""}`}
               >
                 {!hides.has("id") && !!id && (
@@ -99,24 +102,24 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
                     <OutlinedParagraph>{id}</OutlinedParagraph>
                   </div>
                 )}
-                {!hides.has("bpm") && !!metadata?.bpm && (
+                {!hides.has("bpm") && !!bpm && (
                   <div className="flex items-center">
                     <FaDrum
                       className="text-[0.9em] mr-[0.5em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
                       stroke={outline}
                       fill={letter}
                     />
-                    <OutlinedParagraph>{Math.round(metadata.bpm * 10) / 10}</OutlinedParagraph>
+                    <OutlinedParagraph>{Math.round(bpm * 10) / 10}</OutlinedParagraph>
                   </div>
                 )}
-                {!hides.has("njs") && !!diff?.njs && (
+                {!hides.has("njs") && !!noteJumpSpeed && (
                   <div className="flex items-center">
                     <IoIosSpeedometer
                       className="text-[1.0em] mr-[0.4em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
                       stroke={outline}
                       fill={letter}
                     />
-                    <OutlinedParagraph>{Math.round(diff.njs * 10) / 10}</OutlinedParagraph>
+                    <OutlinedParagraph>{Math.round(noteJumpSpeed * 10) / 10}</OutlinedParagraph>
                   </div>
                 )}
               </div>
