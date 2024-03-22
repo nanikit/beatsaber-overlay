@@ -11,7 +11,7 @@ export default defineConfig({
         presets: [[
           "@babel/preset-env",
           {
-            "corejs": "3.22",
+            "corejs": "3.36",
             "useBuiltIns": "usage",
             "modules": false,
           },
