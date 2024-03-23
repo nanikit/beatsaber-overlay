@@ -1,39 +1,26 @@
 import { BeatsaverMap } from "../src/modules/beatsaver.ts";
-import { getRandomElement } from "./common.ts";
+import { getRandomElement, runOverlayServer } from "./common.ts";
 import { delay } from "./deps.ts";
 
-let beatmaps: BeatsaverMap[] = [];
-
 if (import.meta.main) {
-  main().catch(console.error);
+  main();
 }
 
 async function main() {
-  const response = await fetch("https://beatsaver.com/api/search/text/0?sortOrder=Relevance");
-  const json = await response.json();
-  beatmaps = json.docs as BeatsaverMap[];
-
-  const port = 2947;
-  const server = Deno.serve({ port }, handleRequest);
-  await server.finished;
+  await runOverlayServer({ port: 2947, handler: handleRequest });
 }
 
-function handleRequest(request: Request) {
-  const { socket, response } = Deno.upgradeWebSocket(request);
-  socket.onopen = async () => {
-    console.log(`[${new Date().toISOString()}] accepted websocket.`);
-    socket.send(
-      `{ "_type": "handshake", "protocolVersion": 1, "gameVersion": "1.25.1", "playerName": "nanikit", "playerPlatformId": "76561198159100356" }`,
-    );
-    while (socket.readyState === socket.OPEN) {
-      await sendActivity(socket);
-    }
-    console.log(`readyState is ${socket.readyState}, break.`);
-  };
-  return response;
+async function handleRequest(socket: WebSocket, info: { beatmaps: BeatsaverMap[] }) {
+  socket.send(
+    `{ "_type": "handshake", "protocolVersion": 1, "gameVersion": "1.25.1", "playerName": "nanikit", "playerPlatformId": "76561198159100356" }`,
+  );
+  while (socket.readyState === socket.OPEN) {
+    await sendActivity(socket, info);
+  }
+  console.log(`readyState is ${socket.readyState}, break.`);
 }
 
-async function sendActivity(socket: WebSocket) {
+async function sendActivity(socket: WebSocket, { beatmaps }: { beatmaps: BeatsaverMap[] }) {
   if (isSocketClosed()) {
     return;
   }
