@@ -1,5 +1,6 @@
-import { delay } from "https://deno.land/std@0.219.0/async/delay.ts";
 import { BeatsaverMap } from "../src/modules/beatsaver.ts";
+import { getRandomElement } from "./common.ts";
+import { delay } from "./deps.ts";
 
 let beatmaps: BeatsaverMap[] = [];
 
@@ -121,8 +122,4 @@ async function sendActivity(socket: WebSocket) {
   function isSocketClosed() {
     return socket.readyState !== socket.OPEN;
   }
-}
-
-function getRandomElement<T>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)]!;
 }
