@@ -31,7 +31,7 @@ function getMapCoverUrl(base64OrUrl: string): string {
 
 function convertToScoring(performance: Performance | null): OverlayState["scoring"] {
   if (!performance) {
-    return { accuracy: 1, health: 1, score: 0 };
+    return;
   }
 
   const { score, relativeScore, energy, softFailed } = performance;
