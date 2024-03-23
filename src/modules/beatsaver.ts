@@ -23,6 +23,7 @@ export type BeatsaverMap = {
   };
   metadata: {
     bpm: number;
+    /** integer seconds */
     duration: number;
     songName: string;
     songSubName: string;
