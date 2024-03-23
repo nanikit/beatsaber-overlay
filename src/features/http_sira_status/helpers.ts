@@ -13,7 +13,7 @@ export function mergeEvent(current: HttpSiraStatus, event: HttpSiraStatusEvent):
 }
 
 export function convertStatus(state: HttpSiraStatus): OverlayState {
-  const { status: { beatmap, performance }, time } = state;
+  const { status: { beatmap, performance } } = state;
   return {
     readyState: WebSocket.OPEN,
     mapInfo: convertMapInfo(beatmap),
@@ -27,10 +27,10 @@ function convertToScoring(performance: Performance | null): OverlayState["scorin
     return { accuracy: 1, health: 1, score: 0 };
   }
 
-  const { score, relativeScore, energy } = performance;
+  const { score, relativeScore, energy, softFailed } = performance;
   return {
     accuracy: relativeScore,
-    health: energy,
+    health: softFailed ? 0 : energy,
     score,
   };
 }
