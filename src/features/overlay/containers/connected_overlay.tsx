@@ -137,7 +137,7 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
                   <AutoTimeProgress
                     duration={duration ?? 1}
                     progress={progress ?? lastProgress}
-                    className="text-[0.12em] leading-[1] [--color-primary:white] flex"
+                    className={`flex leading-[1] text-[0.12em]`}
                   />
                 )}
                 <div
@@ -151,7 +151,8 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
                     fill={letter}
                   />
                   <OutlinedParagraph
-                    className={`flex ${(health ?? 0) > 0 ? "text-white" : "text-[#aaa]"}`}
+                    className={`flex`}
+                    innerClassName={`${(health ?? 0) > 0 ? "" : "brightness-90"}`}
                   >
                     <MonospaceImitation>
                       {(Math.floor((accuracy ?? 1) * 1000) / 10).toFixed(1)}

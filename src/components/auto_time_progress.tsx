@@ -31,17 +31,26 @@ export function AutoTimeProgress({
   const interval = elapsed >= duration ? null : 1000;
   useInterval(useUpdate(), interval);
 
-  return <TimeProgress duration={duration} elapsed={elapsed} {...props} />;
+  return (
+    <TimeProgress
+      duration={duration}
+      elapsed={elapsed}
+      grayOut={"pauseTime" in progress}
+      {...props}
+    />
+  );
 }
 
 function TimeProgress({
   duration,
   elapsed,
   className,
+  grayOut,
 }: {
   duration: number;
   elapsed: number;
   className?: string;
+  grayOut?: boolean;
 }) {
   const { letter, outline } = usePalette();
 
@@ -55,7 +64,10 @@ function TimeProgress({
         stroke={outline}
         fill={letter}
       />
-      <OutlinedParagraph className={`flex flex-shrink text-[var(--color-primary)]`}>
+      <OutlinedParagraph
+        className={`flex flex-shrink`}
+        innerClassName={grayOut ? "brightness-90" : ""}
+      >
         <MonospaceImitation>{done}</MonospaceImitation>
         &nbsp;/ {total}
       </OutlinedParagraph>

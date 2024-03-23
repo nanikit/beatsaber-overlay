@@ -5,7 +5,7 @@ export function mergeEvent(current: HttpSiraStatus, event: HttpSiraStatusEvent):
   if ("status" in event && event.status) {
     const { status, ...rest } = event;
     if ("beatmap" in status && status.beatmap) {
-      status.beatmap.songCover = `data:image/png;base64,${status.beatmap.songCover}`;
+      status.beatmap.songCover = getMapCoverUrl(status.beatmap.songCover);
     }
     return { ...current, ...rest, status: { ...current.status, ...status } };
   }
@@ -18,8 +18,15 @@ export function convertStatus(state: HttpSiraStatus): OverlayState {
     readyState: WebSocket.OPEN,
     mapInfo: convertMapInfo(beatmap),
     scoring: convertToScoring(performance),
-    progress: convertToProgress(performance),
+    progress: convertToProgress(performance, beatmap?.paused != null),
   };
+}
+
+function getMapCoverUrl(base64OrUrl: string): string {
+  if (base64OrUrl.startsWith("http")) {
+    return base64OrUrl;
+  }
+  return `data:image/png;base64,${base64OrUrl}`;
 }
 
 function convertToScoring(performance: Performance | null): OverlayState["scoring"] {
@@ -35,12 +42,15 @@ function convertToScoring(performance: Performance | null): OverlayState["scorin
   };
 }
 
-function convertToProgress(performance: Performance | null): OverlayState["progress"] {
-  const { currentSongTime } = performance ?? {};
+function convertToProgress(
+  performance: Performance | null,
+  paused: boolean,
+): OverlayState["progress"] {
+  const currentSongTime = performance?.currentSongTime ?? 0;
   return {
     point: new Date(),
-    timeMultiplier: 1,
-    pauseTime: currentSongTime ?? 0,
+    timeMultiplier: 0.5,
+    ...(paused ? { pauseTime: currentSongTime } : { resumeTime: currentSongTime }),
   };
 }
 

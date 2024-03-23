@@ -1,11 +1,12 @@
-import { forwardRef } from "react";
-import { useSearchParam } from "react-use";
+import { forwardRef, HTMLProps } from "react";
 import { usePalette } from "../hooks/use_palette";
 
-export const OutlinedParagraph = forwardRef<
-  HTMLParagraphElement,
-  React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
->(({ className, children, ...props }, ref) => {
+type Props = HTMLProps<HTMLParagraphElement> & {
+  innerClassName?: string;
+};
+
+export const OutlinedParagraph = forwardRef<HTMLParagraphElement, Props>((props, ref) => {
+  const { className, innerClassName, children, ...rest } = props;
   const { letter, outline } = usePalette();
 
   return (
@@ -13,11 +14,13 @@ export const OutlinedParagraph = forwardRef<
       ref={ref}
       className={`relative break-keep ${className ?? ""}`}
       style={{ WebkitTextStrokeColor: outline }}
-      {...props}
+      {...rest}
     >
       {children ?? ""}
       <span
-        className={`absolute top-0 left-0 w-full h-full flex [-webkit-text-stroke:0]`}
+        className={`absolute top-0 left-0 w-full h-full flex [-webkit-text-stroke:0] ${
+          innerClassName ?? ""
+        }`}
         style={{ color: letter }}
       >
         {children ?? ""}
