@@ -11,10 +11,10 @@ export type HttpSiraStatusEvent =
     | SongStart
     | BeatmapEvent
     | NoteSpawned
-    | NoteMissed
-    | NoteCutEvent
+    | Missed
+    | CutEvent
     | PerformanceEvent
-    | Pause
+    | PauseResume
     | SoftFailed
     | Menu
   );
@@ -67,16 +67,16 @@ type NoteSpawned = {
   noteCut: NoteCut;
 };
 
-type NoteMissed = {
-  event: "noteMissed";
+type Missed = {
+  event: "noteMissed" | "bombMissed";
   status: {
     performance: Performance;
   };
   noteCut?: NoteCut;
 };
 
-type NoteCutEvent = {
-  event: "noteCut" | "noteFullyCut";
+type CutEvent = {
+  event: "noteCut" | "noteFullyCut" | "bombCut";
   status: {
     performance: Performance;
   };
@@ -84,14 +84,20 @@ type NoteCutEvent = {
 };
 
 type PerformanceEvent = {
-  event: "energyChanged" | "scoreChanged" | "finished";
+  event:
+    | "energyChanged"
+    | "scoreChanged"
+    | "obstacleEnter"
+    | "obstacleExit"
+    | "failed"
+    | "finished";
   status: {
     performance: Performance;
   };
 };
 
-type Pause = {
-  event: "pause";
+type PauseResume = {
+  event: "pause" | "resume";
   status: {
     beatmap: Beatmap;
   };
@@ -198,7 +204,8 @@ export type Beatmap = {
    * @example iVBORw0KGgoAAAANSUh...
    */
   songCover: string;
-  paused: null;
+  /** epoch milliseconds */
+  paused: number | null;
   songSubName: string | null;
   /**
    * Milliseconds of song length.

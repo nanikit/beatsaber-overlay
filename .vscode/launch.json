@@ -11,6 +11,14 @@
       "url": "http://localhost:5173",
       "webRoot": "${workspaceFolder}",
       "preLaunchTask": "npm: dev"
+    },
+    {
+      "type": "node",
+      "name": "deno current file",
+      "program": "${file}",
+      "request": "launch",
+      "runtimeExecutable": "deno",
+      "runtimeArgs": ["run", "--inspect-wait"]
     }
   ]
 }

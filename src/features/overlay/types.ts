@@ -1,4 +1,4 @@
-import { Characteristic, Difficulty } from "../../modules/beatsaver";
+import { Characteristic, Difficulty } from "../../modules/beatsaver.ts";
 
 export type Interaction = "initialize" | "click" | "cleanUp";
 
