@@ -2,7 +2,7 @@ import { Difficulty } from "../../modules/beatsaver";
 
 export type BsPlusMessage = Handshake | EventMessage;
 
-type Handshake = {
+export type Handshake = {
   _type: "handshake";
   protocolVersion: number;
   gameVersion: string;
