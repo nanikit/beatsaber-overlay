@@ -20,25 +20,25 @@ type EventMessage =
   | PauseEvent
   | ScoreEvent;
 
-type GameStateEvent = {
+export type GameStateEvent = {
   _type: "event";
   _event: "gameState";
   gameStateChanged: "Menu" | "Playing";
 };
 
-type ResumeEvent = {
+export type ResumeEvent = {
   _type: "event";
   _event: "resume";
   resumeTime: number;
 };
 
-type PauseEvent = {
+export type PauseEvent = {
   _type: "event";
   _event: "pause";
   pauseTime: number;
 };
 
-type ScoreEvent = {
+export type ScoreEvent = {
   _type: "event";
   _event: "score";
   scoreEvent: {
@@ -51,7 +51,7 @@ type ScoreEvent = {
   };
 };
 
-type MapInfoEvent = {
+export type MapInfoEvent = {
   _type: "event";
   _event: "mapInfo";
   mapInfoChanged: {

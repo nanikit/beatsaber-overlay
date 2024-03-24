@@ -3,14 +3,12 @@ import { loggerAtom } from "../../atoms/logger";
 import { Mount, mount, onMount, unmount } from "../../modules/atom_mount_hook";
 import { getReconnectingWebSocket } from "../../modules/get_reconnecting_web_socket";
 import { endpointAtom } from "../overlay/atoms/endpoint";
-import { BsPlusMessage, BsPlusOverlayState } from "./types";
-import { processBsPlusMessage } from "./helpers";
+import { OverlayState } from "../overlay/types";
+import { BsPlusMessageHandler } from "./helpers";
+import { BsPlusMessage } from "./types";
 
 const aliveWebSocketAtom = atom<AbortController | null>(null);
-const overlayStateAtom = atom<BsPlusOverlayState>({
-  readyState: WebSocket.CLOSED,
-  hasSoftFailed: false,
-});
+const overlayStateAtom = atom<OverlayState>({ readyState: WebSocket.CLOSED });
 
 export const bsPlusOverlayAtom = atom(
   (get) => get(overlayStateAtom),
@@ -19,7 +17,9 @@ export const bsPlusOverlayAtom = atom(
     aborter?.abort();
 
     if (value === mount) {
+      const handler = new BsPlusMessageHandler((state) => set(overlayStateAtom, state));
       const newAborter = new AbortController();
+
       getReconnectingWebSocket({
         url: "ws://localhost:2947/socket",
         onOpen: () => {
@@ -28,9 +28,7 @@ export const bsPlusOverlayAtom = atom(
         },
         onMessage: (data) => {
           const message = JSON.parse(data) as BsPlusMessage;
-          const previous = get(overlayStateAtom);
-          const current = processBsPlusMessage(previous, message);
-          set(overlayStateAtom, current);
+          handler.process(message);
         },
         onClose: () => {
           set(loggerAtom, { level: "info", type: "socket_close" });
