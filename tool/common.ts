@@ -1,10 +1,6 @@
 import { MapInfo } from "../src/features/overlay/types.ts";
 import { type BeatsaverMap } from "../src/modules/beatsaver.ts";
 
-export function getRandomElement<T>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)]!;
-}
-
 type OverlayServerParameters = {
   port: number;
   handler: (

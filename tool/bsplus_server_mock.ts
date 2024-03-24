@@ -1,6 +1,8 @@
+import { MapInfo } from "../src/features/overlay/types.ts";
 import { BeatsaverMap } from "../src/modules/beatsaver.ts";
-import { getRandomElement, runOverlayServer } from "./common.ts";
+import { runOverlayServer, simulatePlaySession } from "./common.ts";
 import { delay } from "./deps.ts";
+import { prng } from "./prng.ts";
 
 if (import.meta.main) {
   main();
@@ -21,90 +23,86 @@ async function handleRequest(socket: WebSocket, info: { beatmaps: BeatsaverMap[]
 }
 
 async function sendActivity(socket: WebSocket, { beatmaps }: { beatmaps: BeatsaverMap[] }) {
-  if (isSocketClosed()) {
-    return;
-  }
+  const seed = crypto.getRandomValues(new Uint32Array(1))[0]!;
+  console.log(`seed: ${seed}`);
 
-  socket.send(`{ "_type": "event", "_event": "gameState", "gameStateChanged": "Menu" }`);
-  socket.send(`{ "_type": "event", "_event": "gameState", "gameStateChanged": "Playing" }`);
-  socket.send(`{ "_type": "event", "_event": "resume", "resumeTime": 0.01756902 }`);
-  socket.send(
-    `{ "_type": "event", "_event": "score", "scoreEvent": { "time": 0.01756902, "score": 0, "accuracy": 1.0, "combo": 0, "missCount": 0, "currentHealth": 0.5 } }`,
-  );
-  const map = getRandomElement(beatmaps);
-  const { diffs, hash, coverURL } = map.versions[0]!;
-  const diff = getRandomElement(diffs);
-  socket.send(JSON.stringify({
-    _type: "event",
-    _event: "mapInfo",
-    mapInfoChanged: {
-      level_id: `custom_level_${hash.toUpperCase()}${
-        Math.random() >= 0.5 ? "_245de (NanaCat - Glorious Crown)" : ""
-      }`,
-      name: map.metadata.songName,
-      sub_name: map.metadata.songSubName,
-      artist: map.metadata.songAuthorName,
-      mapper: map.metadata.levelAuthorName,
-      characteristic: diff.characteristic,
-      difficulty: diff.difficulty,
-      duration: map.metadata.duration * 1000,
-      time: 0.1,
-      timeMultiplier: 1,
-      BPM: map.metadata.bpm,
-      PP: 0,
-      BSRKey: map.id,
-      coverRaw: coverURL,
-    },
-  }));
+  let songSpeedMultiplier = 1;
+  let currentSongTime = 0;
+  let accuracy = 1;
+  let softFailed = false;
 
-  for (let i = 0; i < 4; i++) {
-    await delay(400);
+  for await (const event of simulatePlaySession({ beatmaps, prng: prng(seed) })) {
     if (isSocketClosed()) {
       return;
     }
+
+    switch (event.type) {
+      case "songStart":
+        songSpeedMultiplier = event.songSpeedMultiplier;
+        currentSongTime = event.currentSongTime;
+        softFailed = false;
+        socket.send(`{ "_type": "event", "_event": "gameState", "gameStateChanged": "Playing" }`);
+        sendSongStart(event.beatmap);
+        sendScore();
+        break;
+      case "timeProgress":
+        await delay(event.seconds * 1000);
+        currentSongTime += event.seconds;
+        break;
+      case "score":
+        accuracy = event.accuracy;
+        sendScore();
+        break;
+      case "pause":
+        socket.send(`{ "_event": "pause", "_type": "event", "pauseTime": ${currentSongTime} }`);
+        break;
+      case "resume":
+        socket.send(`{ "_type": "event", "_event": "resume", "resumeTime": ${currentSongTime} }`);
+        break;
+      case "softFailed":
+        softFailed = true;
+        sendScore();
+        break;
+      case "menu":
+        socket.send(`{ "_type": "event", "_event": "gameState", "gameStateChanged": "Menu" }`);
+        break;
+    }
+  }
+
+  function sendSongStart(map: MapInfo) {
     socket.send(JSON.stringify({
       _type: "event",
-      _event: "score",
-      scoreEvent: {
-        time: 0.01756902,
-        score: 9210,
-        accuracy: 0.9,
-        combo: 0,
-        missCount: 0,
-        currentHealth: 0.5,
+      _event: "mapInfo",
+      mapInfoChanged: {
+        level_id: `custom_level_${map.hash.toUpperCase()}${
+          Math.random() >= 0.5 ? "_245de (NanaCat - Glorious Crown)" : ""
+        }`,
+        name: map.title,
+        sub_name: map.subtitle,
+        artist: map.artist,
+        mapper: map.mapper,
+        characteristic: map.characteristic,
+        difficulty: map.difficulty,
+        duration: (map.duration ?? 0) * 1000,
+        time: currentSongTime,
+        timeMultiplier: songSpeedMultiplier,
+        BPM: map.bpm,
+        BSRKey: map.key,
+        coverRaw: map.coverUrl,
       },
     }));
   }
 
-  await delay(400);
-  if (isSocketClosed()) {
-    return;
+  function sendScore() {
+    socket.send(JSON.stringify({
+      _type: "event",
+      _event: "score",
+      scoreEvent: {
+        accuracy: accuracy * (softFailed ? 0.5 : 1),
+        currentHealth: softFailed ? 0 : 0.1,
+      },
+    }));
   }
-
-  const result = Math.random();
-  const willFail = result < 2 / 3;
-  const isNoFail = result < 1 / 3;
-  socket.send(JSON.stringify({
-    _type: "event",
-    _event: "score",
-    scoreEvent: {
-      time: 0.01756902,
-      score: 19029,
-      accuracy: isNoFail ? 0.45 : 0.9,
-      combo: 4,
-      missCount: 0,
-      currentHealth: willFail ? 0 : 0.1,
-    },
-  }));
-
-  socket.send(`{ "_event": "pause", "_type": "event", "pauseTime": 2.11 }`);
-  await delay(2000);
-  if (isSocketClosed()) {
-    return;
-  }
-
-  socket.send(`{ "_type": "event", "_event": "gameState", "gameStateChanged": "Menu" }`);
-  await delay(1000);
 
   function isSocketClosed() {
     return socket.readyState !== socket.OPEN;
