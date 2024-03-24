@@ -1,14 +1,15 @@
-import { atom, Getter, Setter } from "jotai";
+import { atom } from "jotai";
 import { loggerAtom } from "../../atoms/logger";
-import { OverlayState } from "../overlay/types";
-import { BsPlusMessage, Handshake } from "./types";
+import { Mount, mount, onMount, unmount } from "../../modules/atom_mount_hook";
 import { getReconnectingWebSocket } from "../../modules/get_reconnecting_web_socket";
 import { endpointAtom } from "../overlay/atoms/endpoint";
-import { Mount, mount, onMount, unmount } from "../../modules/atom_mount_hook";
+import { BsPlusMessage, BsPlusOverlayState, Handshake } from "./types";
 
-const isNoFailAtom = atom(false);
 const aliveWebSocketAtom = atom<AbortController | null>(null);
-const overlayStateAtom = atom<OverlayState>({ readyState: WebSocket.CLOSED });
+const overlayStateAtom = atom<BsPlusOverlayState>({
+  readyState: WebSocket.CLOSED,
+  hasSoftFailed: false,
+});
 
 export const bsPlusOverlayAtom = atom(
   (get) => get(overlayStateAtom),
@@ -27,7 +28,7 @@ export const bsPlusOverlayAtom = atom(
         onMessage: (data) => {
           const message = JSON.parse(data) as BsPlusMessage;
           const previous = get(overlayStateAtom);
-          const current = processBsPlusMessage(previous, message, { get, set });
+          const current = processBsPlusMessage(previous, message);
           set(overlayStateAtom, current);
         },
         onClose: () => {
@@ -45,10 +46,9 @@ export const bsPlusOverlayAtom = atom(
 bsPlusOverlayAtom.onMount = onMount;
 
 function processBsPlusMessage(
-  previous: OverlayState,
+  previous: BsPlusOverlayState,
   message: BsPlusMessage,
-  { get, set }: { get: Getter; set: Setter },
-): OverlayState {
+): BsPlusOverlayState {
   if (message._type === "handshake") {
     return mergeHandshake(previous, message);
   }
@@ -79,9 +79,6 @@ function processBsPlusMessage(
         timeMultiplier,
       } = message.mapInfoChanged;
 
-      set(loggerAtom, { level: "info", type: "map_changed", data: { id } });
-      set(isNoFailAtom, false);
-
       return {
         ...previous,
         mapInfo: {
@@ -100,13 +97,14 @@ function processBsPlusMessage(
           resumeTime: time,
           timeMultiplier,
         },
+        hasSoftFailed: false,
       };
     case "score":
       const { accuracy, currentHealth, score } = message.scoreEvent;
+      const { hasSoftFailed } = previous;
 
       const isScoreChangedAfterFail = currentHealth === 0 && score !== previous.scoring?.score;
-      const seemsNoFail = isScoreChangedAfterFail;
-      const isNoFail = get(isNoFailAtom) || seemsNoFail && (set(isNoFailAtom, true), true);
+      const isNoFail = hasSoftFailed || isScoreChangedAfterFail;
 
       return {
         ...previous,
@@ -114,6 +112,7 @@ function processBsPlusMessage(
           accuracy: isNoFail ? accuracy * 2 : accuracy,
           health: message.scoreEvent.currentHealth,
         },
+        hasSoftFailed: isNoFail,
       };
     case "resume":
       return {
@@ -138,7 +137,7 @@ function processBsPlusMessage(
   }
 }
 
-function mergeHandshake(previous: OverlayState, message: Handshake): OverlayState {
+function mergeHandshake(previous: BsPlusOverlayState, message: Handshake): BsPlusOverlayState {
   return {
     ...previous,
     readyState: WebSocket.OPEN,

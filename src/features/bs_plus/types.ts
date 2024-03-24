@@ -1,6 +1,9 @@
 import { Difficulty } from "../../modules/beatsaver";
+import { OverlayState } from "../overlay/types";
 
 export type BsPlusMessage = Handshake | EventMessage;
+
+export type BsPlusOverlayState = OverlayState & { hasSoftFailed: boolean };
 
 export type Handshake = {
   _type: "handshake";
