@@ -1,34 +1,9 @@
 import { FaClock } from "react-icons/fa";
-import { OverlayState } from "../features/overlay/types";
 import { usePalette } from "../hooks/use_palette";
 import { MonospaceImitation } from "./monospace_imitation";
 import { OutlinedParagraph } from "./outlined_paragraph";
 
-const emptyProgress = { point: new Date(), timeMultiplier: 1, pauseTime: 0 };
-
-export function AutoTimeProgress({
-  progress: inputProgress,
-  duration,
-  ...props
-}: {
-  progress: OverlayState["progress"];
-  duration: number;
-  className?: string;
-}) {
-  const progress = inputProgress ?? emptyProgress;
-  const elapsed = "pauseTime" in progress ? progress.pauseTime : progress.resumeTime;
-
-  return (
-    <TimeProgress
-      duration={duration}
-      elapsed={elapsed}
-      grayOut={"pauseTime" in progress}
-      {...props}
-    />
-  );
-}
-
-function TimeProgress({
+export function TimeProgress({
   duration,
   elapsed,
   className,
