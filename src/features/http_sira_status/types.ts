@@ -20,6 +20,10 @@ export type HttpSiraStatusEvent =
   );
 
 export type HttpSiraStatus = {
+  /**
+   * Event time milliseconds since the epoch.
+   * @example 1710512658967
+   */
   time: number;
   status: {
     mod: Modifiers;

@@ -30,6 +30,7 @@ async function sendActivity(socket: WebSocket, { beatmaps }: { beatmaps: Beatsav
   let currentSongTime = 0;
   let accuracy = 1;
   let softFailed = false;
+  let isPaused = false;
 
   for await (const event of simulatePlaySession({ beatmaps, prng: prng(seed) })) {
     if (isSocketClosed()) {
@@ -41,13 +42,16 @@ async function sendActivity(socket: WebSocket, { beatmaps }: { beatmaps: Beatsav
         songSpeedMultiplier = event.songSpeedMultiplier;
         currentSongTime = event.currentSongTime;
         softFailed = false;
+        isPaused = false;
         socket.send(`{ "_type": "event", "_event": "gameState", "gameStateChanged": "Playing" }`);
         sendSongStart(event.beatmap);
         sendScore();
         break;
       case "timeProgress":
         await delay(event.seconds * 1000);
-        currentSongTime += event.seconds;
+        if (!isPaused) {
+          currentSongTime += event.seconds * songSpeedMultiplier;
+        }
         break;
       case "score":
         accuracy = event.accuracy;
@@ -55,9 +59,11 @@ async function sendActivity(socket: WebSocket, { beatmaps }: { beatmaps: Beatsav
         break;
       case "pause":
         socket.send(`{ "_event": "pause", "_type": "event", "pauseTime": ${currentSongTime} }`);
+        isPaused = true;
         break;
       case "resume":
         socket.send(`{ "_type": "event", "_event": "resume", "resumeTime": ${currentSongTime} }`);
+        isPaused = false;
         break;
       case "softFailed":
         softFailed = true;

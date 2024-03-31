@@ -29,12 +29,14 @@ export type GameStateEvent = {
 export type ResumeEvent = {
   _type: "event";
   _event: "resume";
+  /** real number seconds */
   resumeTime: number;
 };
 
 export type PauseEvent = {
   _type: "event";
   _event: "pause";
+  /** real number seconds */
   pauseTime: number;
 };
 

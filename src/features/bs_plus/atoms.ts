@@ -19,6 +19,7 @@ export const bsPlusOverlayAtom = atom(
     if (value === mount) {
       const handler = new BsPlusMessageHandler((state) => set(overlayStateAtom, state));
       const newAborter = new AbortController();
+      newAborter.signal.addEventListener("abort", handler.dispose);
 
       getReconnectingWebSocket({
         url: "ws://localhost:2947/socket",

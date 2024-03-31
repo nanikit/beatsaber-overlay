@@ -18,7 +18,7 @@ export function convertStatus(state: HttpSiraStatus): OverlayState {
     readyState: WebSocket.OPEN,
     mapInfo: convertMapInfo(beatmap),
     scoring: convertToScoring(performance),
-    progress: convertToProgress(performance, beatmap?.paused != null),
+    progress: convertToProgress(state),
   };
 }
 
@@ -42,15 +42,14 @@ function convertToScoring(performance: Performance | null): OverlayState["scorin
   };
 }
 
-function convertToProgress(
-  performance: Performance | null,
-  paused: boolean,
-): OverlayState["progress"] {
+function convertToProgress(state: HttpSiraStatus): OverlayState["progress"] {
+  const { status: { beatmap, performance }, time } = state;
   const currentSongTime = performance?.currentSongTime ?? 0;
+  const isPaused = beatmap?.paused != null;
   return {
-    point: new Date(),
-    timeMultiplier: 0.5,
-    ...(paused ? { pauseTime: currentSongTime } : { resumeTime: currentSongTime }),
+    point: new Date(time),
+    timeMultiplier: performance?.multiplier ?? 1,
+    ...(isPaused ? { pauseTime: currentSongTime } : { resumeTime: currentSongTime }),
   };
 }
 

@@ -12,13 +12,20 @@ export class BsPlusMessageHandler {
     readyState: WebSocket.CLOSED,
     hasSoftFailed: false,
   };
+  #intervalId: number | null = null;
+  #timeoutId: number | null = null;
 
   constructor(private readonly onStateChange: (state: Readonly<BsPlusOverlayState>) => void) {}
 
   process(message: BsPlusMessage) {
     this.#state = this.#merge(message);
+    this.#resetIntervalIfResumed(message);
     this.onStateChange(this.#state);
   }
+
+  dispose = () => {
+    this.#clearTimers();
+  };
 
   #merge(message: BsPlusMessage): BsPlusOverlayState {
     const previous = this.#state;
@@ -56,6 +63,73 @@ export class BsPlusMessageHandler {
         return previous;
     }
   }
+
+  async #resetIntervalIfResumed(message: BsPlusMessage) {
+    if (
+      message._type === "handshake" ||
+      !/^(resume|pause|mapInfo)$/.test(message._event)
+    ) {
+      return;
+    }
+
+    this.#setInterval();
+  }
+
+  async #setInterval() {
+    this.#clearTimers();
+
+    const progress = this.#getResumedProgress();
+    if (!progress) {
+      return;
+    }
+
+    await this.#waitNextUpdateTiming(progress);
+
+    this.#incrementTime();
+    this.#intervalId ??= setInterval(this.#incrementTime, 1000 / progress.timeMultiplier);
+  }
+
+  #clearTimers() {
+    clearInterval(this.#intervalId!);
+    clearTimeout(this.#timeoutId!);
+    this.#intervalId = null;
+    this.#timeoutId = null;
+  }
+
+  async #waitNextUpdateTiming(
+    progress: { point: Date; timeMultiplier: number } & { resumeTime: number },
+  ) {
+    const { resumeTime } = progress;
+    const fractionalSecond = Math.ceil(resumeTime) - resumeTime || 1;
+    const multipliedMilliseconds = fractionalSecond * 1000 / progress.timeMultiplier;
+    await new Promise((resolve) => {
+      this.#timeoutId = setTimeout(resolve, multipliedMilliseconds);
+    });
+  }
+
+  #getResumedProgress() {
+    const { progress } = this.#state;
+    if (progress && "resumeTime" in progress) {
+      return progress;
+    }
+  }
+
+  #incrementTime = () => {
+    const progress = this.#getResumedProgress();
+    if (!progress) {
+      clearInterval(this.#intervalId!);
+      this.#intervalId = null;
+      return;
+    }
+
+    const time = Math.floor(progress.resumeTime + 1);
+
+    this.#state = {
+      ...this.#state,
+      progress: { ...progress, point: new Date(), resumeTime: time },
+    };
+    this.onStateChange(this.#state);
+  };
 }
 
 function mergeHandshake(previous: BsPlusOverlayState, message: Handshake): BsPlusOverlayState {

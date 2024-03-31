@@ -23,9 +23,11 @@ export type OverlayState = {
       point: Date;
       timeMultiplier: number;
     }
-    & ({ resumeTime: number } | {
-      pauseTime: number;
-    });
+    // current progress seconds
+    & (
+      | { resumeTime: number }
+      | { pauseTime: number }
+    );
 };
 
 export type MapInfo = {

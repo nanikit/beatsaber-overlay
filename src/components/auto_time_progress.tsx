@@ -1,5 +1,4 @@
 import { FaClock } from "react-icons/fa";
-import { useInterval, useUpdate } from "react-use";
 import { OverlayState } from "../features/overlay/types";
 import { usePalette } from "../hooks/use_palette";
 import { MonospaceImitation } from "./monospace_imitation";
@@ -17,19 +16,7 @@ export function AutoTimeProgress({
   className?: string;
 }) {
   const progress = inputProgress ?? emptyProgress;
-  const { point, timeMultiplier } = progress;
-
-  const elapsed = (() => {
-    if (!("resumeTime" in progress)) {
-      return progress.pauseTime;
-    }
-    const elapsedMilliseconds = new Date().getTime() - point.getTime();
-    const elapsedSeconds = Math.round(elapsedMilliseconds / 1000);
-    return Math.min(progress.resumeTime + elapsedSeconds * timeMultiplier, duration);
-  })();
-
-  const interval = elapsed >= duration ? null : 1000;
-  useInterval(useUpdate(), interval);
+  const elapsed = "pauseTime" in progress ? progress.pauseTime : progress.resumeTime;
 
   return (
     <TimeProgress
