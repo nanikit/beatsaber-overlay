@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import { BeatsaverMap, getDetailFromId } from "../../modules/beatsaver";
 import { Interaction, OverlayState } from "../overlay/types";
+import { mount, onMount, unmount } from "../../modules/atom_mount_hook";
 
 const sampleStates: OverlayState[] = [
   {
@@ -103,7 +104,7 @@ export const uiTestOverlayAtom = atom(
   },
   async (get, set, value: Interaction) => {
     switch (value) {
-      case "initialize": {
+      case mount: {
         const testParameter = new URLSearchParams(window.location.search).get("query");
         const appointeds = await getTestData(testParameter ?? undefined);
         if (appointeds && appointeds.length > 0) {
@@ -124,7 +125,7 @@ export const uiTestOverlayAtom = atom(
         set(stateAtom, newState);
         break;
       }
-      case "cleanUp":
+      case unmount:
         break;
     }
 
@@ -142,6 +143,7 @@ export const uiTestOverlayAtom = atom(
     }
   },
 );
+uiTestOverlayAtom.onMount = onMount;
 
 async function getTestData(testParameter?: string) {
   if (testParameter?.includes("?")) {
