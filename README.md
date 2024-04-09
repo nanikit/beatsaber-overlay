@@ -1,6 +1,7 @@
 # Beat saber overlay
 
-Currently support only BeatSaberPlus_SongOverlay mod.
+Currently support [HttpSiraStatus](https://github.com/denpadokei/HttpSiraStatus) and
+[BeatSaberPlus_SongOverlay](https://github.com/hardcpp/BeatSaberPlus) mod.
 
 For use: https://nanikit-bs.pages.dev/
 
