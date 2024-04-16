@@ -37,6 +37,7 @@ export const siraOverlayAtom = atom(
         onClose: () => {
           set(loggerAtom, { level: "info", type: "socket_close" });
           set(overlayStateAtom, null);
+          set(endpointAtom, null);
         },
         aborter: newAborter,
       });
