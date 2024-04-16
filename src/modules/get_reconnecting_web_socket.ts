@@ -14,11 +14,7 @@ export async function getReconnectingWebSocket({ url, onOpen, onMessage, onClose
 
   while (!aborter.signal.aborted) {
     const socket = getWebSocket();
-    const delay = 30 * Math.log10(Math.max(2, retryCount + 2)) - 8;
-    const interval = timeout(delay * 1000);
-    console.log(
-      `retryCount: ${retryCount}, next retry will be in ${Math.ceil(delay)} seconds.`,
-    );
+    const interval = timeout(10000);
 
     const result = await waitSocketEvents(socket);
     switch (result) {
