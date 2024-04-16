@@ -27,8 +27,8 @@ export function TimeProgress({
         fill={letter}
       />
       <OutlinedParagraph
-        className={`flex flex-shrink`}
-        innerClassName={grayOut ? "brightness-90" : ""}
+        className="flex flex-shrink"
+        innerClassName={grayOut ? "brightness-[0.8]" : ""}
       >
         <MonospaceImitation>{done}</MonospaceImitation>
         &nbsp;/ {total}

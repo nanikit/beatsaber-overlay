@@ -31,6 +31,7 @@ async function sendActivity(socket: WebSocket, { beatmaps }: { beatmaps: Beatsav
     currentSongTime: 0,
     relativeScore: 1,
     softFailed: false,
+    energy: 1,
   };
   let performance = { ...defaultPerformance };
 
@@ -63,7 +64,7 @@ async function sendActivity(socket: WebSocket, { beatmaps }: { beatmaps: Beatsav
         sendPauseResumeEvent("resume");
         break;
       case "softFailed":
-        performance.softFailed = true;
+        performance.energy = 0;
         sendPerformanceChange();
         break;
       case "menu":

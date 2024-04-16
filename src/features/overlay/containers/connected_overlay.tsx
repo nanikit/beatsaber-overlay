@@ -152,7 +152,7 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
                   />
                   <OutlinedParagraph
                     className={`flex`}
-                    innerClassName={`${(health ?? 0) > 0 ? "" : "brightness-90"}`}
+                    innerClassName={`${(health ?? 0) > 0 ? "" : "brightness-[0.8]"}`}
                   >
                     <MonospaceImitation>
                       {(Math.floor((accuracy ?? 1) * 1000) / 10).toFixed(1)}
