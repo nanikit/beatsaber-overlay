@@ -1,17 +1,15 @@
 import { useAtom } from "jotai";
-import { useLocation, useSearchParam } from "react-use";
+import { useLocation } from "react-use";
 import { DisconnectionWarning } from "./components/disconnection_warning";
-import { ConnectedOverlay } from "./features/overlay/containers/connected_overlay";
 import { uiTestOverlayAtom } from "./features/demo/atoms";
 import { overlayAtom } from "./features/overlay/atoms/overlay";
-import { useIsRightLayout } from "./hooks/search_param_hooks";
+import { ConnectedOverlay } from "./features/overlay/containers/connected_overlay";
 
 export function App() {
   const { pathname } = useLocation();
   const [overlay, updateOverlay] = useAtom(
     pathname === "/test/ui" ? uiTestOverlayAtom : overlayAtom,
   );
-  const isRight = useIsRightLayout();
 
   return (
     <div
@@ -25,8 +23,8 @@ export function App() {
         onClick={() => updateOverlay("click")}
       >
         {overlay.readyState === WebSocket.OPEN
-          ? <ConnectedOverlay state={overlay} isRight={isRight} />
-          : <DisconnectionWarning isRight={isRight} />}
+          ? <ConnectedOverlay state={overlay} />
+          : <DisconnectionWarning />}
       </main>
     </div>
   );
