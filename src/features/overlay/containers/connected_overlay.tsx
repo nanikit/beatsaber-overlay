@@ -1,21 +1,19 @@
-import { FaDrum, FaKey } from "react-icons/fa";
-import { IoIosSpeedometer } from "react-icons/io";
 import { MdFilterCenterFocus } from "react-icons/md";
 import { useQuery } from "react-query";
-import { usePreviousDistinct, useSearchParam } from "react-use";
+import { usePreviousDistinct } from "react-use";
 import { DifficultyLabel } from "../../../components/difficulty_label";
 import { MonospaceImitation } from "../../../components/monospace_imitation";
 import { OutlinedParagraph } from "../../../components/outlined_paragraph";
 import { TransparentFallbackImg } from "../../../components/transparent_fallback_img";
-import { usePalette } from "../../../hooks/search_param_hooks";
+import { useHideList, usePalette } from "../../../hooks/search_param_hooks";
 import { BeatsaverMap, getDataUrlFromHash } from "../../../modules/beatsaver";
 import { OverlayState } from "../types";
+import { IdBpmNjs } from "./id_bpm_njs";
 import { SongProgress } from "./song_progress";
 import { TitleAndMaker } from "./title_and_maker";
 
 export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
-  const hidesParam = useSearchParam("hide") ?? "";
-  const hides = hidesParam.split(",").reduce((acc, x) => acc.add(x), new Set());
+  const hides = useHideList();
 
   const { mapInfo, scoring, progress } = state;
   const previousMap = usePreviousDistinct(mapInfo);
@@ -65,42 +63,7 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
                 isRight ? "items-end flex-wrap" : "flex-wrap-reverse"
               }`}
             >
-              <div
-                className={`text-[0.12em] h-[2.9989vw] flex items-center gap-[1em] transition-opacity ${
-                  !mapQuery.isLoading ? "" : "opacity-0"
-                } ${isRight ? "flex-row-reverse" : ""}`}
-              >
-                {!hides.has("id") && !!id && (
-                  <div className="flex items-center">
-                    <FaKey
-                      className="text-[0.8em] mr-[0.5em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
-                      stroke={outline}
-                      fill={letter}
-                    />
-                    <OutlinedParagraph>{id}</OutlinedParagraph>
-                  </div>
-                )}
-                {!hides.has("bpm") && !!bpm && (
-                  <div className="flex items-center">
-                    <FaDrum
-                      className="text-[0.9em] mr-[0.5em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
-                      stroke={outline}
-                      fill={letter}
-                    />
-                    <OutlinedParagraph>{Math.round(bpm * 10) / 10}</OutlinedParagraph>
-                  </div>
-                )}
-                {!hides.has("njs") && !!noteJumpSpeed && (
-                  <div className="flex items-center">
-                    <IoIosSpeedometer
-                      className="text-[1.0em] mr-[0.4em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
-                      stroke={outline}
-                      fill={letter}
-                    />
-                    <OutlinedParagraph>{Math.round(noteJumpSpeed * 10) / 10}</OutlinedParagraph>
-                  </div>
-                )}
-              </div>
+              <IdBpmNjs {...{ id, bpm, noteJumpSpeed }} />
               <div className={`flex gap-[0.1em] items-center${isRight ? " flex-row-reverse" : ""}`}>
                 {!!difficulty && (
                   <DifficultyLabel

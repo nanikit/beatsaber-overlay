@@ -11,3 +11,8 @@ export function useIsRightLayout() {
   const layout = useSearchParam("layout");
   return layout !== "left";
 }
+
+export function useHideList() {
+  const hidesParam = useSearchParam("hide") ?? "";
+  return hidesParam.split(",").reduce((acc, x) => acc.add(x), new Set());
+}
