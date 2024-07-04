@@ -1,5 +1,5 @@
 import { forwardRef, HTMLProps } from "react";
-import { usePalette } from "../hooks/use_palette";
+import { usePalette } from "../hooks/search_param_hooks";
 
 type Props = HTMLProps<HTMLParagraphElement> & {
   innerClassName?: string;

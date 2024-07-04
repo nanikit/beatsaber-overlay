@@ -1,5 +1,5 @@
 import { FaClock } from "react-icons/fa";
-import { usePalette } from "../hooks/use_palette";
+import { usePalette } from "../hooks/search_param_hooks";
 import { MonospaceImitation } from "./monospace_imitation";
 import { OutlinedParagraph } from "./outlined_paragraph";
 

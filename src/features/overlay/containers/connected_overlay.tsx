@@ -1,18 +1,17 @@
-import { useRef } from "react";
 import { FaDrum, FaKey } from "react-icons/fa";
 import { IoIosSpeedometer } from "react-icons/io";
 import { MdFilterCenterFocus } from "react-icons/md";
 import { useQuery } from "react-query";
-import { usePreviousDistinct, useSearchParam, useWindowSize } from "react-use";
+import { usePreviousDistinct, useSearchParam } from "react-use";
 import { DifficultyLabel } from "../../../components/difficulty_label";
 import { MonospaceImitation } from "../../../components/monospace_imitation";
 import { OutlinedParagraph } from "../../../components/outlined_paragraph";
 import { TransparentFallbackImg } from "../../../components/transparent_fallback_img";
-import { OverlayState } from "../types";
-import { usePalette } from "../../../hooks/use_palette";
-import { useTextFit } from "../../../hooks/use_text_fit";
+import { usePalette } from "../../../hooks/search_param_hooks";
 import { BeatsaverMap, getDataUrlFromHash } from "../../../modules/beatsaver";
+import { OverlayState } from "../types";
 import { SongProgress } from "./song_progress";
+import { TitleAndMaker } from "./title_and_maker";
 
 export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
   const hidesParam = useSearchParam("hide") ?? "";
@@ -41,14 +40,6 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
   const noteJumpSpeed = map?.speed ?? diff?.njs;
   const bpm = map?.bpm ?? metadata?.bpm;
 
-  const { width: vw100 } = useWindowSize();
-
-  const titleRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: titleRef, maxHeight: vw100 * 0.09, maxSize: vw100 * 0.038 });
-
-  const authorRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: authorRef, maxHeight: vw100 * 0.04, maxSize: vw100 * 0.0225 });
-
   const { letter, outline } = usePalette();
 
   return (
@@ -68,20 +59,7 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
               isRight ? "items-end" : "items-start"
             }${mapInfo ? "" : isRight ? " translate-x-[105%]" : " translate-x-[-105%]"}`}
           >
-            <div
-              ref={titleRef}
-              className={`flex flex-wrap justify-end gap-[0_0.4em] leading-[1] ${
-                isRight ? "flex-row items-start" : "flex-row-reverse items-end"
-              }`}
-            >
-              <OutlinedParagraph className="text-[0.5em] leading-[1.4]">
-                {subtitle ?? ""}
-              </OutlinedParagraph>
-              <OutlinedParagraph>{title ?? ""}</OutlinedParagraph>
-            </div>
-            <OutlinedParagraph ref={authorRef} className="text-[0.16em] mt-[0.3em]">
-              {artist ?? ""} [{mapper ?? ""}]
-            </OutlinedParagraph>
+            <TitleAndMaker {...{ title, subtitle, artist, mapper }} />
             <div
               className={`flex-1 mt-[0.03em] w-full min-h-0 flex flex-col gap-[0.03em_0.12em] justify-end ${
                 isRight ? "items-end flex-wrap" : "flex-wrap-reverse"

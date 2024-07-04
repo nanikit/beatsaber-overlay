@@ -6,3 +6,8 @@ export function usePalette() {
     outline: useSearchParam("outline_color") ?? "black",
   };
 }
+
+export function useIsRightLayout() {
+  const layout = useSearchParam("layout");
+  return layout !== "left";
+}

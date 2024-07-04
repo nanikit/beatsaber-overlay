@@ -16,3 +16,8 @@ export const overlayAtom = atom((get) => {
       return get(siraOverlayAtom);
   }
 }, async (_get, _set, _value: Interaction) => {});
+
+export const mapAtom = atom((get) => {
+  const overlay = get(overlayAtom);
+  return overlay.mapInfo;
+});

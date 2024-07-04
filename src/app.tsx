@@ -4,14 +4,14 @@ import { DisconnectionWarning } from "./components/disconnection_warning";
 import { ConnectedOverlay } from "./features/overlay/containers/connected_overlay";
 import { uiTestOverlayAtom } from "./features/demo/atoms";
 import { overlayAtom } from "./features/overlay/atoms/overlay";
+import { useIsRightLayout } from "./hooks/search_param_hooks";
 
 export function App() {
   const { pathname } = useLocation();
   const [overlay, updateOverlay] = useAtom(
     pathname === "/test/ui" ? uiTestOverlayAtom : overlayAtom,
   );
-  const layout = useSearchParam("layout");
-  const isRight = layout !== "left";
+  const isRight = useIsRightLayout();
 
   return (
     <div
