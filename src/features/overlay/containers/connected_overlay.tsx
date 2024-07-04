@@ -1,23 +1,16 @@
-import { MdFilterCenterFocus } from "react-icons/md";
 import { useQuery } from "react-query";
 import { usePreviousDistinct } from "react-use";
-import { DifficultyLabel } from "../../../components/difficulty_label";
-import { MonospaceImitation } from "../../../components/monospace_imitation";
-import { OutlinedParagraph } from "../../../components/outlined_paragraph";
 import { TransparentFallbackImg } from "../../../components/transparent_fallback_img";
-import { useHideList, usePalette } from "../../../hooks/search_param_hooks";
 import { BeatsaverMap, getDataUrlFromHash } from "../../../modules/beatsaver";
 import { OverlayState } from "../types";
+import { DifficultyTimeAccuracy } from "./difficulty_time_accuracy";
 import { IdBpmNjs } from "./id_bpm_njs";
-import { SongProgress } from "./song_progress";
 import { TitleAndMaker } from "./title_and_maker";
 
 export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
-  const hides = useHideList();
-
-  const { mapInfo, scoring, progress } = state;
+  const { mapInfo, scoring } = state;
   const previousMap = usePreviousDistinct(mapInfo);
-  const lastProgress = usePreviousDistinct(progress);
+  const lastProgress = usePreviousDistinct(state.progress);
   const lastScoring = usePreviousDistinct(scoring);
   const health = scoring?.health ?? lastScoring?.health;
   const accuracy = scoring?.accuracy ?? lastScoring?.accuracy;
@@ -37,8 +30,7 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
   );
   const noteJumpSpeed = map?.speed ?? diff?.njs;
   const bpm = map?.bpm ?? metadata?.bpm;
-
-  const { letter, outline } = usePalette();
+  const progress = state.progress ?? lastProgress;
 
   return (
     <>
@@ -64,44 +56,9 @@ export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRi
               }`}
             >
               <IdBpmNjs {...{ id, bpm, noteJumpSpeed }} />
-              <div className={`flex gap-[0.1em] items-center${isRight ? " flex-row-reverse" : ""}`}>
-                {!!difficulty && (
-                  <DifficultyLabel
-                    difficulty={difficulty}
-                    characteristic={characteristic}
-                    stars={diff?.stars}
-                    label={diff?.label}
-                    className="[-webkit-text-stroke:0]"
-                  />
-                )}
-                {!hides.has("time") && (
-                  <SongProgress
-                    duration={duration ?? 1}
-                    progress={progress ?? lastProgress}
-                    className={`flex leading-[1] text-[0.12em]`}
-                  />
-                )}
-                <div
-                  className={`text-[0.12em] leading-[1] flex ${
-                    !hides.has("acc") && accuracy != null ? "" : "hidden"
-                  }`}
-                >
-                  <MdFilterCenterFocus
-                    className="center-icon mr-[0.4em] [stroke-width:10%] overflow-visible [paint-order:stroke_fill]"
-                    stroke={outline}
-                    fill={letter}
-                  />
-                  <OutlinedParagraph
-                    className={`flex`}
-                    innerClassName={`${(health ?? 0) > 0 ? "" : "brightness-[0.8]"}`}
-                  >
-                    <MonospaceImitation>
-                      {(Math.floor((accuracy ?? 1) * 1000) / 10).toFixed(1)}
-                    </MonospaceImitation>
-                    %
-                  </OutlinedParagraph>
-                </div>
-              </div>
+              <DifficultyTimeAccuracy
+                {...{ progress, duration, accuracy, health, characteristic, difficulty, diff }}
+              />
             </div>
           </div>
         </div>
