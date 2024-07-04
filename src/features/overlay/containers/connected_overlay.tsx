@@ -12,7 +12,7 @@ import { OverlayState } from "../types";
 import { usePalette } from "../../../hooks/use_palette";
 import { useTextFit } from "../../../hooks/use_text_fit";
 import { BeatsaverMap, getDataUrlFromHash } from "../../../modules/beatsaver";
-import { SongProgress } from "../components/song_progress";
+import { SongProgress } from "./song_progress";
 
 export function ConnectedOverlay({ state, isRight }: { state: OverlayState; isRight: boolean }) {
   const hidesParam = useSearchParam("hide") ?? "";

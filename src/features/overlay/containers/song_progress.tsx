@@ -1,4 +1,4 @@
-import { TimeProgress } from "../../../components/auto_time_progress";
+import { TimeProgress } from "../../../components/time_progress";
 import { OverlayState } from "../types";
 
 const emptyProgress = { point: new Date(), timeMultiplier: 1, pauseTime: 0 };
