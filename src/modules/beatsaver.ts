@@ -88,7 +88,7 @@ export const getMapFromHash = async (hash: string): Promise<BeatsaverMap> => {
   return response.json();
 };
 
-export async function getDetailFromId(id: string): Promise<BeatsaverMap> {
-  const response = await fetch(`https://beatsaver.com/api/maps/id/${id}`);
+export async function getDetailFromIds(ids: string[]): Promise<Record<string, BeatsaverMap>> {
+  const response = await fetch(`https://beatsaver.com/api/maps/ids/${ids.join(",")}`);
   return response.json();
 }

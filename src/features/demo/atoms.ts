@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { BeatsaverMap, getDetailFromId } from "../../modules/beatsaver";
+import { BeatsaverMap, getDetailFromIds } from "../../modules/beatsaver";
 import { Interaction, OverlayState } from "../overlay/types";
 import { mount, onMount, unmount } from "../../modules/atom_mount_hook";
 
@@ -145,15 +145,18 @@ export const uiTestOverlayAtom = atom(
 );
 uiTestOverlayAtom.onMount = onMount;
 
+/** input: map ids separated by comma or beatsaver api subpath comes after /search/text/ */
 async function getTestData(testParameter?: string) {
   if (testParameter?.includes("?")) {
     const response = await fetch(`https://beatsaver.com/api/search/text/${testParameter}`);
     const json = await response.json();
     return beatsaversToStates(json.docs);
   }
+
   const ids = testParameter?.split(",").filter(Boolean);
   if (ids?.length) {
-    const maps = await Promise.all(ids.map(getDetailFromId));
+    const mapRecord = await getDetailFromIds(ids);
+    const maps = ids.flatMap((id) => mapRecord[id] ? [mapRecord[id]] : []);
     return beatsaversToStates(maps);
   }
 }
