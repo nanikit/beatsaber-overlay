@@ -4,7 +4,9 @@
   "deno.enablePaths": ["tool", "deno.json"],
   "editor.defaultFormatter": "denoland.vscode-deno",
   "[typescript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always"
+    }
   },
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

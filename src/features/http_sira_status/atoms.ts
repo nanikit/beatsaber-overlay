@@ -1,11 +1,10 @@
 import { atom } from "jotai";
-import { loggerAtom } from "../../atoms/logger";
 import { Mount, mount, onMount, unmount } from "../../modules/atom_mount_hook";
 import { getReconnectingWebSocket } from "../../modules/get_reconnecting_web_socket";
+import { addBreadcrumb } from "../../modules/logger";
 import { endpointAtom } from "../overlay/atoms/endpoint";
 import { convertStatus, mergeEvent } from "./helpers";
 import { HttpSiraStatus, HttpSiraStatusEvent } from "./types";
-import { addBreadcrumb } from "@sentry/react";
 
 const overlayStateAtom = atom<HttpSiraStatus | null>(null);
 const aliveWebSocketAtom = atom<AbortController | null>(null);
@@ -34,7 +33,7 @@ export const siraOverlayAtom = atom(
         url: "ws://localhost:6557/socket",
         onOpen: () => {
           set(endpointAtom, "sirahttpstatus");
-          set(loggerAtom, { level: "info", type: "socket_open" });
+          addBreadcrumb({ level: "info", type: "socket_open" });
         },
         onMessage: (data) => {
           const message = JSON.parse(data) as HttpSiraStatusEvent;
@@ -42,7 +41,7 @@ export const siraOverlayAtom = atom(
           set(overlayStateAtom, mergeEvent((previous ?? message) as HttpSiraStatus, message));
         },
         onClose: () => {
-          set(loggerAtom, { level: "info", type: "socket_close" });
+          addBreadcrumb({ level: "info", type: "socket_close" });
           set(overlayStateAtom, null);
           set(endpointAtom, null);
         },

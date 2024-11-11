@@ -1,7 +1,7 @@
 import { atom } from "jotai";
-import { loggerAtom } from "../../atoms/logger";
 import { Mount, mount, onMount, unmount } from "../../modules/atom_mount_hook";
 import { getReconnectingWebSocket } from "../../modules/get_reconnecting_web_socket";
+import { addBreadcrumb } from "../../modules/logger";
 import { endpointAtom } from "../overlay/atoms/endpoint";
 import { OverlayState } from "../overlay/types";
 import { BsPlusMessageHandler } from "./helpers";
@@ -25,14 +25,14 @@ export const bsPlusOverlayAtom = atom(
         url: "ws://localhost:2947/socket",
         onOpen: () => {
           set(endpointAtom, "bsplus");
-          set(loggerAtom, { level: "info", type: "socket_open" });
+          addBreadcrumb({ level: "info", type: "socket_open" });
         },
         onMessage: (data) => {
           const message = JSON.parse(data) as BsPlusMessage;
           handler.process(message);
         },
         onClose: () => {
-          set(loggerAtom, { level: "info", type: "socket_close" });
+          addBreadcrumb({ level: "info", type: "socket_close" });
           set(endpointAtom, null);
         },
         aborter: newAborter,
