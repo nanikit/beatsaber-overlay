@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import jotaiDebugLabel from "jotai/babel/plugin-debug-label";
 import jotaiReactRefresh from "jotai/babel/plugin-react-refresh";
@@ -19,5 +20,13 @@ export default defineConfig({
         plugins: [jotaiDebugLabel, jotaiReactRefresh],
       },
     }),
+    sentryVitePlugin({
+      org: "nanikit",
+      project: "beatsaber-overlay",
+    }),
   ],
+
+  build: {
+    sourcemap: true,
+  },
 });
