@@ -5,6 +5,7 @@ import { getReconnectingWebSocket } from "../../modules/get_reconnecting_web_soc
 import { endpointAtom } from "../overlay/atoms/endpoint";
 import { convertStatus, mergeEvent } from "./helpers";
 import { HttpSiraStatus, HttpSiraStatusEvent } from "./types";
+import { addBreadcrumb } from "@sentry/react";
 
 const overlayStateAtom = atom<HttpSiraStatus | null>(null);
 const aliveWebSocketAtom = atom<AbortController | null>(null);
@@ -12,10 +13,16 @@ const aliveWebSocketAtom = atom<AbortController | null>(null);
 export const siraOverlayAtom = atom(
   (get) => {
     const state = get(overlayStateAtom);
-    if (state === null) {
-      return { readyState: WebSocket.CLOSED };
+    try {
+      if (state === null) {
+        return { readyState: WebSocket.CLOSED };
+      }
+
+      return convertStatus(state);
+    } catch (error) {
+      addBreadcrumb({ "message": "Current state", data: { state: JSON.stringify(state) } });
+      throw error;
     }
-    return convertStatus(state);
   },
   async (get, set, value: Mount) => {
     const aborter = get(aliveWebSocketAtom);
