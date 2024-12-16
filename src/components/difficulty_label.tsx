@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { RefObject, useRef, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import useResizeObserver from "use-resize-observer";
 import { Characteristic, Difficulty } from "../modules/beatsaver";
@@ -26,7 +26,7 @@ export function DifficultyLabel({
   const { isOverflowed, width } = state;
 
   useResizeObserver({
-    ref: containerRef,
+    ref: containerRef as RefObject<HTMLElement>,
     onResize: () => {
       const div = containerRef.current;
       if (!div) {

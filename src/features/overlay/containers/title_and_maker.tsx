@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { RefObject, useRef } from "react";
 import { OutlinedParagraph } from "../../../components/outlined_paragraph";
 import { useTextFit } from "../../../hooks/use_text_fit";
 import { useWindowSize } from "react-use";
@@ -15,10 +15,18 @@ export function TitleAndMaker({ title, subtitle, artist, mapper }: Props) {
   const { width: vw100 } = useWindowSize();
 
   const titleRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: titleRef, maxHeight: vw100 * 0.09, maxSize: vw100 * 0.038 });
+  useTextFit({
+    ref: titleRef as RefObject<HTMLElement>,
+    maxHeight: vw100 * 0.09,
+    maxSize: vw100 * 0.038,
+  });
 
   const authorRef = useRef<HTMLParagraphElement>(null);
-  useTextFit({ ref: authorRef, maxHeight: vw100 * 0.04, maxSize: vw100 * 0.0225 });
+  useTextFit({
+    ref: authorRef as RefObject<HTMLElement>,
+    maxHeight: vw100 * 0.04,
+    maxSize: vw100 * 0.0225,
+  });
 
   const isRightLayout = useIsRightLayout();
 

@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { usePreviousDistinct } from "react-use";
 import { TransparentFallbackImg } from "../../../components/transparent_fallback_img";
 import { BeatsaverMap, getDataUrlFromHash } from "../../../modules/beatsaver";
@@ -20,7 +20,8 @@ export function ConnectedOverlay({ state }: { state: OverlayState }) {
   const map = mapInfo ?? previousMap;
   const { hash, coverUrl, title, subtitle, artist, mapper, characteristic, difficulty, duration } =
     map ?? {};
-  const mapQuery = useQuery<BeatsaverMap>([getDataUrlFromHash(hash ?? "")], {
+  const mapQuery = useQuery<BeatsaverMap>({
+    queryKey: [getDataUrlFromHash(hash ?? "")],
     enabled: !!hash,
     staleTime: Infinity,
   });
