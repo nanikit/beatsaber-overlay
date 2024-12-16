@@ -1,6 +1,9 @@
 import { MapInfo, OverlayState } from "../overlay/types";
 import { Beatmap, HttpSiraStatus, HttpSiraStatusEvent, Performance } from "./types";
 
+export const transparentPngBase64 =
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+
 export function mergeEvent(current: HttpSiraStatus, event: HttpSiraStatusEvent): HttpSiraStatus {
   if ("status" in event && event.status) {
     const { status, ...rest } = event;
@@ -23,10 +26,10 @@ export function convertStatus(state: HttpSiraStatus): OverlayState {
 }
 
 function getMapCoverUrl(base64OrUrl: string): string {
-  if (base64OrUrl.startsWith("http")) {
+  if (base64OrUrl?.startsWith("http")) {
     return base64OrUrl;
   }
-  return `data:image/png;base64,${base64OrUrl}`;
+  return `data:image/png;base64,${base64OrUrl ?? transparentPngBase64}`;
 }
 
 function convertToScoring(performance: Performance | null): OverlayState["scoring"] {
