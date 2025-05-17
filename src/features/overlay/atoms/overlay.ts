@@ -1,15 +1,15 @@
 import { atom } from "jotai";
 import { bsPlusOverlayAtom } from "../../bs_plus/atoms";
 import { siraOverlayAtom } from "../../http_sira_status/atoms";
-import { endpointAtom } from "./endpoint";
 import { Interaction } from "../types";
+import { endpointAtom } from "./endpoint";
 
 export const overlayAtom = atom((get) => {
   const endpoint = get(endpointAtom);
   switch (endpoint) {
-    case "bsplus":
+    case "bsPlus":
       return get(bsPlusOverlayAtom);
-    case "sirahttpstatus":
+    case "siraHttpStatus":
       return get(siraOverlayAtom);
     default:
       get(bsPlusOverlayAtom);

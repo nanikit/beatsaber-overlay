@@ -32,7 +32,7 @@ export const siraOverlayAtom = atom(
       getReconnectingWebSocket({
         url: "ws://localhost:6557/socket",
         onOpen: () => {
-          set(endpointAtom, "sirahttpstatus");
+          set(endpointAtom, "siraHttpStatus");
           addBreadcrumb({ level: "info", type: "socket_open" });
         },
         onMessage: (data) => {

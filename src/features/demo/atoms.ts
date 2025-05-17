@@ -150,18 +150,18 @@ async function getTestData(testParameter?: string) {
   if (testParameter?.includes("?")) {
     const response = await fetch(`https://beatsaver.com/api/search/text/${testParameter}`);
     const json = await response.json();
-    return beatsaversToStates(json.docs);
+    return convertBeatsaverMapsToOverlayStates(json.docs);
   }
 
   const ids = testParameter?.split(",").filter(Boolean);
   if (ids?.length) {
     const mapRecord = await getDetailFromIds(ids);
     const maps = ids.flatMap((id) => mapRecord[id] ? [mapRecord[id]] : []);
-    return beatsaversToStates(maps);
+    return convertBeatsaverMapsToOverlayStates(maps);
   }
 }
 
-function beatsaversToStates(maps: BeatsaverMap[]) {
+function convertBeatsaverMapsToOverlayStates(maps: BeatsaverMap[]) {
   const infos = maps.map((map) => {
     const { metadata, versions } = map;
     const { levelAuthorName, songName, songAuthorName, songSubName, duration } = metadata;

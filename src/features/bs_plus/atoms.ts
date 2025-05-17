@@ -24,7 +24,7 @@ export const bsPlusOverlayAtom = atom(
       getReconnectingWebSocket({
         url: "ws://localhost:2947/socket",
         onOpen: () => {
-          set(endpointAtom, "bsplus");
+          set(endpointAtom, "bsPlus");
           addBreadcrumb({ level: "info", type: "socket_open" });
         },
         onMessage: (data) => {

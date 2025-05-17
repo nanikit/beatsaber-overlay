@@ -1,3 +1,3 @@
 import { atom } from "jotai";
 
-export const endpointAtom = atom<"bsplus" | "sirahttpstatus" | null>(null);
+export const endpointAtom = atom<"bsPlus" | "siraHttpStatus" | null>(null);
