@@ -1,7 +1,7 @@
+import { delay } from "jsr:@std/async/delay";
 import { MapInfo } from "../src/features/overlay/types.ts";
 import { BeatsaverMap } from "../src/modules/beatsaver.ts";
 import { runOverlayServer, simulatePlaySession } from "./common.ts";
-import { delay } from "./deps.ts";
 import { prng } from "./prng.ts";
 
 if (import.meta.main) {
