@@ -1,8 +1,12 @@
 {
-  "npm.packageManager": "pnpm",
-  "editor.formatOnSave": true,
   "deno.enablePaths": ["tool", "deno.json"],
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "editor.formatOnSave": true,
   "editor.defaultFormatter": "denoland.vscode-deno",
+  "files.eol": "\n",
+  "npm.packageManager": "pnpm",
   "[typescript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": "always"
