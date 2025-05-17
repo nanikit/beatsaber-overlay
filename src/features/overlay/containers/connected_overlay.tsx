@@ -89,8 +89,8 @@ function GreenDotFadeOut() {
   return (
     <div
       className="absolute top-[0.05em] w-[0.1em] h-[0.1em] rounded-full 
-         bg-gradient-to-br from-green-300 to-emerald-600
-         animate-[0.2s_ease-in_1s_forwards_onetime-fadeout]"
+         bg-linear-to-br from-green-300 to-emerald-600
+         animate-onetime-fadeout"
       style={isRightLayout ? { right: "1vw" } : { left: "1vw" }}
     />
   );

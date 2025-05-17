@@ -22,12 +22,12 @@ export function TimeProgress({
   return (
     <div className={`flex items-center ${className}`}>
       <FaClock
-        className="text-[0.85em] mr-[0.5em] [stroke-width:20%] align-bottom overflow-visible [paint-order:stroke_fill]"
+        className="text-[0.85em] mr-[0.5em] stroke-[20%] align-bottom overflow-visible [paint-order:stroke_fill]"
         stroke={outline}
         fill={letter}
       />
       <OutlinedParagraph
-        className="flex flex-shrink"
+        className="flex shrink"
         innerClassName={grayOut ? "brightness-[0.8]" : ""}
       >
         <MonospaceImitation>{done}</MonospaceImitation>

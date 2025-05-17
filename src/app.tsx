@@ -13,7 +13,7 @@ export function App() {
 
   return (
     <div
-      className="h-[100vh]"
+      className="h-screen"
       onContextMenu={(event) => {
         event.preventDefault();
       }}

@@ -34,7 +34,7 @@ export function TitleAndMaker({ title, subtitle, artist, mapper }: Props) {
     <>
       <div
         ref={titleRef}
-        className={`flex flex-wrap justify-end gap-[0_0.4em] leading-[1] ${
+        className={`flex flex-wrap justify-end gap-[0_0.4em] leading-none ${
           isRightLayout ? "flex-row items-start" : "flex-row-reverse items-end"
         }`}
       >

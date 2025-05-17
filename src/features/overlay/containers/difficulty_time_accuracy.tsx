@@ -50,15 +50,15 @@ export function DifficultyTimeAccuracy({
         <SongProgress
           duration={duration ?? 1}
           progress={progress}
-          className="flex leading-[1] text-[0.12em]"
+          className="flex leading-none text-[0.12em]"
         />
       )}
       <div
-        className="text-[0.12em] leading-[1] flex"
+        className="text-[0.12em] leading-none flex"
         style={{ display: !hides.has("acc") && accuracy != null ? undefined : "none" }}
       >
         <MdFilterCenterFocus
-          className="center-icon mr-[0.4em] [stroke-width:10%] overflow-visible [paint-order:stroke_fill]"
+          className="center-icon mr-[0.4em] stroke-[10%] overflow-visible [paint-order:stroke_fill]"
           stroke={outline}
           fill={letter}
         />

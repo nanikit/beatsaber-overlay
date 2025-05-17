@@ -12,7 +12,7 @@ export const OutlinedParagraph = forwardRef<HTMLParagraphElement, Props>((props,
   return (
     <p
       ref={ref}
-      className={`relative break-keep [overflow-wrap:anywhere] ${className ?? ""}`}
+      className={`relative break-keep wrap-anywhere ${className ?? ""}`}
       style={{ WebkitTextStrokeColor: outline }}
       {...rest}
     >

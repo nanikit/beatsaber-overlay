@@ -26,7 +26,7 @@ export function IdBpmNjs({ id, bpm, noteJumpSpeed }: Props) {
       {!hides.has("id") && !!id && (
         <div className="flex items-center">
           <FaKey
-            className="text-[0.8em] mr-[0.5em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
+            className="text-[0.8em] mr-[0.5em] stroke-[20%] overflow-visible [paint-order:stroke_fill]"
             stroke={outline}
             fill={letter}
           />
@@ -36,7 +36,7 @@ export function IdBpmNjs({ id, bpm, noteJumpSpeed }: Props) {
       {!hides.has("bpm") && !!bpm && (
         <div className="flex items-center">
           <FaDrum
-            className="text-[0.9em] mr-[0.5em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
+            className="text-[0.9em] mr-[0.5em] stroke-[20%] overflow-visible [paint-order:stroke_fill]"
             stroke={outline}
             fill={letter}
           />
@@ -46,7 +46,7 @@ export function IdBpmNjs({ id, bpm, noteJumpSpeed }: Props) {
       {!hides.has("njs") && !!noteJumpSpeed && (
         <div className="flex items-center">
           <IoIosSpeedometer
-            className="text-[1.0em] mr-[0.4em] [stroke-width:20%] overflow-visible [paint-order:stroke_fill]"
+            className="text-[1.0em] mr-[0.4em] stroke-[20%] overflow-visible [paint-order:stroke_fill]"
             stroke={outline}
             fill={letter}
           />

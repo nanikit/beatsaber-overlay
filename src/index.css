@@ -1,20 +1,41 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@font-face {
-  font-family: "Genjyuu";
-  src: url("https://cdn.jsdelivr.net/gh/nanikit/beatsaber-overlay@37c5a2eff2cc6f3e5a8786565b48dfa9e0b9ca8f/public/GenJyuuGothicX.woff2") format("woff2");
-}
-
-body {
-  font-family: Genjyuu, sans-serif;
-  user-select: none;
-}
-
-.center-icon path:first-child {
-  display: none;
-}
+@import "tailwindcss";
 
 @layer utilities {
+  @font-face {
+    font-family: "Genjyuu";
+    src: url("https://cdn.jsdelivr.net/gh/nanikit/beatsaber-overlay@37c5a2eff2cc6f3e5a8786565b48dfa9e0b9ca8f/public/GenJyuuGothicX.woff2")
+      format("woff2");
+  }
+
+  body {
+    font-family: Genjyuu, sans-serif;
+    user-select: none;
+  }
+
+  .center-icon path:first-child {
+    display: none;
+  }
+}
+
+@theme {
+  --animate-onetime-fadeout: onetime-fadeout 0.2s ease-in 1s forwards;
+  --animate-translate-diff: translate-x-diff 10s linear infinite;
+
+  @keyframes onetime-fadeout {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes translate-x-diff {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
