@@ -1,6 +1,6 @@
-import { RefObject, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FaStar } from "react-icons/fa";
-import useResizeObserver from "use-resize-observer";
+import { useResizeObserver } from "../hooks/use_resize_observer";
 import { Characteristic, Difficulty } from "../modules/beatsaver";
 
 export function DifficultyLabel({
@@ -20,13 +20,12 @@ export function DifficultyLabel({
   const containerRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState({
     isOverflowed: false,
-    isMeasuring: true,
     width: undefined as number | undefined,
   });
   const { isOverflowed, width } = state;
 
-  useResizeObserver({
-    ref: containerRef as RefObject<HTMLElement>,
+  useResizeObserver(containerRef, {
+    invokeOnMount: true,
     onResize: () => {
       const div = containerRef.current;
       if (!div) {
@@ -35,7 +34,8 @@ export function DifficultyLabel({
 
       const maxWidth = parseFloat(getComputedStyle(div).fontSize) * 0.8;
       const width = Math.min(div.clientWidth, maxWidth);
-      setState({ ...state, width, isOverflowed: div.clientWidth > maxWidth * 1.15 });
+      const isOverflowed = div.clientWidth > maxWidth * 1.15;
+      setState({ ...state, width, isOverflowed });
     },
   });
 

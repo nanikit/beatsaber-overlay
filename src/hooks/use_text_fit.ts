@@ -1,5 +1,5 @@
-import { RefObject, useEffect } from "react";
-import useResizeObserver from "use-resize-observer";
+import { RefObject } from "react";
+import { useResizeObserver } from "./use_resize_observer";
 
 export function useTextFit(
   {
@@ -8,20 +8,14 @@ export function useTextFit(
     maxSize,
   }: { ref: RefObject<HTMLElement>; maxHeight: number; maxSize?: number },
 ) {
-  useResizeObserver({
-    ref,
+  useResizeObserver(ref, {
+    invokeOnMount: true,
     onResize: () => {
       if (ref.current) {
         fitText(ref.current, { maxHeight, maxWidth: Number.MAX_VALUE, maxSize });
       }
     },
   });
-
-  useEffect(() => {
-    if (ref.current) {
-      fitText(ref.current, { maxHeight, maxWidth: Number.MAX_VALUE, maxSize });
-    }
-  }, [ref.current, maxHeight, maxSize]);
 }
 
 function fitText(
