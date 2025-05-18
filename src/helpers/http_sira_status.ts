@@ -1,5 +1,10 @@
-import { MapInfo, OverlayState } from "../overlay/types";
-import { Beatmap, HttpSiraStatus, HttpSiraStatusEvent, Performance } from "./types";
+import {
+  Beatmap,
+  HttpSiraStatus,
+  HttpSiraStatusEvent,
+  Performance,
+} from "../types/http_sira_status";
+import { MapInfo, OverlayState } from "../types/overlay";
 
 export const transparentPngBase64 =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";

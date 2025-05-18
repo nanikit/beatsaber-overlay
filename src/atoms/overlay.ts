@@ -1,7 +1,7 @@
 import { atom } from "jotai";
-import { bsPlusOverlayAtom } from "../../bs_plus/atoms";
-import { siraOverlayAtom } from "../../http_sira_status/atoms";
+import { bsPlusOverlayAtom } from "./bs_plus";
 import { endpointAtom } from "./endpoint";
+import { siraOverlayAtom } from "./http_sira_status";
 
 export const overlayAtom = atom((get) => {
   const endpoint = get(endpointAtom);

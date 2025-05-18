@@ -1,12 +1,12 @@
 import { MdFilterCenterFocus } from "react-icons/md";
-import { DifficultyDots } from "../../../components/difficulty_dots";
-import { DifficultyLabel } from "../../../components/difficulty_label";
-import { MonospaceImitation } from "../../../components/monospace_imitation";
-import { OutlinedParagraph } from "../../../components/outlined_paragraph";
-import { filterAlternativeDifficulties } from "../../../helpers/filter_alternative_difficulties";
-import { useHideList, useIsRightLayout, usePalette } from "../../../hooks/search_param_hooks";
-import { Characteristic, Difficulty } from "../../../modules/beatsaver";
-import { OverlayState } from "../types";
+import { filterAlternativeDifficulties } from "../helpers/filter_alternative_difficulties";
+import { useHideList, useIsRightLayout, usePalette } from "../hooks/search_param_hooks";
+import { Characteristic, Difficulty } from "../modules/beatsaver";
+import { OverlayState } from "../types/overlay";
+import { DifficultyDots } from "./difficulty_dots";
+import { DifficultyLabel } from "./difficulty_label";
+import { MonospaceImitation } from "./monospace_imitation";
+import { OutlinedParagraph } from "./outlined_paragraph";
 import { SongProgress } from "./song_progress";
 
 type Props = {

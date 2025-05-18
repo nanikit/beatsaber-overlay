@@ -1,11 +1,11 @@
 import { atom } from "jotai";
 import { withAtomEffect } from "jotai-effect";
-import { getReconnectingWebSocket } from "../../modules/get_reconnecting_web_socket";
-import { addBreadcrumb } from "../../modules/logger";
-import { endpointAtom } from "../overlay/atoms/endpoint";
-import { OverlayState } from "../overlay/types";
-import { BsPlusMessageHandler } from "./helpers";
-import { BsPlusMessage } from "./types";
+import { BsPlusMessageHandler } from "../helpers/bs_plus_message_handler";
+import { getReconnectingWebSocket } from "../modules/get_reconnecting_web_socket";
+import { addBreadcrumb } from "../modules/logger";
+import { BsPlusMessage } from "../types/bs_plus";
+import { OverlayState } from "../types/overlay";
+import { endpointAtom } from "./endpoint";
 
 const overlayStateAtom = atom<OverlayState>({ readyState: WebSocket.CLOSED });
 

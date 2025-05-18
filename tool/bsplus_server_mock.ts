@@ -1,6 +1,6 @@
 import { delay } from "jsr:@std/async/delay";
-import { MapInfo } from "../src/features/overlay/types.ts";
 import { BeatsaverMap } from "../src/modules/beatsaver.ts";
+import { MapInfo } from "../src/types/overlay.ts";
 import { runOverlayServer, simulatePlaySession } from "./common.ts";
 import { prng } from "./prng.ts";
 

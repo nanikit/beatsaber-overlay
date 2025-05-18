@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { usePreviousDistinct } from "react-use";
-import { TransparentFallbackImg } from "../../../components/transparent_fallback_img";
-import { useIsRightLayout } from "../../../hooks/search_param_hooks";
-import { BeatsaverMap, getDataUrlFromHash } from "../../../modules/beatsaver";
-import { OverlayState } from "../types";
+import { useIsRightLayout } from "../hooks/search_param_hooks";
+import { BeatsaverMap, getDataUrlFromHash } from "../modules/beatsaver";
+import { OverlayState } from "../types/overlay";
 import { DifficultyTimeAccuracy } from "./difficulty_time_accuracy";
 import { IdBpmNjs } from "./id_bpm_njs";
 import { TitleAndMaker } from "./title_and_maker";
+import { TransparentFallbackImg } from "./transparent_fallback_img";
 
 export function ConnectedOverlay({ state }: { state: OverlayState }) {
   const { mapInfo, scoring } = state;

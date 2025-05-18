@@ -1,8 +1,8 @@
 import { RefObject, useRef } from "react";
-import { OutlinedParagraph } from "../../../components/outlined_paragraph";
-import { useTextFit } from "../../../hooks/use_text_fit";
 import { useWindowSize } from "react-use";
-import { useIsRightLayout } from "../../../hooks/search_param_hooks";
+import { useIsRightLayout } from "../hooks/search_param_hooks";
+import { useTextFit } from "../hooks/use_text_fit";
+import { OutlinedParagraph } from "./outlined_paragraph";
 
 type Props = {
   title?: string;

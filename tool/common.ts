@@ -1,5 +1,5 @@
-import { MapInfo } from "../src/features/overlay/types.ts";
 import { type BeatsaverMap } from "../src/modules/beatsaver.ts";
+import { MapInfo } from "../src/types/overlay.ts";
 
 type OverlayServerParameters = {
   port: number;

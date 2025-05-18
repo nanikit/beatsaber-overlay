@@ -1,5 +1,5 @@
-import { Difficulty } from "../../modules/beatsaver";
-import { OverlayState } from "../overlay/types";
+import { Difficulty } from "../modules/beatsaver";
+import { OverlayState } from "./overlay";
 
 export type BsPlusMessage = Handshake | EventMessage;
 

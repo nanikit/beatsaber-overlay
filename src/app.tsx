@@ -1,9 +1,9 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useLocation } from "react-use";
+import { uiTestOverlayAtom, uiTestOverlayClickAtom } from "./atoms/demo";
+import { overlayAtom } from "./atoms/overlay";
+import { ConnectedOverlay } from "./components/connected_overlay";
 import { DisconnectionWarning } from "./components/disconnection_warning";
-import { uiTestOverlayAtom, uiTestOverlayClickAtom } from "./features/demo/atoms";
-import { overlayAtom } from "./features/overlay/atoms/overlay";
-import { ConnectedOverlay } from "./features/overlay/containers/connected_overlay";
 
 export function App() {
   const { pathname } = useLocation();

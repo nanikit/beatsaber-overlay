@@ -5,7 +5,7 @@ import {
   Handshake,
   MapInfoEvent,
   ScoreEvent,
-} from "./types";
+} from "../types/bs_plus";
 
 export class BsPlusMessageHandler {
   #state: BsPlusOverlayState = {

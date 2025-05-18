@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 import { withAtomEffect } from "jotai-effect";
-import { BeatsaverMap, getDetailFromIds } from "../../modules/beatsaver";
-import { OverlayState } from "../overlay/types";
+import { BeatsaverMap, getDetailFromIds } from "../modules/beatsaver";
+import { OverlayState } from "../types/overlay";
 
 const emptyState = { readyState: WebSocket.OPEN };
 

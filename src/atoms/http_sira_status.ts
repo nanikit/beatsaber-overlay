@@ -1,10 +1,10 @@
 import { atom } from "jotai";
 import { withAtomEffect } from "jotai-effect";
-import { getReconnectingWebSocket } from "../../modules/get_reconnecting_web_socket";
-import { addBreadcrumb } from "../../modules/logger";
-import { endpointAtom } from "../overlay/atoms/endpoint";
-import { convertStatus, mergeEvent } from "./helpers";
-import { HttpSiraStatus, HttpSiraStatusEvent } from "./types";
+import { convertStatus, mergeEvent } from "../helpers/http_sira_status";
+import { getReconnectingWebSocket } from "../modules/get_reconnecting_web_socket";
+import { addBreadcrumb } from "../modules/logger";
+import { HttpSiraStatus, HttpSiraStatusEvent } from "../types/http_sira_status";
+import { endpointAtom } from "./endpoint";
 
 const overlayStateAtom = atom<HttpSiraStatus | null>(null);
 const siraOverlayStateAtom = atom(

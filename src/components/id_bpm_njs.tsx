@@ -1,7 +1,7 @@
 import { FaDrum, FaKey } from "react-icons/fa";
 import { IoIosSpeedometer } from "react-icons/io";
-import { OutlinedParagraph } from "../../../components/outlined_paragraph";
-import { useHideList, useIsRightLayout, usePalette } from "../../../hooks/search_param_hooks";
+import { useHideList, useIsRightLayout, usePalette } from "../hooks/search_param_hooks";
+import { OutlinedParagraph } from "./outlined_paragraph";
 
 type Props = {
   id?: string;

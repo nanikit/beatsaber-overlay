@@ -1,4 +1,4 @@
-import { Characteristic, Difficulty } from "../../modules/beatsaver.ts";
+import { Characteristic, Difficulty } from "../modules/beatsaver.ts";
 
 export type OverlayState = {
   readyState?: number;
