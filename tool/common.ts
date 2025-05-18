@@ -19,8 +19,13 @@ export async function runOverlayServer({ port, handler }: OverlayServerParameter
   function handleRequest(request: Request, info: Deno.ServeHandlerInfo) {
     const { socket, response } = Deno.upgradeWebSocket(request);
     socket.onopen = async () => {
-      const { hostname, port } = info.remoteAddr;
-      console.log(`[${new Date().toISOString()}] open websocket from ${hostname}:${port}.`);
+      const { remoteAddr } = info;
+      if (remoteAddr.transport === "tcp" || remoteAddr.transport === "udp") {
+        const { hostname, port } = remoteAddr;
+        console.log(`[${new Date().toISOString()}] open websocket from ${hostname}:${port}.`);
+      } else {
+        console.log(`[${new Date().toISOString()}] open ${remoteAddr.transport} websocket.`);
+      }
       await handler(socket, { ...info, beatmaps });
     };
     return response;
