@@ -1,7 +1,9 @@
 import { atom } from "jotai";
+import { withAtomEffect } from "jotai-effect";
 import { BeatsaverMap, getDetailFromIds } from "../../modules/beatsaver";
-import { Interaction, OverlayState } from "../overlay/types";
-import { mount, onMount, unmount } from "../../modules/atom_mount_hook";
+import { OverlayState } from "../overlay/types";
+
+const emptyState = { readyState: WebSocket.OPEN };
 
 const sampleStates: OverlayState[] = [
   {
@@ -84,66 +86,59 @@ const sampleStates: OverlayState[] = [
       resumeTime: 10,
     },
   },
-  {
-    readyState: WebSocket.OPEN,
-  },
+  emptyState,
 ];
 
-const stateAtom = atom(sampleStates[sampleStates.length - 1]);
+const testMapStatesAtom = atom(sampleStates);
+const testMapIndexAtom = atom(0);
+const testOverlayStateAtom = atom<OverlayState>(emptyState);
+const isTestStatePlayingAtom = atom((get) =>
+  "resumeTime" in (get(testOverlayStateAtom).progress ?? {})
+);
+const testOverlayAtom = withAtomEffect(testOverlayStateAtom, (get, set) => {
+  if (get(isTestStatePlayingAtom)) {
+    const intervalId = setInterval(updateAccuracy, 200);
 
-const statesAtom = atom({
-  index: sampleStates.length - 1,
-  states: sampleStates,
+    return () => {
+      clearInterval(intervalId);
+    };
+  }
+
+  function updateAccuracy() {
+    if (Math.random() < 0.25) {
+      return;
+    }
+
+    const state = get(testOverlayStateAtom);
+    let accuracy = (state.scoring?.accuracy ?? 0.9) + (Math.random() - 0.5) * 0.01;
+    accuracy = Math.max(0, Math.min(1, accuracy));
+    set(testOverlayStateAtom, { ...state, scoring: { ...state.scoring, accuracy } });
+  }
 });
 
-let intervalId = 0;
-
-export const uiTestOverlayAtom = atom(
-  (get) => {
-    return get(stateAtom);
-  },
-  async (get, set, value: Interaction) => {
-    switch (value) {
-      case mount: {
-        const testParameter = new URLSearchParams(window.location.search).get("query");
-        const appointeds = await getTestData(testParameter ?? undefined);
-        if (appointeds && appointeds.length > 0) {
-          set(statesAtom, { states: appointeds, index: 0 });
-        }
-        set(stateAtom, get(statesAtom).states[0]);
-        break;
-      }
-      case "click": {
-        const states = get(statesAtom);
-        const newIndex = (states.index + 1) % states.states.length;
-        set(statesAtom, { ...states, index: newIndex });
-
-        const newState = structuredClone(states.states[newIndex]);
-        if (newState.progress) {
-          newState.progress.point = new Date();
-        }
-        set(stateAtom, newState);
-        break;
-      }
-      case unmount:
-        break;
+export const uiTestOverlayAtom = withAtomEffect(testOverlayAtom, (get, set) => {
+  const testParameter = new URLSearchParams(window.location.search).get("query");
+  getTestData(testParameter ?? undefined).then((testMapStates) => {
+    if (testMapStates && testMapStates.length > 0) {
+      set(testMapStatesAtom, testMapStates);
+      set(testMapIndexAtom, 0);
+      set(testOverlayStateAtom, testMapStates[0]);
     }
+  });
+});
 
-    clearInterval(intervalId);
-    if ("resumeTime" in (get(stateAtom).progress ?? {})) {
-      intervalId = setInterval(() => {
-        if (Math.random() < 0.25) {
-          return;
-        }
-        const state = get(stateAtom);
-        let accuracy = (state.scoring?.accuracy ?? 0.9) + (Math.random() - 0.5) * 0.01;
-        accuracy = Math.max(0, Math.min(1, accuracy));
-        set(stateAtom, { ...state, scoring: { ...state.scoring, accuracy } });
-      }, 200);
-    }
-  },
-);
-uiTestOverlayAtom.onMount = onMount;
+export const uiTestOverlayClickAtom = atom(null, (get, set) => {
+  const states = get(testMapStatesAtom);
+  const index = get(testMapIndexAtom);
+  const newIndex = (index + 1) % states.length;
+
+  const state = structuredClone(states[newIndex]);
+  if (state.progress) {
+    state.progress.point = new Date();
+  }
+  set(testMapIndexAtom, newIndex);
+  set(testOverlayStateAtom, state);
+});
 
 /** input: map ids separated by comma or beatsaver api subpath comes after /search/text/ */
 async function getTestData(testParameter?: string) {

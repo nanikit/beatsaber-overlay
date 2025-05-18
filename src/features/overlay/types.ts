@@ -1,7 +1,4 @@
-import { mount, unmount } from "../../modules/atom_mount_hook.ts";
 import { Characteristic, Difficulty } from "../../modules/beatsaver.ts";
-
-export type Interaction = typeof mount | "click" | typeof unmount;
 
 export type OverlayState = {
   readyState?: number;

@@ -1,7 +1,6 @@
 import { atom } from "jotai";
 import { bsPlusOverlayAtom } from "../../bs_plus/atoms";
 import { siraOverlayAtom } from "../../http_sira_status/atoms";
-import { Interaction } from "../types";
 import { endpointAtom } from "./endpoint";
 
 export const overlayAtom = atom((get) => {
@@ -15,7 +14,7 @@ export const overlayAtom = atom((get) => {
       get(bsPlusOverlayAtom);
       return get(siraOverlayAtom);
   }
-}, async (_get, _set, _value: Interaction) => {});
+});
 
 export const mapAtom = atom((get) => {
   const overlay = get(overlayAtom);
