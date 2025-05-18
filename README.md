@@ -32,3 +32,4 @@ https://nanikit-bs.pages.dev/test/ui?layout=left&hide=njs,bpm)
   - `id`: beatmap id
   - `time`: time progress
   - `acc`: current accuracy
+  - `other_diffs`: other difficulties

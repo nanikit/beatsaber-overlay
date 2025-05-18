@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { FaStar } from "react-icons/fa";
+import { getDifficultyBackground } from "../helpers/get_difficulty_background";
 import { useResizeObserver } from "../hooks/use_resize_observer";
 import { Characteristic, Difficulty } from "../modules/beatsaver";
 
@@ -43,9 +44,9 @@ export function DifficultyLabel({
     <div
       className={`relative px-[0.03em] py-[0.015em] flex items-center justify-center ${
         width ? "" : "max-w-[0.8em]"
-      } ${getDifficultyBackground(difficulty)} overflow-hidden transition-all rounded-[1em] ${
-        className ?? ""
-      }`}
+      } ${
+        getDifficultyBackground(difficulty)
+      } overflow-hidden transition-all rounded-[1em] [-webkit-text-stroke:0] ${className ?? ""}`}
       style={{ width }}
     >
       <div
@@ -136,20 +137,5 @@ function getDifficultyAbbreviation(difficulty: Difficulty) {
       return "E";
     case "ExpertPlus":
       return "E+";
-  }
-}
-
-function getDifficultyBackground(difficulty: Difficulty) {
-  switch (difficulty) {
-    case "Easy":
-      return "bg-green-700";
-    case "Normal":
-      return "bg-sky-700";
-    case "Hard":
-      return "bg-amber-700";
-    case "Expert":
-      return "bg-red-700";
-    case "ExpertPlus":
-      return "bg-purple-700";
   }
 }

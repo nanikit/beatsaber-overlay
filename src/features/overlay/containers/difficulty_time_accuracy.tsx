@@ -1,11 +1,13 @@
 import { MdFilterCenterFocus } from "react-icons/md";
+import { DifficultyDots } from "../../../components/difficulty_dots";
 import { DifficultyLabel } from "../../../components/difficulty_label";
 import { MonospaceImitation } from "../../../components/monospace_imitation";
 import { OutlinedParagraph } from "../../../components/outlined_paragraph";
-import { SongProgress } from "./song_progress";
+import { filterAlternativeDifficulties } from "../../../helpers/filter_alternative_difficulties";
 import { useHideList, useIsRightLayout, usePalette } from "../../../hooks/search_param_hooks";
 import { Characteristic, Difficulty } from "../../../modules/beatsaver";
 import { OverlayState } from "../types";
+import { SongProgress } from "./song_progress";
 
 type Props = {
   progress?: OverlayState["progress"];
@@ -15,6 +17,7 @@ type Props = {
   characteristic?: Characteristic;
   difficulty?: Difficulty;
   diff?: { stars?: number; label?: string };
+  difficulties?: { characteristic: Characteristic; difficulty: Difficulty }[];
 };
 
 export function DifficultyTimeAccuracy({
@@ -25,26 +28,40 @@ export function DifficultyTimeAccuracy({
   characteristic,
   difficulty,
   diff,
+  difficulties,
 }: Props) {
   const hides = useHideList();
   const { letter, outline } = usePalette();
   const isRightLayout = useIsRightLayout();
 
+  const alternativeDiffs = difficulties && characteristic && difficulty
+    ? filterAlternativeDifficulties({ difficulties, current: { characteristic, difficulty } })
+    : undefined;
+  const showAlternativeDiffs = alternativeDiffs && alternativeDiffs.length > 1;
+
+  const directionStyle = {
+    flexDirection: isRightLayout ? "row-reverse" : undefined,
+  } as const;
+
   return (
     <div
       className="flex gap-[0.1em] items-center"
-      style={{
-        flexDirection: isRightLayout ? "row-reverse" : undefined,
-      }}
+      style={directionStyle}
     >
-      {!!difficulty && (
-        <DifficultyLabel
-          difficulty={difficulty}
-          characteristic={characteristic}
-          stars={diff?.stars}
-          label={diff?.label}
-          className="[-webkit-text-stroke:0]"
-        />
+      {(!!difficulty || showAlternativeDiffs) && (
+        <div className="flex gap-[0.015em] items-center" style={directionStyle}>
+          {!!difficulty && (
+            <DifficultyLabel
+              difficulty={difficulty}
+              characteristic={characteristic}
+              stars={diff?.stars}
+              label={diff?.label}
+            />
+          )}
+          {!hides.has("other_diffs") && showAlternativeDiffs && (
+            <DifficultyDots reverse={isRightLayout} difficulties={alternativeDiffs} />
+          )}
+        </div>
       )}
       {!hides.has("time") && (
         <SongProgress
