@@ -96,9 +96,10 @@ function GreenDotFadeOut() {
   const isRightLayout = useIsRightLayout();
 
   return (
+    // bg-green-500 is @property fallback
     <div
       className="absolute top-[0.05em] w-[0.1em] h-[0.1em] rounded-full 
-         bg-linear-to-br from-green-300 to-emerald-600
+         bg-green-500 bg-linear-to-br from-green-300 to-emerald-600
          animate-onetime-fadeout"
       style={isRightLayout ? { right: "1vw" } : { left: "1vw" }}
     />

@@ -17,7 +17,8 @@ export function DisconnectionWarning() {
       className={`absolute top-[1vw] ${
         isRightLayout ? "right-[1vw]" : "left-[1vw]"
       } rounded-full transition-all overflow-hidden` +
-        ` bg-linear-to-br from-yellow-300 to-orange-600` +
+        // bg-yellow-400 is @property fallback
+        ` bg-yellow-400 bg-linear-to-br from-yellow-300 to-orange-600` +
         ` ${isHovering ? "w-[1.8em] h-[0.25em]" : "w-[0.1em] h-[0.1em]"}`}
     >
       {isHovering && (
