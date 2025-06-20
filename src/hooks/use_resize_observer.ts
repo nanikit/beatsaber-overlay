@@ -8,8 +8,6 @@ type HookOptions = {
   onResize?: (rect: DOMRectReadOnly) => void;
   /** Whether to invoke the onResize callback immediately on mount */
   invokeOnMount?: boolean;
-  /** Options to pass to the ResizeObserver constructor */
-  options?: ResizeObserverOptions;
 };
 
 /**
@@ -19,16 +17,16 @@ type HookOptions = {
  */
 export function useResizeObserver<T extends HTMLElement = HTMLElement>(
   ref: RefObject<T | null>,
-  { onResize, invokeOnMount, options }: HookOptions = {},
+  { onResize, invokeOnMount }: HookOptions = {},
 ) {
   const onResizeRef = useRef(onResize);
-  const element = ref.current;
 
   useEffect(() => {
     onResizeRef.current = onResize;
   }, [onResize]);
 
   useEffect(() => {
+    const element = ref.current;
     if (!element) {
       return;
     }
@@ -40,7 +38,7 @@ export function useResizeObserver<T extends HTMLElement = HTMLElement>(
       }
     });
 
-    observer.observe(element, options);
+    observer.observe(element);
 
     if (invokeOnMount) {
       onResizeRef.current?.(element.getBoundingClientRect());
@@ -49,5 +47,5 @@ export function useResizeObserver<T extends HTMLElement = HTMLElement>(
     return () => {
       observer.disconnect();
     };
-  }, [element, invokeOnMount]);
+  }, [ref.current, invokeOnMount]);
 }
