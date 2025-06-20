@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 import { uiTestOverlayClickAtom } from "./demo";
 import { hideListAtom, isRightLayoutAtom } from "./location";
-import { mapAtom, mapQueryAtom, overlayAtom } from "./overlay";
+import { lastMapAtom, mapQueryAtom, overlayAtom } from "./overlay";
 
 export const appAtom = atom(
   (get) => ({ isConnected: get(overlayAtom).readyState === WebSocket.OPEN }),
@@ -9,14 +9,14 @@ export const appAtom = atom(
 );
 
 export const titleAndMakerAtom = atom((get) => {
-  const { title, subtitle, artist, mapper } = get(mapAtom) ?? {};
+  const { title, subtitle, artist, mapper } = get(lastMapAtom) ?? {};
   const isRightLayout = get(isRightLayoutAtom);
 
   return { title, subtitle, artist, mapper, isRightLayout };
 });
 
 export const idBpmNjsAtom = atom((get) => {
-  const map = get(mapAtom);
+  const map = get(lastMapAtom);
   const mapQuery = get(mapQueryAtom);
   const hideList = get(hideListAtom);
 

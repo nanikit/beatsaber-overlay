@@ -1,11 +1,10 @@
 import { atom } from "jotai";
-import { withAtomEffect } from "jotai-effect";
 import { atomWithQuery } from "jotai-tanstack-query";
 import { BeatsaverMap, getDataUrlFromHash } from "../modules/beatsaver";
-import { MapInfo } from "../types/overlay";
 import { bsPlusOverlayAtom } from "./bs_plus";
 import { uiTestOverlayAtom } from "./demo";
 import { endpointAtom } from "./endpoint";
+import { atomWithPrevious } from "./helpers/atomWithPrevious";
 import { siraOverlayAtom } from "./http_sira_status";
 import { locationAtom } from "./location";
 
@@ -39,16 +38,4 @@ export const mapQueryAtom = atomWithQuery<BeatsaverMap>((get) => {
   };
 });
 
-const previousMapInfoAtom = atom<MapInfo | null>(null);
-const currentMapInfoAtom = atom((get) => get(overlayAtom).mapInfo);
-
-export const mapAtom = withAtomEffect(
-  atom((get) => get(currentMapInfoAtom) ?? get(previousMapInfoAtom)),
-  (get, set) => {
-    const current = get(currentMapInfoAtom);
-    const previous = get(previousMapInfoAtom);
-    if (current && current !== previous) {
-      set(previousMapInfoAtom, current);
-    }
-  },
-);
+export const lastMapAtom = atomWithPrevious(atom((get) => get(overlayAtom).mapInfo));
