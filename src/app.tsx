@@ -1,12 +1,10 @@
-import { useAtomValue, useSetAtom } from "jotai";
-import { uiTestOverlayClickAtom } from "./atoms/demo";
-import { overlayAtom } from "./atoms/overlay";
+import { useAtom } from "jotai";
+import { appAtom } from "./atoms/view_models";
 import { ConnectedOverlay } from "./components/connected_overlay";
 import { DisconnectionWarning } from "./components/disconnection_warning";
 
 export function App() {
-  const overlay = useAtomValue(overlayAtom);
-  const updateOverlay = useSetAtom(uiTestOverlayClickAtom);
+  const [{ isConnected }, updateOverlay] = useAtom(appAtom);
 
   return (
     <div
@@ -19,9 +17,7 @@ export function App() {
         className="w-full h-[20vw] text-white p-[1vw] text-[20vw]"
         onClick={updateOverlay}
       >
-        {overlay.readyState === WebSocket.OPEN
-          ? <ConnectedOverlay state={overlay} />
-          : <DisconnectionWarning />}
+        {isConnected ? <ConnectedOverlay /> : <DisconnectionWarning />}
       </main>
     </div>
   );

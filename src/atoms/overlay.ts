@@ -1,13 +1,19 @@
 import { atom } from "jotai";
+import { withAtomEffect } from "jotai-effect";
 import { atomWithLocation } from "jotai-location";
 import { atomWithQuery } from "jotai-tanstack-query";
 import { BeatsaverMap, getDataUrlFromHash } from "../modules/beatsaver";
+import { MapInfo } from "../types/overlay";
 import { bsPlusOverlayAtom } from "./bs_plus";
 import { uiTestOverlayAtom } from "./demo";
 import { endpointAtom } from "./endpoint";
 import { siraOverlayAtom } from "./http_sira_status";
 
 const locationAtom = atomWithLocation();
+
+export const isRightLayoutAtom = atom((get) =>
+  get(locationAtom).searchParams?.get("layout") !== "left"
+);
 
 export const overlayAtom = atom((get) => {
   const location = get(locationAtom);
@@ -30,7 +36,7 @@ export const overlayAtom = atom((get) => {
 
 const hashAtom = atom((get) => get(overlayAtom).mapInfo?.hash);
 
-export const mapAtom = atomWithQuery<BeatsaverMap>((get) => {
+export const mapQueryAtom = atomWithQuery<BeatsaverMap>((get) => {
   const hash = get(hashAtom);
   return {
     queryKey: [getDataUrlFromHash(hash ?? "")],
@@ -38,3 +44,17 @@ export const mapAtom = atomWithQuery<BeatsaverMap>((get) => {
     staleTime: Infinity,
   };
 });
+
+const previousMapInfoAtom = atom<MapInfo | null>(null);
+const currentMapInfoAtom = atom((get) => get(overlayAtom).mapInfo);
+
+export const mapAtom = withAtomEffect(
+  atom((get) => get(currentMapInfoAtom) ?? get(previousMapInfoAtom)),
+  (get, set) => {
+    const current = get(currentMapInfoAtom);
+    const previous = get(previousMapInfoAtom);
+    if (current && current !== previous) {
+      set(previousMapInfoAtom, current);
+    }
+  },
+);

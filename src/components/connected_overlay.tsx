@@ -1,14 +1,14 @@
 import { useAtomValue } from "jotai";
 import { usePreviousDistinct } from "react-use";
-import { mapAtom } from "../atoms/overlay";
+import { mapQueryAtom, overlayAtom } from "../atoms/overlay";
 import { useIsRightLayout } from "../hooks/search_param_hooks";
-import { OverlayState } from "../types/overlay";
 import { DifficultyTimeAccuracy } from "./difficulty_time_accuracy";
 import { IdBpmNjs } from "./id_bpm_njs";
 import { TitleAndMaker } from "./title_and_maker";
 import { TransparentFallbackImg } from "./transparent_fallback_img";
 
-export function ConnectedOverlay({ state }: { state: OverlayState }) {
+export function ConnectedOverlay() {
+  const state = useAtomValue(overlayAtom);
   const { mapInfo, scoring } = state;
 
   const previousMap = usePreviousDistinct(mapInfo);
@@ -18,9 +18,8 @@ export function ConnectedOverlay({ state }: { state: OverlayState }) {
   const accuracy = scoring?.accuracy ?? lastScoring?.accuracy;
 
   const map = mapInfo ?? previousMap;
-  const { hash, coverUrl, title, subtitle, artist, mapper, characteristic, difficulty, duration } =
-    map ?? {};
-  const mapQuery = useAtomValue(mapAtom);
+  const { hash, coverUrl, characteristic, difficulty, duration } = map ?? {};
+  const mapQuery = useAtomValue(mapQueryAtom);
 
   const isRightLayout = useIsRightLayout();
 
@@ -56,7 +55,7 @@ export function ConnectedOverlay({ state }: { state: OverlayState }) {
               transform: `translateX(${mapInfo ? 0 : isRightLayout ? "105%" : "-105%"})`,
             }}
           >
-            <TitleAndMaker {...{ title, subtitle, artist, mapper }} />
+            <TitleAndMaker />
             <div
               className="flex-1 mt-[0.03em] w-full min-h-0 flex flex-col gap-[0.03em_0.12em] justify-end"
               style={isRightLayout

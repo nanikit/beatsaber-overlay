@@ -1,17 +1,12 @@
+import { useAtomValue } from "jotai";
 import { RefObject, useRef } from "react";
 import { useWindowSize } from "react-use";
-import { useIsRightLayout } from "../hooks/search_param_hooks";
+import { titleAndMakerAtom } from "../atoms/view_models";
 import { useTextFit } from "../hooks/use_text_fit";
 import { OutlinedParagraph } from "./outlined_paragraph";
 
-type Props = {
-  title?: string;
-  subtitle?: string;
-  artist?: string;
-  mapper?: string;
-};
-
-export function TitleAndMaker({ title, subtitle, artist, mapper }: Props) {
+export function TitleAndMaker() {
+  const { title, subtitle, artist, mapper, isRightLayout } = useAtomValue(titleAndMakerAtom);
   const { width: vw100 } = useWindowSize();
 
   const titleRef = useRef<HTMLParagraphElement>(null);
@@ -27,8 +22,6 @@ export function TitleAndMaker({ title, subtitle, artist, mapper }: Props) {
     maxHeight: vw100 * 0.04,
     maxSize: vw100 * 0.0225,
   });
-
-  const isRightLayout = useIsRightLayout();
 
   return (
     <>
