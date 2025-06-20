@@ -1,18 +1,14 @@
-import { useSearchParam } from "react-use";
+import { useAtomValue } from "jotai";
+import { hideListAtom, isRightLayoutAtom, paletteAtom } from "../atoms/location";
 
 export function usePalette() {
-  return {
-    letter: useSearchParam("letter_color") ?? "white",
-    outline: useSearchParam("outline_color") ?? "black",
-  };
+  return useAtomValue(paletteAtom);
 }
 
 export function useIsRightLayout() {
-  const layout = useSearchParam("layout");
-  return layout !== "left";
+  return useAtomValue(isRightLayoutAtom);
 }
 
 export function useHideList() {
-  const hidesParam = useSearchParam("hide") ?? "";
-  return hidesParam.split(",").reduce((acc, x) => acc.add(x), new Set());
+  return useAtomValue(hideListAtom);
 }

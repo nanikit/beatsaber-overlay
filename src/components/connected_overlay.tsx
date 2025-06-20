@@ -23,14 +23,12 @@ export function ConnectedOverlay() {
 
   const isRightLayout = useIsRightLayout();
 
-  const { id, metadata, versions } = mapQuery.data ?? {};
+  const { versions } = mapQuery.data ?? {};
   const version = versions?.find((version) => version.hash === hash) ??
     versions?.[versions.length - 1];
   const diff = version?.diffs?.find(
     (diff) => diff.characteristic === characteristic && diff.difficulty === difficulty,
   );
-  const noteJumpSpeed = map?.speed ?? diff?.njs;
-  const bpm = map?.bpm ?? metadata?.bpm;
   const progress = state.progress ?? lastProgress;
 
   return (
@@ -62,7 +60,7 @@ export function ConnectedOverlay() {
                 ? { alignItems: "flex-end", flexWrap: "wrap" }
                 : { flexWrap: "wrap-reverse" }}
             >
-              <IdBpmNjs {...{ id, bpm, noteJumpSpeed }} />
+              <IdBpmNjs />
               <DifficultyTimeAccuracy
                 {...{
                   progress,

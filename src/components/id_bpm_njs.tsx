@@ -1,19 +1,15 @@
+import { useAtomValue } from "jotai";
 import { FaDrum, FaKey } from "react-icons/fa";
 import { IoIosSpeedometer } from "react-icons/io";
-import { useHideList, useIsRightLayout, usePalette } from "../hooks/search_param_hooks";
+import { idBpmNjsAtom } from "../atoms/view_models";
+import { useIsRightLayout, usePalette } from "../hooks/search_param_hooks";
 import { OutlinedParagraph } from "./outlined_paragraph";
 
-type Props = {
-  id?: string;
-  bpm?: number;
-  noteJumpSpeed?: number;
-};
+export function IdBpmNjs() {
+  const { id, bpm, noteJumpSpeed, isLoading } = useAtomValue(idBpmNjsAtom);
 
-export function IdBpmNjs({ id, bpm, noteJumpSpeed }: Props) {
   const { letter, outline } = usePalette();
   const isRightLayout = useIsRightLayout();
-  const hides = useHideList();
-  const isLoading = id == null && bpm == null && noteJumpSpeed == null;
 
   return (
     <div
@@ -23,7 +19,7 @@ export function IdBpmNjs({ id, bpm, noteJumpSpeed }: Props) {
         flexDirection: isRightLayout ? "row-reverse" : undefined,
       }}
     >
-      {!hides.has("id") && !!id && (
+      {!!id && (
         <div className="flex items-center">
           <FaKey
             className="text-[0.8em] mr-[0.5em] stroke-[20%] overflow-visible [paint-order:stroke_fill]"
@@ -33,7 +29,7 @@ export function IdBpmNjs({ id, bpm, noteJumpSpeed }: Props) {
           <OutlinedParagraph>{id}</OutlinedParagraph>
         </div>
       )}
-      {!hides.has("bpm") && !!bpm && (
+      {!!bpm && (
         <div className="flex items-center">
           <FaDrum
             className="text-[0.9em] mr-[0.5em] stroke-[20%] overflow-visible [paint-order:stroke_fill]"
@@ -43,7 +39,7 @@ export function IdBpmNjs({ id, bpm, noteJumpSpeed }: Props) {
           <OutlinedParagraph>{Math.round(bpm * 10) / 10}</OutlinedParagraph>
         </div>
       )}
-      {!hides.has("njs") && !!noteJumpSpeed && (
+      {!!noteJumpSpeed && (
         <div className="flex items-center">
           <IoIosSpeedometer
             className="text-[1.0em] mr-[0.4em] stroke-[20%] overflow-visible [paint-order:stroke_fill]"

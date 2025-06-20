@@ -1,6 +1,5 @@
 import { atom } from "jotai";
 import { withAtomEffect } from "jotai-effect";
-import { atomWithLocation } from "jotai-location";
 import { atomWithQuery } from "jotai-tanstack-query";
 import { BeatsaverMap, getDataUrlFromHash } from "../modules/beatsaver";
 import { MapInfo } from "../types/overlay";
@@ -8,12 +7,7 @@ import { bsPlusOverlayAtom } from "./bs_plus";
 import { uiTestOverlayAtom } from "./demo";
 import { endpointAtom } from "./endpoint";
 import { siraOverlayAtom } from "./http_sira_status";
-
-const locationAtom = atomWithLocation();
-
-export const isRightLayoutAtom = atom((get) =>
-  get(locationAtom).searchParams?.get("layout") !== "left"
-);
+import { locationAtom } from "./location";
 
 export const overlayAtom = atom((get) => {
   const location = get(locationAtom);
