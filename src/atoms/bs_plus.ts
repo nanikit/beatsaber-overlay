@@ -18,14 +18,16 @@ export const bsPlusOverlayAtom = withAtomEffect(overlayStateAtom, (_get, set) =>
     url: "ws://localhost:2947/socket",
     onOpen: () => {
       set(endpointAtom, "bsPlus");
-      addBreadcrumb({ level: "info", type: "socket_open" });
+      addBreadcrumb({ level: "info", type: "bsplus socket_open" });
     },
     onMessage: (data) => {
       const message = JSON.parse(data) as BsPlusMessage;
+      addBreadcrumb({ level: "info", type: "bsplus socket_message", data: { message } });
+
       handler.process(message);
     },
     onClose: () => {
-      addBreadcrumb({ level: "info", type: "socket_close" });
+      addBreadcrumb({ level: "info", type: "bsplus socket_close" });
       set(endpointAtom, null);
     },
     aborter,

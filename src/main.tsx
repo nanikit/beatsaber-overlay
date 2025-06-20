@@ -1,4 +1,4 @@
-import { ErrorBoundary } from "@sentry/react";
+import { ErrorBoundary } from "./modules/logger";
 
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { Provider } from "jotai";

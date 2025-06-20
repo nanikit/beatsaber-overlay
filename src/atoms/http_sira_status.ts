@@ -30,15 +30,17 @@ export const siraOverlayAtom = withAtomEffect(siraOverlayStateAtom, (get, set) =
     url: "ws://localhost:6557/socket",
     onOpen: () => {
       set(endpointAtom, "siraHttpStatus");
-      addBreadcrumb({ level: "info", type: "socket_open" });
+      addBreadcrumb({ level: "info", type: "sira socket_open" });
     },
     onMessage: (data) => {
       const message = JSON.parse(data) as HttpSiraStatusEvent;
+      addBreadcrumb({ level: "info", type: "sira socket_message", data: { message } });
+
       const previous = get(overlayStateAtom);
       set(overlayStateAtom, mergeEvent((previous ?? message) as HttpSiraStatus, message));
     },
     onClose: () => {
-      addBreadcrumb({ level: "info", type: "socket_close" });
+      addBreadcrumb({ level: "info", type: "sira socket_close" });
       set(overlayStateAtom, null);
       set(endpointAtom, null);
     },
