@@ -1,18 +1,14 @@
-import { OverlayState } from "../types/overlay";
+import { useAtomValue } from "jotai";
+import { songProgressAtom } from "../atoms/view_models";
 import { TimeProgress } from "./time_progress";
 
-const emptyProgress = { point: new Date(), timeMultiplier: 1, pauseTime: 0 };
+export function SongProgress({ ...props }: { className?: string }) {
+  const model = useAtomValue(songProgressAtom);
+  if (!model) {
+    return null;
+  }
 
-export function SongProgress({
-  progress: inputProgress,
-  duration,
-  ...props
-}: {
-  progress: OverlayState["progress"];
-  duration: number;
-  className?: string;
-}) {
-  const progress = inputProgress ?? emptyProgress;
+  const { progress, duration } = model;
   const elapsed = "pauseTime" in progress ? progress.pauseTime : progress.resumeTime;
 
   return (

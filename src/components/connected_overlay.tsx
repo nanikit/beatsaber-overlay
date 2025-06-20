@@ -1,6 +1,5 @@
 import { useAtomValue } from "jotai";
-import { usePreviousDistinct } from "react-use";
-import { mapQueryAtom, overlayAtom } from "../atoms/overlay";
+import { lastMapAtom, overlayAtom } from "../atoms/overlay";
 import { useIsRightLayout } from "../hooks/search_param_hooks";
 import { DifficultyTimeAccuracy } from "./difficulty_time_accuracy";
 import { IdBpmNjs } from "./id_bpm_njs";
@@ -9,27 +8,12 @@ import { TransparentFallbackImg } from "./transparent_fallback_img";
 
 export function ConnectedOverlay() {
   const state = useAtomValue(overlayAtom);
-  const { mapInfo, scoring } = state;
+  const { mapInfo } = state;
 
-  const previousMap = usePreviousDistinct(mapInfo);
-  const lastProgress = usePreviousDistinct(state.progress);
-  const lastScoring = usePreviousDistinct(scoring);
-  const health = scoring?.health ?? lastScoring?.health;
-  const accuracy = scoring?.accuracy ?? lastScoring?.accuracy;
-
-  const map = mapInfo ?? previousMap;
-  const { hash, coverUrl, characteristic, difficulty, duration } = map ?? {};
-  const mapQuery = useAtomValue(mapQueryAtom);
+  const map = useAtomValue(lastMapAtom);
+  const { coverUrl } = map ?? {};
 
   const isRightLayout = useIsRightLayout();
-
-  const { versions } = mapQuery.data ?? {};
-  const version = versions?.find((version) => version.hash === hash) ??
-    versions?.[versions.length - 1];
-  const diff = version?.diffs?.find(
-    (diff) => diff.characteristic === characteristic && diff.difficulty === difficulty,
-  );
-  const progress = state.progress ?? lastProgress;
 
   return (
     <>
@@ -61,18 +45,7 @@ export function ConnectedOverlay() {
                 : { flexWrap: "wrap-reverse" }}
             >
               <IdBpmNjs />
-              <DifficultyTimeAccuracy
-                {...{
-                  progress,
-                  duration,
-                  accuracy,
-                  health,
-                  characteristic,
-                  difficulty,
-                  diff,
-                  difficulties: version?.diffs,
-                }}
-              />
+              <DifficultyTimeAccuracy />
             </div>
           </div>
         </div>
