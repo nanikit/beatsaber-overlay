@@ -19,7 +19,7 @@ function ColoredDots({ reverse, classNames }: { reverse?: boolean; classNames: s
   const fullColumnIndex = Math.floor(classNames.length / 3) * 3;
   const fullColumnClasses = classNames.slice(0, fullColumnIndex);
   const partialColumnClasses = classNames.slice(fullColumnIndex);
-  const offsetCss = reverse ? "translate-x-[0.01em]" : "translate-x-[-0.01em]";
+  const offsetCss = reverse ? "translate-x-[0.014em]" : "translate-x-[-0.014em]";
 
   return (
     <div
