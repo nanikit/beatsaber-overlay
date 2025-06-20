@@ -9,29 +9,29 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@sentry/react": "^9.19.0",
-    "@sentry/vite-plugin": "^3.4.0",
-    "@tailwindcss/vite": "^4.1.7",
-    "@tanstack/react-query": "^5.76.1",
-    "core-js": "^3.42.0",
-    "jotai": "^2.12.4",
-    "jotai-effect": "^2.0.2",
+    "@sentry/react": "^9.30.0",
+    "@sentry/vite-plugin": "^3.5.0",
+    "@tailwindcss/vite": "^4.1.10",
+    "@tanstack/react-query": "^5.80.10",
+    "core-js": "^3.43.0",
+    "jotai": "^2.12.5",
+    "jotai-effect": "^2.0.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "react-use": "^17.6.0",
-    "tailwindcss": "^4.1.7"
+    "tailwindcss": "^4.1.10"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.27.2",
     "@csstools/postcss-oklab-function": "^4.0.10",
-    "@types/react": "^19.1.4",
-    "@types/react-dom": "^19.1.5",
-    "@vitejs/plugin-react": "^4.4.1",
-    "tsx": "^4.19.4",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.5.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
   },
   "browserslist": "> 0.25%, not dead",
-  "packageManager": "pnpm@10.11.0"
+  "packageManager": "pnpm@10.12.1"
 }
