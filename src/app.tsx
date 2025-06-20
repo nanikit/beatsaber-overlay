@@ -1,15 +1,11 @@
 import { useAtomValue, useSetAtom } from "jotai";
-import { useLocation } from "react-use";
-import { uiTestOverlayAtom, uiTestOverlayClickAtom } from "./atoms/demo";
+import { uiTestOverlayClickAtom } from "./atoms/demo";
 import { overlayAtom } from "./atoms/overlay";
 import { ConnectedOverlay } from "./components/connected_overlay";
 import { DisconnectionWarning } from "./components/disconnection_warning";
 
 export function App() {
-  const { pathname } = useLocation();
-  const overlay = useAtomValue(
-    pathname === "/test/ui" ? uiTestOverlayAtom : overlayAtom,
-  );
+  const overlay = useAtomValue(overlayAtom);
   const updateOverlay = useSetAtom(uiTestOverlayClickAtom);
 
   return (

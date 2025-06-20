@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
 import { usePreviousDistinct } from "react-use";
+import { mapAtom } from "../atoms/overlay";
 import { useIsRightLayout } from "../hooks/search_param_hooks";
-import { BeatsaverMap, getDataUrlFromHash } from "../modules/beatsaver";
 import { OverlayState } from "../types/overlay";
 import { DifficultyTimeAccuracy } from "./difficulty_time_accuracy";
 import { IdBpmNjs } from "./id_bpm_njs";
@@ -20,11 +20,7 @@ export function ConnectedOverlay({ state }: { state: OverlayState }) {
   const map = mapInfo ?? previousMap;
   const { hash, coverUrl, title, subtitle, artist, mapper, characteristic, difficulty, duration } =
     map ?? {};
-  const mapQuery = useQuery<BeatsaverMap>({
-    queryKey: [getDataUrlFromHash(hash ?? "")],
-    enabled: !!hash,
-    staleTime: Infinity,
-  });
+  const mapQuery = useAtomValue(mapAtom);
 
   const isRightLayout = useIsRightLayout();
 
