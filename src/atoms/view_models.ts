@@ -57,7 +57,7 @@ export const difficultyTimeAccuracyAtom = atom((get) => {
     ? filterAlternativeDifficulties({ difficulties, current: { characteristic, difficulty } })
     : [];
   const showOtherDiffs = !get(hideListAtom).has("other_diffs");
-  const hasAlternativeDiffs = alternativeDiffs.length > 1;
+  const hasAlternativeDiffs = alternativeDiffs.length > 0;
 
   return {
     characteristic,
